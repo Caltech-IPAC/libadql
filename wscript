@@ -1,0 +1,82 @@
+#! /usr/bin/env python
+# encoding: utf-8
+#
+# Copyright (C) 2011 Serge Monkewitz IPAC/Caltech
+#
+
+from __future__ import with_statement
+import os
+import sys
+import traceback
+
+from waflib import Build, Logs, Utils
+
+def options(ctx):
+    ctx.load('compiler_cxx')
+    ctx.add_option('--debug', help='Include debug symbols and turn ' +
+                                   'compiler optimizations off',
+                   action='store_true', default=False, dest='debug')
+
+    boost=ctx.add_option_group('boost Options')
+    boost.add_option('--boost-dir',
+                   help='Base directory where boost is installed')
+    boost.add_option('--boost-incdir',
+                   help='Directory where boost include files are installed')
+    boost.add_option('--boost-libdir',
+                   help='Directory where boost library files are installed')
+    boost.add_option('--boost-libs',
+                   help='Names of the boost libraries without prefix or suffix\n'
+                   '(e.g. "boost_filesystem boost_system"')
+
+def configure(ctx):
+    ctx.load('compiler_cxx')
+    ctx.env.append_value('CXXFLAGS', '-Wall')
+    ctx.env.append_value('CXXFLAGS', '-Wextra')
+    ctx.env.append_value('CXXFLAGS', '-std=c++11')
+
+    # Find Boost
+    if ctx.options.boost_dir:
+        if not ctx.options.boost_incdir:
+            ctx.options.boost_incdir=ctx.options.boost_dir + "/include"
+        if not ctx.options.boost_libdir:
+            ctx.options.boost_libdir=ctx.options.boost_dir + "/lib"
+    frag="#include <boost/spirit/include/qi.hpp>\n" + 'int main()\n' \
+        + "{}\n"
+    if ctx.options.boost_incdir:
+        boost_inc=ctx.options.boost_incdir
+    else:
+        boost_inc='/usr/include'
+    if ctx.options.boost_libs:
+        boost_libs=[ctx.options.boost_libs]
+    else:
+        boost_libs=[]
+
+    ctx.check_cxx(msg="Checking for Boost",
+                  fragment=frag,
+                  includes=[boost_inc], uselib_store='boost',
+                  libpath=[ctx.options.boost_libdir],
+                  rpath=[ctx.options.boost_libdir],
+                  lib=boost_libs)
+
+
+    if ctx.options.debug:
+        ctx.env.append_value('CXXFLAGS', '-g')
+    else:
+        ctx.env.append_value('CXXFLAGS', '-Ofast')
+        ctx.env.append_value('CXXFLAGS', '-mtune=native')
+        ctx.env.append_value('CXXFLAGS', '-march=native')
+        ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
+
+    ctx.env.append_value('CXXFLAGS', '-std=c++11')
+
+def build(ctx):
+    ctx.program(
+        source=[
+            'src/main.cxx',
+            'src/Query/Query.cxx'],
+        target='parse_adql',
+        name='parse_adql',
+        install_path=os.path.join(ctx.env.PREFIX, 'bin'),
+        use=['boost']
+    )
+
