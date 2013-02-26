@@ -5,7 +5,7 @@
 
 namespace ADQL
 {
-  class Coordinate
+  struct Coordinate
   {
   public:
     double ra, dec;

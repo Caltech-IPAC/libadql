@@ -14,4 +14,8 @@ namespace ADQL
   };
 }
 
+BOOST_FUSION_ADAPT_STRUCT(ADQL::Contains,
+                          (ADQL::Point, point)
+                          (ADQL::Circle, circle))
+
 #endif
