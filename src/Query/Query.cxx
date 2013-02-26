@@ -2,7 +2,8 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
-#include <boost/spirit/include/phoenix_object.hpp>
+#include <boost/spirit/include/phoenix_fusion.hpp>
+#include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/fusion/include/io.hpp>
 
 #include "../Query.hxx"
@@ -13,19 +14,26 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
 {
   ADQL_parser() : ADQL_parser::base_type(contains)
   {
-    quoted_string %= boost::spirit::qi::lexeme['\'' >> +(boost::spirit::ascii::char_ - '\'') >> '\''];
- 
-    coord %= boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_;
-    point %= "POINT(" >> quoted_string >> "," >> coord >> ")";
+    coord_sys %=
+      '\'' >> -boost::spirit::qi::lit("J2000")
+      [boost::phoenix::at_c<0>(boost::spirit::qi::labels::_val)=
+       ADQL::Coord_Sys::Reference_Frame::J2000]
+           >> -boost::spirit::qi::lit("GEOCENTER")
+      [boost::phoenix::at_c<1>(boost::spirit::qi::labels::_val)=
+       ADQL::Coord_Sys::Reference_Position::GEOCENTER]
+           >> '\'';
 
-    circle %= "CIRCLE(" >> quoted_string >> "," >> coord >> ','
+    coord %= boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_;
+    point %= "POINT(" >> coord_sys >> "," >> coord >> ")";
+
+    circle %= "CIRCLE(" >> coord_sys >> "," >> coord >> ','
                        >> boost::spirit::qi::double_ >> ")";
 
     contains %= "CONTAINS(" >> point >> "," >> circle >> ")";
   }
 
-  boost::spirit::qi::rule<Iterator, std::string(),
-                          boost::spirit::ascii::space_type> quoted_string;
+  boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
+                          boost::spirit::ascii::space_type> coord_sys;
   boost::spirit::qi::rule<Iterator, ADQL::Coordinate(),
                           boost::spirit::ascii::space_type> coord;
 

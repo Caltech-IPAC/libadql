@@ -9,15 +9,14 @@ namespace ADQL
   class Circle
   {
   public:
-    // Coord_Sys coord_sys;
-    std::string coord_sys;
+    Coord_Sys coord_sys;
     Coordinate coordinate;
     double radius;
   };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Circle,
-                          (std::string, coord_sys)
+                          (ADQL::Coord_Sys, coord_sys)
                           (ADQL::Coordinate, coordinate)
                           (double, radius))
 

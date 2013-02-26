@@ -9,15 +9,13 @@ namespace ADQL
   struct Point
   {
   public:
-    // Coord_Sys coord_sys;
-    std::string coord_sys;
+    Coord_Sys coord_sys;
     Coordinate coordinate;
   };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Point,
-                          (std::string, coord_sys)
+                          (ADQL::Coord_Sys, coord_sys)
                           (ADQL::Coordinate, coordinate))
-
 
 #endif
