@@ -15,8 +15,28 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
   ADQL_parser() : ADQL_parser::base_type(query)
   {
     using boost::phoenix::at_c;
+    using boost::phoenix::push_back;
     using boost::spirit::qi::labels::_val;
+    using boost::spirit::qi::labels::_1;
+    using boost::spirit::qi::labels::_2;
+    using boost::spirit::qi::labels::_3;
     using boost::spirit::qi::lit;
+    using boost::spirit::qi::char_;
+    using boost::spirit::qi::digit;
+
+    simple_Latin_upper_case_letter%=char_("A-Z");
+    simple_Latin_lower_case_letter%=char_("a-z");
+    simple_Latin_letter%=simple_Latin_upper_case_letter
+      | simple_Latin_lower_case_letter;
+
+    // regular_identifier=*(digit | simple_Latin_letter | '_')
+    regular_identifier= *(digit | char_("a-zA-Z") | '_');
+
+    // regular_identifier=simple_Latin_letter [push_back(_val,_1)]
+    //   >> *((digit | simple_Latin_letter | '_') [push_back(_val,_1)]);
+
+    // identifier=regular_identifier;  // FIXME: add delimited identifier
+    identifier=+char_("a-z");  // FIXME: add delimited identifier
 
     coord_sys %=
       '\'' >> -lit("J2000")
@@ -35,8 +55,23 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
 
     geometry %= contains;
 
-    query %= geometry;
+    query =
+      lit("SELECT") >> (identifier % ',')
+                    >> "FROM" >> identifier
+                    >> "WHERE" >> (geometry [at_c<1>(_val)=_1]);
   }
+
+  boost::spirit::qi::rule<Iterator, char, boost::spirit::ascii::space_type>
+  simple_Latin_upper_case_letter;
+  boost::spirit::qi::rule<Iterator, char, boost::spirit::ascii::space_type>
+  simple_Latin_lower_case_letter;
+  boost::spirit::qi::rule<Iterator, char,
+                          boost::spirit::ascii::space_type> simple_Latin_letter;
+
+  boost::spirit::qi::rule<Iterator, std::string,
+                          boost::spirit::ascii::space_type> regular_identifier;
+  boost::spirit::qi::rule<Iterator, std::vector<char>,
+                          boost::spirit::ascii::space_type> identifier;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -76,6 +111,9 @@ ADQL::Query::Query(const std::string &input)
     }
   else
     {
-      std::cout << "Invalid '" << input << "'\n";
+      std::string rest(begin,end);
+      std::cout << "Invalid '" << input << "'\n"
+                << "Parsing stopped at: '"
+                <<  rest << "'\n";
     }
 }

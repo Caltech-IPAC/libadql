@@ -19,6 +19,7 @@ namespace ADQL
 }
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Query,
+                          (std::string, table)
                           (ADQL::Geometry, geometry))
 
 #endif
