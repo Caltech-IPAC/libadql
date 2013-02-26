@@ -8,12 +8,12 @@ namespace ADQL
   struct Coordinate
   {
   public:
-    double ra, dec;
+    std::string ra, dec;
   };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Coordinate,
-                          (double, ra)
-                          (double, dec))
+                          (std::string, ra)
+                          (std::string, dec))
 
 #endif

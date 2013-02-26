@@ -29,8 +29,8 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     using boost::spirit::qi::hold;
     using boost::spirit::qi::lower;
 
-    simple_Latin_letter=char_("a-zA-Z");
-    regular_identifier= simple_Latin_letter >> *(digit | simple_Latin_letter | '_');
+    simple_Latin_letter%=char_("a-zA-Z");
+    regular_identifier%= simple_Latin_letter >> *(digit | simple_Latin_letter | '_');
 
     // FIXME: add delimited identifier
     identifier%=regular_identifier;
@@ -42,8 +42,32 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
       [at_c<1>(_val)=ADQL::Coord_Sys::Reference_Position::GEOCENTER]
            >> '\'';
 
-    coord %= double_ >> ',' >> double_;
-    // coord %= identifier >> ',' >> identifier;
+
+    catalog_name%=identifier;
+    unqualified_schema_name%=identifier;
+    schema_name%=-(catalog_name >> '.') >> unqualified_schema_name;
+    table_name%=-(schema_name >> '.') >> identifier;
+    correlation_name%=identifier;
+
+    qualifier%=table_name | correlation_name;
+
+    column_reference=-(identifier >> char_("."))[_val=_1+_2] >> identifier [_val+=_1];
+    // column_reference= -(qualifier >> '.') >> identifier;
+      
+    number=-((char_("+") | char_("-")) [_val=_1]) >> +digit [_val+=_1];
+
+    // FIXME: Add functions etc. into factor
+    factor%= number | column_reference;
+    // factor%= number | identifier;
+
+    // FIXME: add math (*/) into term
+    term%=factor;
+
+    // FIXME: add math (+-) into numeric_value_expression
+    numeric_value_expression%=term;
+
+    coord %= numeric_value_expression >> ',' >> numeric_value_expression;
+    // coord %= double_ >> ',' >> double_;
     point %= "POINT(" >> coord_sys >> "," >> coord >> ")";
 
     circle %= "CIRCLE(" >> coord_sys >> "," >> coord >> ','
@@ -61,8 +85,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
 
-  boost::spirit::qi::rule<Iterator, std::string()> regular_identifier;
-  boost::spirit::qi::rule<Iterator, std::string()> identifier;
+  boost::spirit::qi::rule<Iterator, std::string()>
+  regular_identifier, identifier, numeric_value_expression, term, factor,
+    column_reference, qualifier, correlation_name, table_name, schema_name,
+    unqualified_schema_name, catalog_name, number;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -102,6 +128,9 @@ ADQL::Query::Query(const std::string &input)
                 << table << " "
                 << geometry.contains.point.coordinate.ra << " "
                 << geometry.contains.point.coordinate.dec << " "
+                << geometry.contains.circle.coordinate.ra << " "
+                << geometry.contains.circle.coordinate.dec << " "
+                << geometry.contains.circle.radius << " "
                 << "\n";
     }
   else
