@@ -36,7 +36,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     //   >> *((digit | simple_Latin_letter | '_') [push_back(_val,_1)]);
 
     // identifier=regular_identifier;  // FIXME: add delimited identifier
-    identifier=+char_("a-z");  // FIXME: add delimited identifier
+    identifier%=+char_("a-z");  // FIXME: add delimited identifier
 
     coord_sys %=
       '\'' >> -lit("J2000")
@@ -56,21 +56,21 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     geometry %= contains;
 
     query =
-      lit("SELECT") >> (identifier % ',')
-                    >> "FROM" >> identifier
-                    >> "WHERE" >> (geometry [at_c<1>(_val)=_1]);
+      lit("SELECT") >> ((identifier % ',') [at_c<0>(_val)=_1])
+                    >> "FROM" >> (identifier [at_c<1>(_val)=_1])
+                    >> "WHERE" >> (geometry [at_c<2>(_val)=_1]);
   }
 
-  boost::spirit::qi::rule<Iterator, char, boost::spirit::ascii::space_type>
+  boost::spirit::qi::rule<Iterator, char(), boost::spirit::ascii::space_type>
   simple_Latin_upper_case_letter;
-  boost::spirit::qi::rule<Iterator, char, boost::spirit::ascii::space_type>
+  boost::spirit::qi::rule<Iterator, char(), boost::spirit::ascii::space_type>
   simple_Latin_lower_case_letter;
-  boost::spirit::qi::rule<Iterator, char,
+  boost::spirit::qi::rule<Iterator, char(),
                           boost::spirit::ascii::space_type> simple_Latin_letter;
 
-  boost::spirit::qi::rule<Iterator, std::string,
+  boost::spirit::qi::rule<Iterator, std::string(),
                           boost::spirit::ascii::space_type> regular_identifier;
-  boost::spirit::qi::rule<Iterator, std::vector<char>,
+  boost::spirit::qi::rule<Iterator, std::string(),
                           boost::spirit::ascii::space_type> identifier;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
@@ -104,7 +104,11 @@ ADQL::Query::Query(const std::string &input)
 
   if(valid && begin==end)
     {
-      std::cout << "Valid '" << input << "' "
+      std::cout << "Valid '" << input << "'\n";
+      for(auto &o: output_columns)
+        std::cout << o << " ";
+      std::cout << "\n"
+                << table << " "
                 << geometry.contains.point.coordinate.ra << " "
                 << geometry.contains.point.coordinate.dec << " "
                 << "\n";
