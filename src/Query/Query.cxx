@@ -22,21 +22,18 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     using boost::spirit::qi::labels::_3;
     using boost::spirit::qi::lit;
     using boost::spirit::qi::char_;
+    using boost::spirit::qi::alpha;
+    using boost::spirit::qi::alnum;
     using boost::spirit::qi::digit;
+    using boost::spirit::qi::double_;
+    using boost::spirit::qi::hold;
+    using boost::spirit::qi::lower;
 
-    simple_Latin_upper_case_letter%=char_("A-Z");
-    simple_Latin_lower_case_letter%=char_("a-z");
-    simple_Latin_letter%=simple_Latin_upper_case_letter
-      | simple_Latin_lower_case_letter;
+    simple_Latin_letter=char_("a-zA-Z");
+    regular_identifier= simple_Latin_letter >> *(digit | simple_Latin_letter | '_');
 
-    // regular_identifier=*(digit | simple_Latin_letter | '_')
-    regular_identifier= *(digit | char_("a-zA-Z") | '_');
-
-    // regular_identifier=simple_Latin_letter [push_back(_val,_1)]
-    //   >> *((digit | simple_Latin_letter | '_') [push_back(_val,_1)]);
-
-    // identifier=regular_identifier;  // FIXME: add delimited identifier
-    identifier%=+char_("a-z");  // FIXME: add delimited identifier
+    // FIXME: add delimited identifier
+    identifier%=regular_identifier;
 
     coord_sys %=
       '\'' >> -lit("J2000")
@@ -45,7 +42,8 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
       [at_c<1>(_val)=ADQL::Coord_Sys::Reference_Position::GEOCENTER]
            >> '\'';
 
-    coord %= boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_;
+    coord %= double_ >> ',' >> double_;
+    // coord %= identifier >> ',' >> identifier;
     point %= "POINT(" >> coord_sys >> "," >> coord >> ")";
 
     circle %= "CIRCLE(" >> coord_sys >> "," >> coord >> ','
@@ -61,17 +59,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
                     >> "WHERE" >> (geometry [at_c<2>(_val)=_1]);
   }
 
-  boost::spirit::qi::rule<Iterator, char(), boost::spirit::ascii::space_type>
-  simple_Latin_upper_case_letter;
-  boost::spirit::qi::rule<Iterator, char(), boost::spirit::ascii::space_type>
-  simple_Latin_lower_case_letter;
-  boost::spirit::qi::rule<Iterator, char(),
-                          boost::spirit::ascii::space_type> simple_Latin_letter;
+  boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
 
-  boost::spirit::qi::rule<Iterator, std::string(),
-                          boost::spirit::ascii::space_type> regular_identifier;
-  boost::spirit::qi::rule<Iterator, std::string(),
-                          boost::spirit::ascii::space_type> identifier;
+  boost::spirit::qi::rule<Iterator, std::string()> regular_identifier;
+  boost::spirit::qi::rule<Iterator, std::string()> identifier;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
                           boost::spirit::ascii::space_type> coord_sys;
