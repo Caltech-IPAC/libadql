@@ -13,7 +13,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Coordinate(),
 {
   ADQL_parser() : ADQL_parser::base_type(start)
   {
-    start %= boost::spirit::qi::double_ >>  boost::spirit::qi::double_;
+    start %= boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_;
   }
 
   boost::spirit::qi::rule<Iterator, ADQL::Coordinate(),
