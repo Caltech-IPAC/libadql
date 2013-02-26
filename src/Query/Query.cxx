@@ -45,14 +45,13 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
 
     catalog_name%=identifier;
     unqualified_schema_name%=identifier;
-    schema_name%=-(catalog_name >> '.') >> unqualified_schema_name;
-    table_name%=-(schema_name >> '.') >> identifier;
+    schema_name=-(catalog_name >> char_("."))[_val=_1+_2] >> unqualified_schema_name [_val+=_1];
+    table_name=-(schema_name >> char_("."))[_val=_1+_2] >> identifier [_val+=_1];
     correlation_name%=identifier;
 
-    qualifier%=table_name | correlation_name;
+    qualifier%=hold[table_name] | correlation_name;
 
-    column_reference=-(identifier >> char_("."))[_val=_1+_2] >> identifier [_val+=_1];
-    // column_reference= -(qualifier >> '.') >> identifier;
+    column_reference=-(qualifier >> char_("."))[_val=_1+_2] >> identifier [_val+=_1];
       
     number=-((char_("+") | char_("-")) [_val=_1]) >> +digit [_val+=_1];
 
