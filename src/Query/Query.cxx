@@ -14,13 +14,15 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
 {
   ADQL_parser() : ADQL_parser::base_type(contains)
   {
+    using boost::phoenix::at_c;
+    using boost::spirit::qi::labels::_val;
+    using boost::spirit::qi::lit;
+
     coord_sys %=
-      '\'' >> -boost::spirit::qi::lit("J2000")
-      [boost::phoenix::at_c<0>(boost::spirit::qi::labels::_val)=
-       ADQL::Coord_Sys::Reference_Frame::J2000]
-           >> -boost::spirit::qi::lit("GEOCENTER")
-      [boost::phoenix::at_c<1>(boost::spirit::qi::labels::_val)=
-       ADQL::Coord_Sys::Reference_Position::GEOCENTER]
+      '\'' >> -lit("J2000")
+      [at_c<0>(_val)=ADQL::Coord_Sys::Reference_Frame::J2000]
+           >> -lit("GEOCENTER")
+      [at_c<1>(_val)=ADQL::Coord_Sys::Reference_Position::GEOCENTER]
            >> '\'';
 
     coord %= boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_;
@@ -30,6 +32,8 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
                        >> boost::spirit::qi::double_ >> ")";
 
     contains %= "CONTAINS(" >> point >> "," >> circle >> ")";
+
+    geometry %= contains;
   }
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
@@ -44,23 +48,26 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
 
   boost::spirit::qi::rule<Iterator, ADQL::Contains(),
                           boost::spirit::ascii::space_type> contains;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Geometry(),
+                          boost::spirit::ascii::space_type> geometry;
 };
 
 
 ADQL::Query::Query(const std::string &input)
 {
   ADQL_parser<std::string::const_iterator> parser;
-  Contains contains;
+  Geometry geom;
   std::string::const_iterator begin(input.begin()), end(input.end());
 
   bool valid(phrase_parse(begin,end,parser,
-                          boost::spirit::ascii::space,contains));
+                          boost::spirit::ascii::space,geom));
 
   if(valid && begin==end)
     {
       std::cout << "Valid '" << input << "' "
-                << contains.point.coordinate.ra << " "
-                << contains.point.coordinate.dec << " "
+                << geom.contains.point.coordinate.ra << " "
+                << geom.contains.point.coordinate.dec << " "
                 << "\n";
     }
   else

@@ -12,4 +12,7 @@ namespace ADQL
   };
 }
 
+BOOST_FUSION_ADAPT_STRUCT(ADQL::Geometry,
+                          (ADQL::Contains, contains))
+
 #endif
