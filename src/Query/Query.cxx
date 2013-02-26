@@ -9,10 +9,10 @@
 #include "../Query.hxx"
 
 template <typename Iterator>
-struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
+struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
                                                 boost::spirit::ascii::space_type>
 {
-  ADQL_parser() : ADQL_parser::base_type(contains)
+  ADQL_parser() : ADQL_parser::base_type(query)
   {
     using boost::phoenix::at_c;
     using boost::spirit::qi::labels::_val;
@@ -34,6 +34,8 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
     contains %= "CONTAINS(" >> point >> "," >> circle >> ")";
 
     geometry %= contains;
+
+    query %= geometry;
   }
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
@@ -51,23 +53,25 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Contains(),
 
   boost::spirit::qi::rule<Iterator, ADQL::Geometry(),
                           boost::spirit::ascii::space_type> geometry;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Query(),
+                          boost::spirit::ascii::space_type> query;
 };
 
 
 ADQL::Query::Query(const std::string &input)
 {
   ADQL_parser<std::string::const_iterator> parser;
-  Geometry geom;
   std::string::const_iterator begin(input.begin()), end(input.end());
 
   bool valid(phrase_parse(begin,end,parser,
-                          boost::spirit::ascii::space,geom));
+                          boost::spirit::ascii::space,*this));
 
   if(valid && begin==end)
     {
       std::cout << "Valid '" << input << "' "
-                << geom.contains.point.coordinate.ra << " "
-                << geom.contains.point.coordinate.dec << " "
+                << geometry.contains.point.coordinate.ra << " "
+                << geometry.contains.point.coordinate.dec << " "
                 << "\n";
     }
   else
