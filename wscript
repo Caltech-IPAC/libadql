@@ -70,13 +70,33 @@ def configure(ctx):
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
 
 def build(ctx):
+
+    cxx_sources=['src/Query/Query.cxx']
+    
+    ctx.stlib(
+        source=cxx_sources,
+        includes='',
+        target='adql_query',
+        name='adql_query_st',
+        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
+        use=['boost']
+    )
+    # shared library
+    ctx.shlib(
+        source=cxx_sources,
+        includes='',
+        target='adql_query',
+        name='adql_query_sh',
+        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
+        use=['boost']
+    )
+
+
     ctx.program(
-        source=[
-            'src/main.cxx',
-            'src/Query/Query.cxx'],
+        source=['src/main.cxx'],
         target='parse_adql',
         name='parse_adql',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['boost']
+        use=['boost','adql_query_st']
     )
 
