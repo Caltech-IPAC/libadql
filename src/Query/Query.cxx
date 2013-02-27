@@ -118,25 +118,9 @@ ADQL::Query::Query(const std::string &input)
   bool valid(phrase_parse(begin,end,parser,
                           boost::spirit::ascii::space,*this));
 
-  if(valid && begin==end)
+  if(!(valid && begin==end))
     {
-      std::cout << "Valid '" << input << "'\n";
-      for(auto &o: output_columns)
-        std::cout << o << " ";
-      std::cout << "\n"
-                << table << " "
-                << geometry.contains.point.coordinate.ra << " "
-                << geometry.contains.point.coordinate.dec << " "
-                << geometry.contains.circle.coordinate.ra << " "
-                << geometry.contains.circle.coordinate.dec << " "
-                << geometry.contains.circle.radius << " "
-                << "\n";
-    }
-  else
-    {
-      std::string rest(begin,end);
-      std::cout << "Invalid '" << input << "'\n"
-                << "Parsing stopped at: '"
-                <<  rest << "'\n";
+      throw std::runtime_error("Invalid input:\n\t"
+                               + input);
     }
 }
