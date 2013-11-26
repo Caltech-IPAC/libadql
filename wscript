@@ -12,7 +12,7 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx')
+    ctx.load('compiler_cxx gnu_dirs')
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
@@ -29,7 +29,7 @@ def options(ctx):
                    '(e.g. "boost_filesystem boost_system"')
 
 def configure(ctx):
-    ctx.load('compiler_cxx')
+    ctx.load('compiler_cxx gnu_dirs')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
     ctx.env.append_value('CXXFLAGS', '-std=c++11')
@@ -100,3 +100,8 @@ def build(ctx):
         use=['boost','adql_query_st']
     )
 
+    # Install headers
+
+    ctx.install_files(ctx.env.INCLUDEDIR + '/ADQL',
+                      ctx.path.ant_glob('src/**/*.hxx'),
+                      cwd=ctx.path.find_dir('src'), relative_trick=True)
