@@ -33,7 +33,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     regular_identifier%= simple_Latin_letter >> *(digit | simple_Latin_letter | '_');
 
     // FIXME: add delimited identifier
-    identifier%=regular_identifier;
+    identifier%=regular_identifier | char_("*");
 
     coord_sys %=
       '\'' >> -lit("J2000")
