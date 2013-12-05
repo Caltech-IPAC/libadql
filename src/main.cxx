@@ -19,7 +19,7 @@ int main()
       try
         {
           ADQL::Query query(i);
-          std::cout << "Query:\n"
+          std::cout << "Query: " << i << "\n"
                     << "  Output Columns:";
           for(auto &o: query.output_columns)
             {
