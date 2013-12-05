@@ -1,6 +1,7 @@
 #ifndef ADQL_COORD_SYS_HXX
 #define ADQL_COORD_SYS_HXX
 
+#include <iostream>
 #include <boost/fusion/include/adapt_struct.hpp>
 
 namespace ADQL
