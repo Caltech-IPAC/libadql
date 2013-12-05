@@ -12,7 +12,7 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx gnu_dirs')
+    ctx.load('compiler_cxx cxx11 gnu_dirs')
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
@@ -29,10 +29,9 @@ def options(ctx):
                    '(e.g. "boost_filesystem boost_system"')
 
 def configure(ctx):
-    ctx.load('compiler_cxx gnu_dirs')
+    ctx.load('compiler_cxx cxx11 gnu_dirs')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
-    ctx.env.append_value('CXXFLAGS', '-std=c++11')
 
     # Find Boost
     if ctx.options.boost_dir:
@@ -67,8 +66,6 @@ def configure(ctx):
         ctx.env.append_value('CXXFLAGS', '-march=native')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
 
-    ctx.env.append_value('CXXFLAGS', '-std=c++11')
-
 def build(ctx):
 
     cxx_sources=['src/Query/Query.cxx']
@@ -79,7 +76,7 @@ def build(ctx):
         target='adql_query',
         name='adql_query_st',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['boost']
+        use=['boost','cxx11']
     )
     # shared library
     ctx.shlib(
@@ -88,7 +85,7 @@ def build(ctx):
         target='adql_query',
         name='adql_query_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['boost']
+        use=['boost','cxx11']
     )
 
 
@@ -97,7 +94,7 @@ def build(ctx):
         target='parse_adql',
         name='parse_adql',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
-        use=['boost','adql_query_st']
+        use=['boost','adql_query_st','cxx11']
     )
 
     # Install headers
