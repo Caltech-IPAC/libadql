@@ -33,7 +33,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     regular_identifier%= simple_Latin_letter >> *(digit | simple_Latin_letter | '_');
 
     // FIXME: add delimited identifier
-    identifier%=regular_identifier | char_("*");
+    identifier%=regular_identifier;
 
     coord_sys %=
       '\'' >> -lit("J2000")
@@ -76,8 +76,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
 
     geometry %= contains;
 
+    column_name %= identifier | char_("*");
+
     query =
-      lit("SELECT") >> ((identifier % ',') [at_c<0>(_val)=_1])
+      lit("SELECT") >> ((column_name % ',') [at_c<0>(_val)=_1])
                     >> "FROM" >> (identifier [at_c<1>(_val)=_1])
                     >> "WHERE" >> (geometry [at_c<2>(_val)=_1]);
   }
@@ -86,7 +88,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
 
   boost::spirit::qi::rule<Iterator, std::string()>
   regular_identifier, identifier, numeric_value_expression, term, factor,
-    column_reference, qualifier, correlation_name, table_name, schema_name,
+    column_name, column_reference, qualifier, correlation_name, table_name, schema_name,
     unqualified_schema_name, catalog_name, number;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
