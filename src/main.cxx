@@ -12,6 +12,8 @@ int main()
      "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',+10 , +20),CIRCLE('J2000',10 , 20,-1))",
      "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
      "SELECT * FROM mytable WHERE CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
+     "SELECT * FROM my_table WHERE CONTAINS(POINT('J2000',my_table.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
+     "SELECT * FROM my_table1 WHERE CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
      "SELECT FROM WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , 20,1))"};
 
   for(auto &i: inputs)
