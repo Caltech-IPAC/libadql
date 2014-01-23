@@ -30,7 +30,8 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     using boost::spirit::qi::lower;
 
     simple_Latin_letter%=char_("a-zA-Z");
-    regular_identifier%= simple_Latin_letter >> *(digit | simple_Latin_letter | '_');
+    regular_identifier%= simple_Latin_letter >> *(digit | simple_Latin_letter
+                                                  | char_("_"));
 
     // FIXME: add delimited identifier
     identifier%=regular_identifier;
