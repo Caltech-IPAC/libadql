@@ -130,7 +130,7 @@ public:
     : table(Table), ra_dec(Ra_dec) {}
   bool operator()(const double &) const
   {
-    return true;
+    return false;
   }
   bool operator()(const std::string &s) const
   {
@@ -149,15 +149,14 @@ ADQL::Query::Query(const std::string &input)
 
   if(!(valid && begin==end))
     {
-      throw std::runtime_error("Invalid input:\n\t"
-                               + input);
+      throw std::runtime_error("");
     }
 
-  if(!boost::apply_visitor(Check_RA_DEC(table,"ra"),geometry.contains.point.coordinate.ra))
-     throw std::runtime_error("Invalid value for ra in Contains():\n\t"
-                              + input);
+  if(!boost::apply_visitor(Check_RA_DEC(table,"ra"),
+                           geometry.contains.point.coordinate.numbers[0]))
+     throw std::runtime_error("Invalid value for ra in Contains():\n\t");
 
-  if(!boost::apply_visitor(Check_RA_DEC(table,"dec"),geometry.contains.point.coordinate.dec))
-     throw std::runtime_error("Invalid value for dec in Contains():\n\t"
-                              + input);
+  if(!boost::apply_visitor(Check_RA_DEC(table,"dec"),
+                           geometry.contains.point.coordinate.numbers[1]))
+     throw std::runtime_error("Invalid value for dec in Contains():\n\t");
 }
