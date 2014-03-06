@@ -5,9 +5,11 @@
 #include <boost/spirit/include/phoenix_fusion.hpp>
 #include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/fusion/include/io.hpp>
+#include "boost/variant.hpp"
 
 #include "../Query.hxx"
 
+namespace {
 template <typename Iterator>
 struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
                                                 boost::spirit::ascii::space_type>
@@ -120,6 +122,22 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
                           boost::spirit::ascii::space_type> query;
 };
 
+class Check_RA_DEC : public boost::static_visitor<bool>
+{
+  std::string table, ra_dec;
+public:
+  Check_RA_DEC(const std::string &Table, const std::string &Ra_dec)
+    : table(Table), ra_dec(Ra_dec) {}
+  bool operator()(const double &) const
+  {
+    return true;
+  }
+  bool operator()(const std::string &s) const
+  {
+    return s==ra_dec || s==table+"."+ra_dec;
+  }
+};
+}
 
 ADQL::Query::Query(const std::string &input)
 {
@@ -135,17 +153,11 @@ ADQL::Query::Query(const std::string &input)
                                + input);
     }
 
-  if(geometry.contains.point.coordinate.ra!="ra"
-     && geometry.contains.point.coordinate.ra!=table+".ra")
-    {
-      throw std::runtime_error("Invalid value for ra in Contains():\n\t"
-                               + input);
-    }
+  if(!boost::apply_visitor(Check_RA_DEC(table,"ra"),geometry.contains.point.coordinate.ra))
+     throw std::runtime_error("Invalid value for ra in Contains():\n\t"
+                              + input);
 
-  if(geometry.contains.point.coordinate.dec!="dec"
-     && geometry.contains.point.coordinate.dec!=table+".dec")
-    {
-      throw std::runtime_error("Invalid value for dec in Contains():\n\t"
-                               + input);
-    }
+  if(!boost::apply_visitor(Check_RA_DEC(table,"dec"),geometry.contains.point.coordinate.dec))
+     throw std::runtime_error("Invalid value for dec in Contains():\n\t"
+                              + input);
 }
