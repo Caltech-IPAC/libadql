@@ -62,8 +62,6 @@ def configure(ctx):
         ctx.env.append_value('CXXFLAGS', '-g')
     else:
         ctx.env.append_value('CXXFLAGS', '-Ofast')
-        ctx.env.append_value('CXXFLAGS', '-mtune=native')
-        ctx.env.append_value('CXXFLAGS', '-march=native')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
 
 def build(ctx):

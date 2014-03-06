@@ -70,7 +70,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     point %= "POINT(" >> coord_sys >> "," >> coord >> ")";
 
     circle %= "CIRCLE(" >> coord_sys >> "," >> coord >> ','
-                       >> boost::spirit::qi::double_ >> ")";
+                        >> boost::spirit::qi::double_ >> ")";
 
     contains %= "CONTAINS(" >> point >> "," >> circle >> ")";
 
@@ -132,6 +132,20 @@ ADQL::Query::Query(const std::string &input)
   if(!(valid && begin==end))
     {
       throw std::runtime_error("Invalid input:\n\t"
+                               + input);
+    }
+
+  if(geometry.contains.point.coordinate.ra!="ra"
+     && geometry.contains.point.coordinate.ra!=table+".ra")
+    {
+      throw std::runtime_error("Invalid value for ra in Contains():\n\t"
+                               + input);
+    }
+
+  if(geometry.contains.point.coordinate.dec!="dec"
+     && geometry.contains.point.coordinate.dec!=table+".dec")
+    {
+      throw std::runtime_error("Invalid value for dec in Contains():\n\t"
                                + input);
     }
 }
