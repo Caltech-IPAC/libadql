@@ -43,22 +43,22 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
       [at_c<1>(_val)=ADQL::Coord_Sys::Reference_Position::GEOCENTER]
            >> '\'';
 
-
     catalog_name%=identifier;
     unqualified_schema_name%=identifier;
-    schema_name=-(catalog_name >> char_("."))[_val=_1+_2] >> unqualified_schema_name [_val+=_1];
+    schema_name=-(catalog_name >> char_("."))[_val=_1+_2]
+      >> unqualified_schema_name [_val+=_1];
     table_name=-(schema_name >> char_("."))[_val=_1+_2] >> identifier [_val+=_1];
     correlation_name%=identifier;
 
     qualifier%=hold[table_name] | correlation_name;
 
-    column_reference=-(qualifier >> char_("."))[_val=_1+_2] >> identifier [_val+=_1];
+    column_reference=-(qualifier >> char_("."))[_val=_1+_2]
+      >> identifier [_val+=_1];
       
-    number=-((char_("+") | char_("-")) [_val=_1]) >> +digit [_val+=_1];
+    number%=double_;
 
     // FIXME: Add functions etc. into factor
     factor%= number | column_reference;
-    // factor%= number | identifier;
 
     // FIXME: add math (*/) into term
     term%=factor;
@@ -67,7 +67,6 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
     numeric_value_expression%=term;
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
-    // coord %= double_ >> ',' >> double_;
     point %= "POINT(" >> coord_sys >> "," >> coord >> ")";
 
     circle %= "CIRCLE(" >> coord_sys >> "," >> coord >> ','
@@ -88,14 +87,23 @@ struct ADQL_parser : boost::spirit::qi::grammar<Iterator, ADQL::Query(),
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
 
   boost::spirit::qi::rule<Iterator, std::string()>
-  regular_identifier, identifier, numeric_value_expression, term, factor,
-    column_name, column_reference, qualifier, correlation_name, table_name, schema_name,
-    unqualified_schema_name, catalog_name, number;
+  regular_identifier, identifier,
+    column_name, column_reference, qualifier, correlation_name, table_name,
+    schema_name,
+    unqualified_schema_name, catalog_name,
+    sign, unsigned_integer, signed_integer, exponent, exact_numeric_literal;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys(),
                           boost::spirit::ascii::space_type> coord_sys;
   boost::spirit::qi::rule<Iterator, ADQL::Coordinate(),
                           boost::spirit::ascii::space_type> coord;
+
+  boost::spirit::qi::rule<Iterator, ADQL::number_variant(),
+                          boost::spirit::ascii::space_type>
+  numeric_value_expression, factor, term;
+
+  boost::spirit::qi::rule<Iterator, double(),
+                          boost::spirit::ascii::space_type> number;
 
   boost::spirit::qi::rule<Iterator, ADQL::Point(),
                           boost::spirit::ascii::space_type> point;

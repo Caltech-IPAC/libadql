@@ -6,12 +6,15 @@ int main()
 {
   std::vector<std::string> inputs=
     {"POINT('foo',10 20)",
-     "POINT('foo',10, 20)",
-     "POINT('foo',10 ,20)",
-     "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',+10 , -20),CIRCLE('J2000',10 , 20,-1))",
-     "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',+10 , +20),CIRCLE('J2000',10 , 20,-1))",
+     "POINT('foo',1.0, 20)",
+     "POINT('foo',10 ,-2.0)",
+     "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',+1.0 , -20),CIRCLE('J2000',-.10 , +.20,-1))",
+     "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',+10 , +2.0),CIRCLE('J2000',.10 , -0.20,-1))",
      "SELECT ra1,dec2,flux FROM mytable WHERE CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
      "SELECT * FROM mytable WHERE CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
+
+     "SELECT * FROM mytable WHERE CONTAINS(POINT('J2000',ra,ra),CIRCLE('J2000',+10 , -20,-1))",
+
      "SELECT * FROM my_table WHERE CONTAINS(POINT('J2000',my_table.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
      "SELECT * FROM my_table1 WHERE CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
      "SELECT FROM WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , 20,1))"};
