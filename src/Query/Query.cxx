@@ -42,8 +42,8 @@ struct ADQL_parser
 
     coord_sys
         %= '\'' >> -lit ("J2000")[at_c<0>(_val)
-                                  = ADQL::Coord_Sys::Reference_Frame::J2000] >
-           > -lit (
+                                  = ADQL::Coord_Sys::Reference_Frame::J2000]
+           >> -lit (
                  "GEOCENTER")[at_c<1>(_val)
                               = ADQL::Coord_Sys::Reference_Position::GEOCENTER]
            >> '\'';
