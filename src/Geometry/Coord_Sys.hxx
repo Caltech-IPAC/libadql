@@ -6,17 +6,24 @@
 
 namespace ADQL
 {
-  class Coord_Sys
+class Coord_Sys
+{
+public:
+  enum class Reference_Frame
   {
-  public:
-    enum class Reference_Frame {J2000, ICRS} frame;
-    enum class Reference_Position {GEOCENTER} position;
-  };
+    J2000,
+    ICRS
+  } frame;
+  enum class Reference_Position
+  {
+    GEOCENTER
+  } position;
+};
 }
 
-inline std::ostream & operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
 {
-  switch(c.frame)
+  switch (c.frame)
     {
     case ADQL::Coord_Sys::Reference_Frame::J2000:
       os << "J2000";
@@ -28,9 +35,9 @@ inline std::ostream & operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
   return os;
 }
 
-
-BOOST_FUSION_ADAPT_STRUCT(ADQL::Coord_Sys,
-                          (ADQL::Coord_Sys::Reference_Frame, frame)
-                          (ADQL::Coord_Sys::Reference_Position, position))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Coord_Sys,
+                           (ADQL::Coord_Sys::Reference_Frame,
+                            frame)(ADQL::Coord_Sys::Reference_Position,
+                                   position))
 
 #endif

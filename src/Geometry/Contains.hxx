@@ -6,16 +6,15 @@
 
 namespace ADQL
 {
-  class Contains
-  {
-  public:
-    Point point;
-    Circle circle;
-  };
+class Contains
+{
+public:
+  Point point;
+  Circle circle;
+};
 }
 
-BOOST_FUSION_ADAPT_STRUCT(ADQL::Contains,
-                          (ADQL::Point, point)
-                          (ADQL::Circle, circle))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Contains,
+                           (ADQL::Point, point)(ADQL::Circle, circle))
 
 #endif

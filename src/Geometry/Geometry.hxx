@@ -3,11 +3,11 @@
 
 namespace ADQL
 {
-  class Geometry
-  {
-  public:
-    Contains contains;
-  };
+class Geometry
+{
+public:
+  Contains contains;
+};
 }
 
 #endif
