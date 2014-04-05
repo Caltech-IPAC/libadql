@@ -88,7 +88,7 @@ def build(ctx):
 
 
     ctx.program(
-        source=['src/main.cxx'],
+        source=['test/parse_adql.cxx'],
         target='parse_adql',
         name='parse_adql',
         install_path=os.path.join(ctx.env.PREFIX, 'bin'),
