@@ -30,6 +30,7 @@ int main ()
     "1 = CONTAINS(POINT('J2000',dec,dec),CIRCLE('J2000',+10 , -20,-1))"
   };
 
+  int result(0);
   for (auto &i : pass)
     {
       try
@@ -40,6 +41,7 @@ int main ()
       catch (std::runtime_error &e)
         {
           std::cout << "FAIL: " << i << "\n";
+          result=1;
         }
     }
 
@@ -50,10 +52,13 @@ int main ()
         {
           ADQL::Query query (i);
           std::cout << "FAIL: Unexpected parse: " << i << "\n";
+          result=1;
         }
       catch (std::runtime_error &e)
         {
           std::cout << "PASS: " << i << "\n";
         }
     }
+
+  return result;
 }
