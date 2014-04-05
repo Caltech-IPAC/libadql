@@ -79,7 +79,9 @@ struct ADQL_parser
 
     contains %= "CONTAINS(" >> point >> "," >> circle >> ")";
 
-    geometry %= contains;
+    /// Weird extra parenthese because compiler complains about "1" >>
+    /// "=".
+    geometry %= (contains >> "=" >> "1") | ("1" >> ("=" >> contains));
 
     column_name %= identifier | char_ ("*");
 
