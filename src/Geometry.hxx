@@ -1,5 +1,4 @@
-#ifndef ADQL_GEOMETRY_HXX
-#define ADQL_GEOMETRY_HXX
+#pragma once
 
 #include "Geometry/Contains.hxx"
 
@@ -14,4 +13,3 @@ public:
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Geometry, (ADQL::Contains, contains))
 
-#endif

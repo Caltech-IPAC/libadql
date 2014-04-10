@@ -81,9 +81,13 @@ struct ADQL_parser
 
     geometry %= (contains >> "=" >> "1") | (lit("1") >> "=" >> contains);
 
-    column_name %= identifier | char_ ("*");
+    as %= identifier >> "AS" >> identifier;
 
-    query = lit ("SELECT") >> ((column_name % ',')[at_c<0>(_val) = _1])
+    column_name %=identifier | char_ ("*");
+
+    select_item %= as | column_name;
+
+    query = lit ("SELECT") >> ((select_item % ',')[at_c<0>(_val) = _1])
             >> "FROM" >> (identifier[at_c<1>(_val) = _1]) >> "WHERE"
             >> (geometry[at_c<2>(_val) = _1]);
   }
@@ -91,7 +95,7 @@ struct ADQL_parser
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
 
   boost::spirit::qi::rule<Iterator, std::string ()> regular_identifier,
-      identifier, column_name, column_reference, qualifier, correlation_name,
+      identifier, column_reference, qualifier, correlation_name,
       table_name, schema_name, unqualified_schema_name, catalog_name, sign,
       unsigned_integer, signed_integer, exponent, exact_numeric_literal;
 
@@ -99,6 +103,15 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> coord_sys;
   boost::spirit::qi::rule<Iterator, ADQL::Coordinate (),
                           boost::spirit::ascii::space_type> coord;
+
+  boost::spirit::qi::rule<Iterator, std::string(),
+                          boost::spirit::ascii::space_type> column_name;
+
+  boost::spirit::qi::rule<Iterator, ADQL::column_variant (),
+                          boost::spirit::ascii::space_type> select_item;
+
+  boost::spirit::qi::rule<Iterator, ADQL::As (),
+                          boost::spirit::ascii::space_type> as;
 
   boost::spirit::qi::rule<Iterator, ADQL::number_variant (),
                           boost::spirit::ascii::space_type>

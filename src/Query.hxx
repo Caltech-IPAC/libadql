@@ -1,16 +1,19 @@
-#ifndef ADQL_QUERY_HXX
-#define ADQL_QUERY_HXX
+#pragma once
 
+#include <boost/fusion/include/io.hpp>
 #include <vector>
 #include <string>
 #include "Geometry.hxx"
+#include "As.hxx"
 
 namespace ADQL
 {
+typedef boost::variant<As, std::string> column_variant;
+
 class Query
 {
 public:
-  std::vector<std::string> output_columns;
+  std::vector<column_variant> output_columns;
   std::string table;
   Geometry geometry;
 
@@ -19,8 +22,7 @@ public:
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Query,
-                           (std::vector<std::string>,
-                            output_columns)(std::string, table)(ADQL::Geometry,
-                                                                geometry))
+                           (std::vector<ADQL::column_variant>,output_columns)
+                           (std::string, table)
+                           (ADQL::Geometry,geometry))
 
-#endif

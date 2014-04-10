@@ -7,6 +7,8 @@ int main ()
   std::vector<std::string> pass = {
     "SELECT ra1,dec2,flux FROM mytable WHERE "
     "CONTAINS(POINT('J2000',ra,dec),CIRCLE('J2000',+10 , -20,-1))= 1",
+    "SELECT ra1 AS rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000',ra,dec),CIRCLE('J2000',+10 , -20,-1))= 1",
     "SELECT * FROM mytable WHERE "
     "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
     "SELECT * FROM my_table WHERE "
