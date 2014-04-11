@@ -1,19 +1,16 @@
-#ifndef ADQL_COORDINATE_HXX
-#define ADQL_COORDINATE_HXX
+#pragma once
 
 #include <vector>
 #include <sstream>
-#include "boost/variant.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
+#include "../Number_Variant.hxx"
 
 namespace ADQL
 {
-typedef boost::variant<double, std::string> number_variant;
-
 struct Coordinate
 {
 public:
-  std::vector<number_variant> numbers;
+  std::vector<Number_Variant> numbers;
   Coordinate(): numbers(2) {}
   std::string ra () const { return ra_dec (0); }
   std::string dec () const { return ra_dec (1); }
@@ -27,7 +24,6 @@ public:
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Coordinate,
-                           (ADQL::number_variant,
-                            numbers[0])(ADQL::number_variant, numbers[1]))
+                           (ADQL::Number_Variant,
+                            numbers[0])(ADQL::Number_Variant, numbers[1]))
 
-#endif
