@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/qi_no_case.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>
@@ -31,6 +32,7 @@ struct ADQL_parser
     using boost::spirit::qi::double_;
     using boost::spirit::qi::hold;
     using boost::spirit::qi::lower;
+    namespace ascii=boost::spirit::ascii;
 
     simple_Latin_letter %= char_ ("a-zA-Z");
     regular_identifier %= simple_Latin_letter
@@ -40,10 +42,10 @@ struct ADQL_parser
     identifier %= regular_identifier;
 
     coord_sys
-        %= '\'' >> -lit ("J2000")[at_c<0>(_val)
+      %= '\'' >> -ascii::no_case[lit ("J2000")][at_c<0>(_val)
                                   = ADQL::Coord_Sys::Reference_Frame::J2000] 
-                >> -lit (
-                 "GEOCENTER")[at_c<1>(_val)
+                >> -ascii::no_case[lit (
+                 "GEOCENTER")][at_c<1>(_val)
                               = ADQL::Coord_Sys::Reference_Position::GEOCENTER]
                 >> '\'';
 
@@ -72,24 +74,27 @@ struct ADQL_parser
     numeric_value_expression %= term;
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
-    point %= "POINT(" >> coord_sys >> "," >> coord >> ")";
+    point %= ascii::no_case["POINT("] >> coord_sys >> "," >> coord >> ")";
 
-    circle %= "CIRCLE(" >> coord_sys >> "," >> coord >> ','
+    circle %= ascii::no_case["CIRCLE("] >> coord_sys >> "," >> coord >> ','
               >> boost::spirit::qi::double_ >> ")";
 
-    contains %= "CONTAINS(" >> point >> "," >> circle >> ")";
+    contains %= ascii::no_case["CONTAINS("] >> point >> "," >> circle >> ")";
 
     geometry %= (contains >> "=" >> "1") | (lit("1") >> "=" >> contains);
 
-    as %= identifier >> "AS" >> identifier;
+    as %= identifier >> ascii::no_case["AS"] >> identifier;
 
     column_name %=identifier | char_ ("*");
 
     select_item %= as | column_name;
 
-    query = lit ("SELECT") >> ((select_item % ',')[at_c<0>(_val) = _1])
-            >> "FROM" >> (identifier[at_c<1>(_val) = _1]) >> "WHERE"
-            >> (geometry[at_c<2>(_val) = _1]);
+    query = ascii::no_case["SELECT"]
+      >> ((select_item % ',')[at_c<0>(_val) = _1])
+      >> ascii::no_case["FROM"]
+      >> (identifier[at_c<1>(_val) = _1])
+      >> ascii::no_case["WHERE"]
+      >> (geometry[at_c<2>(_val) = _1]);
   }
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
