@@ -1,3 +1,4 @@
+#include "../Query.hxx"
 #include "ADQL_parser.hxx"
 #include "Check_RA_DEC.hxx"
 
@@ -14,11 +15,14 @@ ADQL::Query::Query (const std::string &input)
       throw std::runtime_error ("");
     }
 
-  if (!boost::apply_visitor (Check_RA_DEC (table, "ra"),
-                             geometry.contains.point.coordinate.numbers[0]))
-    throw std::runtime_error ("Invalid value for ra in Contains():\n\t");
+  if(where.geometry.good())
+    {
+      if (!boost::apply_visitor (Check_RA_DEC (table, "ra"),
+                                 where.geometry.contains.point.coordinate.numbers[0]))
+        throw std::runtime_error ("Invalid value for ra in Contains():\n\t");
 
-  if (!boost::apply_visitor (Check_RA_DEC (table, "dec"),
-                             geometry.contains.point.coordinate.numbers[1]))
-    throw std::runtime_error ("Invalid value for dec in Contains():\n\t");
+      if (!boost::apply_visitor (Check_RA_DEC (table, "dec"),
+                                 where.geometry.contains.point.coordinate.numbers[1]))
+        throw std::runtime_error ("Invalid value for dec in Contains():\n\t");
+    }
 }

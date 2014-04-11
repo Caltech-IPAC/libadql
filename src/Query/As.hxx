@@ -1,8 +1,9 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
 #include <iostream>
 #include <string>
+#include <boost/fusion/include/io.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
 
 namespace ADQL
 {

@@ -94,14 +94,16 @@ struct ADQL_parser
           | "!=" | "<>" | "<" | "<=" | ">" | ">=")
       >> numeric_value_expression;
 
+    where %= ascii::no_case["WHERE"]
+      >> geometry
+      >> -(ascii::no_case["AND"] >> comparison_predicate);
+           
+
     query %= ascii::no_case["SELECT"]
       >> (select_item % ',')
       >> ascii::no_case["FROM"]
       >> identifier
-      >> ascii::no_case["WHERE"]
-      >> geometry
-      >> -(ascii::no_case["AND"]
-           >> (comparison_predicate[at_c<3>(_val) = _1]));
+      >> (-where);
   }
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
@@ -141,10 +143,13 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> contains;
 
   boost::spirit::qi::rule<Iterator, ADQL::Geometry (),
-                          boost::spirit::ascii::space_type> geometry,where;
+                          boost::spirit::ascii::space_type> geometry;
 
   boost::spirit::qi::rule<Iterator, ADQL::Comparison_Predicate (),
                           boost::spirit::ascii::space_type> comparison_predicate;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Where (),
+                          boost::spirit::ascii::space_type> where;
 
   boost::spirit::qi::rule<Iterator, ADQL::Query (),
                           boost::spirit::ascii::space_type> query;
