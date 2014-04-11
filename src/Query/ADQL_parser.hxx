@@ -91,12 +91,7 @@ struct ADQL_parser
 
     comparison_predicate %= numeric_value_expression
       >> (boost::spirit::ascii::string("==")
-          | boost::spirit::ascii::string("!=")
-          | boost::spirit::ascii::string("<>")
-          | boost::spirit::ascii::string("<")
-          | boost::spirit::ascii::string("<=")
-          | boost::spirit::ascii::string(">")
-          | boost::spirit::ascii::string(">="))
+          | "!=" | "<>" | "<" | "<=" | ">" | ">=")
       >> numeric_value_expression;
 
     query %= ascii::no_case["SELECT"]
