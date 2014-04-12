@@ -11,6 +11,7 @@ public:
   Search_Condition search_condition;
   Geometry geometry;
   Comparison_Predicate comparison_predicate;
+  Predicate predicate;
 };
 }
 
@@ -21,6 +22,4 @@ inline std::ostream & operator<<(std::ostream &os, const ADQL::Where &w)
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Where,
                            (ADQL::Geometry, geometry)
-                           (ADQL::Comparison_Predicate, comparison_predicate))
-                           // (ADQL::Search_Condition, search_condition))
-
+                           (ADQL::Search_Condition, search_condition))
