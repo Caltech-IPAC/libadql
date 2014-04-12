@@ -16,7 +16,7 @@ int main ()
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
     "SELECT * FROM my_table1 WHERE "
-    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1))"
+    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
     "And x<1",
     "SELECT * FROM my_table1"
   };
