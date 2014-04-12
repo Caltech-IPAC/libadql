@@ -105,7 +105,7 @@ struct ADQL_parser
 
     where %= ascii::no_case["WHERE"]
       >> geometry
-      >> (ascii::no_case["AND"] >> search_condition);
+      >> (-search_condition);
            
     query %= ascii::no_case["SELECT"]
       >> (select_item % ',')
