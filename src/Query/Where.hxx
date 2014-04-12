@@ -10,8 +10,6 @@ class Where
 public:
   Search_Condition search_condition;
   Geometry geometry;
-  Comparison_Predicate comparison_predicate;
-  Predicate predicate;
 };
 }
 

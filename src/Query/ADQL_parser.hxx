@@ -101,12 +101,14 @@ struct ADQL_parser
     boolean_factor %= -ascii::no_case[ascii::string("NOT")]
       >> boolean_primary;
 
-    search_condition %=  ascii::no_case["AND"] >> boolean_factor;
+    search_condition %= boolean_factor;
 
-    where %= ascii::no_case["WHERE"]
-      >> geometry
-      >> (-search_condition);
-           
+    where = ascii::no_case["WHERE"]
+      >> ((geometry[at_c<0>(_val)=_1]
+           >> -(ascii::no_case["AND"] >> search_condition[at_c<1>(_val)=_1]))
+           | (search_condition[at_c<1>(_val)=_1]
+              >> -(ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1])));
+
     query %= ascii::no_case["SELECT"]
       >> (select_item % ',')
       >> ascii::no_case["FROM"]
