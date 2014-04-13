@@ -14,7 +14,7 @@ public:
 
 inline std::ostream & operator<<(std::ostream &os, const ADQL::Boolean_Factor &b)
 {
-  return os << b.Not << " " << b.boolean_primary;
+  return os << b.Not << (b.Not.empty() ? "" : " ") << b.boolean_primary;
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Boolean_Factor,
