@@ -19,6 +19,19 @@ public:
   Where where;
 
   Query (const std::string &input);
+
+  std::string output_columns_string()
+  {
+    std::stringstream ss;
+    for(auto &o: output_columns)
+      {
+        ss << o << ", ";
+      }        
+    std::string result=ss.str();
+    /// Trim off the trailing comma
+    result=result.substr(0,result.size()-2);
+    return result;
+  }
 };
 }
 
