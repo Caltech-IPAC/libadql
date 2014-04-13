@@ -51,8 +51,9 @@ int main ()
           ADQL::Query query (i);
           std::cout << "PASS: " << i << "\n";
           std::cout << "SELECT " << query.output_columns_string()
-                    << " FROM " << query.table
-                    << " " << query.where << "\n";
+                    << " FROM " << query.table;
+          if(query.where.search_condition.good())
+            std::cout << " WHERE " << query.where.search_condition << "\n";
         }
       catch (std::runtime_error &e)
         {
