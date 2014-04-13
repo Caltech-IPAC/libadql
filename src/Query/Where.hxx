@@ -15,7 +15,9 @@ public:
 
 inline std::ostream & operator<<(std::ostream &os, const ADQL::Where &w)
 {
-  return os << "WHERE " << w.search_condition;
+  if(w.search_condition.good())
+    return os << "WHERE " << w.search_condition;
+  return os;
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Where,

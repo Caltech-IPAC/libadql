@@ -17,6 +17,11 @@ public:
   /// creates a Search_Condition_Variant, and so on until we run out
   /// of stack space :(
   std::vector<Search_Condition_Variant> search_condition_variant;
+
+  bool good() const
+  {
+    return !search_condition_variant.empty();
+  }
 };
 }
 
