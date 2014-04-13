@@ -39,13 +39,13 @@ inline std::ostream & operator<<(std::ostream &os,
 }
 
 
-
-class my_visitor : public boost::static_visitor<std::ostream &>
+class Search_Condition_Variant_visitor
+  : public boost::static_visitor<std::ostream &>
 {
 public:
   std::ostream &os;
-  my_visitor(std::ostream &OS): os(OS) {}
-  my_visitor()=delete;
+  Search_Condition_Variant_visitor(std::ostream &OS): os(OS) {}
+  Search_Condition_Variant_visitor()=delete;
 
   std::ostream & operator()(const ADQL::Boolean_Term &s) const
   {
@@ -62,9 +62,9 @@ public:
 inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::Search_Condition &s)
 {
-  if(!s.search_condition_variant.empty())
+  if(s.good())
     {
-      my_visitor visitor(os);
+      Search_Condition_Variant_visitor visitor(os);
       return boost::apply_visitor(visitor,s.search_condition_variant[0]);
     }
   return os;
