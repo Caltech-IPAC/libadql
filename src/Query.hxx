@@ -20,7 +20,7 @@ public:
 
   Query (const std::string &input);
 
-  std::string output_columns_string()
+  std::string output_columns_string() const
   {
     std::stringstream ss;
     for(auto &o: output_columns)
