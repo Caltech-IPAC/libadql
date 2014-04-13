@@ -90,8 +90,9 @@ struct ADQL_parser
     select_item %= as | column_name;
 
     comparison_predicate %= numeric_value_expression
-      >> (ascii::string("==")
-          | "!=" | "<>" | "<" | "<=" | ">" | ">=")
+      >> (ascii::string("==") | ascii::string("!=") | ascii::string("<>")
+          | ascii::string("<") | ascii::string("<=") | ascii::string(">")
+          | ascii::string(">="))
       >> numeric_value_expression;
 
     predicate %= comparison_predicate;
@@ -101,7 +102,13 @@ struct ADQL_parser
     boolean_factor %= -ascii::no_case[ascii::string("NOT")]
       >> boolean_primary;
 
-    search_condition %= boolean_factor;
+    boolean_term %= boolean_factor
+      >> (ascii::no_case[ascii::string("AND")]
+          | ascii::no_case[ascii::string("OR")])
+      >> search_condition;
+
+    search_condition =
+      (boolean_term | boolean_factor)[push_back(at_c<0>(_val), _1)];
 
     where = ascii::no_case["WHERE"]
       >> ((geometry[at_c<0>(_val)=_1]
@@ -166,6 +173,9 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::Boolean_Factor (),
                           boost::spirit::ascii::space_type> boolean_factor;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Boolean_Term (),
+                          boost::spirit::ascii::space_type> boolean_term;
 
   boost::spirit::qi::rule<Iterator, ADQL::Search_Condition (),
                           boost::spirit::ascii::space_type> search_condition;

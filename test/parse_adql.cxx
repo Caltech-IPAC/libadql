@@ -21,7 +21,11 @@ int main ()
     "SELECT * FROM my_table1 WHERE x!=3 and "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) ",
     "SELECT * FROM my_table1",
-    "SELECT * FROM my_table1 where x>2"
+    "SELECT * FROM my_table1 where x>2",
+    "SELECT * FROM my_table1 where x>2 AND x<4",
+    "SELECT * FROM my_table1 WHERE "
+    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
+    "And x<1 And x>2 Or y < 3 Or y >5"
   };
 
 
@@ -46,10 +50,12 @@ int main ()
         {
           ADQL::Query query (i);
           std::cout << "PASS: " << i << "\n";
+          std::cout << query.where << "\n";
         }
       catch (std::runtime_error &e)
         {
           std::cout << "FAIL: " << i << "\n";
+          std::cout << e.what() << "\n";
           result=1;
         }
     }
