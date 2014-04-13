@@ -70,6 +70,32 @@ inline std::ostream & operator<<(std::ostream &os,
   return os;
 }
 
+class Boolean_Primary_Variant_visitor
+  : public boost::static_visitor<std::ostream &>
+{
+public:
+  std::ostream &os;
+  Boolean_Primary_Variant_visitor(std::ostream &OS): os(OS) {}
+  Boolean_Primary_Variant_visitor()=delete;
+
+  std::ostream & operator()(const ADQL::Predicate &s) const
+  {
+    return os << s;
+  }
+    
+  std::ostream & operator()(const ADQL::Search_Condition_Wrap &s) const
+  {
+    return os << "(" << s.get() << ")";
+  }
+};
+
+inline std::ostream & operator<<(std::ostream &os,
+                                 const ADQL::Boolean_Primary &b)
+{
+  Boolean_Primary_Variant_visitor visitor(os);
+  return boost::apply_visitor(visitor,b.boolean_primary_variant);
+}
+
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Search_Condition,
                            (std::vector<ADQL::Search_Condition_Variant>,
                             search_condition_variant))

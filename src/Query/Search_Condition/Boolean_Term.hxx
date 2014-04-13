@@ -1,13 +1,10 @@
 #pragma once
 
-#include <boost/variant/recursive_wrapper.hpp>
+#include "Search_Condition_Wrap.hxx"
 #include "Boolean_Factor.hxx"
 
 namespace ADQL
 {
-class Search_Condition;
-typedef boost::recursive_wrapper<Search_Condition> Search_Condition_Wrap;
-
 class Boolean_Term
 {
 public:

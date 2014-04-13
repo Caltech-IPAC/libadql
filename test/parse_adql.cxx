@@ -25,7 +25,8 @@ int main ()
     "SELECT * FROM my_table1 where x>2 AND x<4",
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
-    "And x<1 And x>2 Or y < 3 Or y >5"
+    "And x<1 And x>2 Or y < 3 Or y >5",
+    "SELECT * FROM my_table1 where (x>2 AND x<4) Or (x>6 and x<10)",
   };
 
 

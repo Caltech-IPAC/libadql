@@ -4,19 +4,19 @@
 
 namespace ADQL
 {
+typedef boost::variant<Predicate,Search_Condition_Wrap> Boolean_Primary_Variant;
+
 class Boolean_Primary
 {
 public:
-  Predicate predicate;
+  Boolean_Primary_Variant boolean_primary_variant;
 };
 }
 
-inline std::ostream & operator<<(std::ostream &os,
-                                 const ADQL::Boolean_Primary &b)
-{
-  return os << b.predicate;
-}
+std::ostream & operator<<(std::ostream &os,
+                          const ADQL::Boolean_Primary &b);
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Boolean_Primary,
-                           (ADQL::Predicate, predicate))
+                           (ADQL::Boolean_Primary_Variant,
+                            boolean_primary_variant))
 

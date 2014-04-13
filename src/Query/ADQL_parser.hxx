@@ -97,7 +97,7 @@ struct ADQL_parser
 
     predicate %= comparison_predicate;
 
-    boolean_primary %= predicate;
+    boolean_primary %= predicate | (lit("(") >> search_condition >> ")");
 
     boolean_factor %= -ascii::no_case[ascii::string("NOT")]
       >> boolean_primary;
