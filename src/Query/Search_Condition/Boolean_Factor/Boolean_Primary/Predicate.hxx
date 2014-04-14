@@ -10,7 +10,7 @@ typedef boost::variant<Comparison_Predicate,Between_Predicate> Predicate_Variant
 class Predicate
 {
 public:
-  Predicate_Variant predicate_variant;
+  Predicate_Variant variant;
 };
 }
 
@@ -37,9 +37,9 @@ public:
 inline std::ostream & operator<<(std::ostream &os, const ADQL::Predicate &p)
 {
   Predicate_Variant_visitor visitor(os);
-  return boost::apply_visitor(visitor,p.predicate_variant);
+  return boost::apply_visitor(visitor,p.variant);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Predicate,
-                           (ADQL::Predicate_Variant, predicate_variant))
+                           (ADQL::Predicate_Variant, variant))
 

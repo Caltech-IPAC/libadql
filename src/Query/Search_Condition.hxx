@@ -16,11 +16,11 @@ public:
   /// Search_Condition_Variant creates a Search_Condition, which
   /// creates a Search_Condition_Variant, and so on until we run out
   /// of stack space :(
-  std::vector<Search_Condition_Variant> search_condition_variant;
+  std::vector<Search_Condition_Variant> variant;
 
   bool good() const
   {
-    return !search_condition_variant.empty();
+    return !variant.empty();
   }
 };
 }
@@ -65,7 +65,7 @@ inline std::ostream & operator<<(std::ostream &os,
   if(s.good())
     {
       Search_Condition_Variant_visitor visitor(os);
-      return boost::apply_visitor(visitor,s.search_condition_variant[0]);
+      return boost::apply_visitor(visitor,s.variant[0]);
     }
   return os;
 }
@@ -93,10 +93,10 @@ inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::Boolean_Primary &b)
 {
   Boolean_Primary_Variant_visitor visitor(os);
-  return boost::apply_visitor(visitor,b.boolean_primary_variant);
+  return boost::apply_visitor(visitor,b.variant);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Search_Condition,
                            (std::vector<ADQL::Search_Condition_Variant>,
-                            search_condition_variant))
+                            variant))
 
