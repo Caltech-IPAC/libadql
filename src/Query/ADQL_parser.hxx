@@ -90,7 +90,7 @@ struct ADQL_parser
     select_item %= as | column_name;
 
     comparison_predicate %= numeric_value_expression
-      >> (ascii::string("==") | ascii::string("!=") | ascii::string("<>")
+      >> (ascii::string("=") | ascii::string("!=") | ascii::string("<>")
           | ascii::string("<") | ascii::string("<=") | ascii::string(">")
           | ascii::string(">="))
       >> numeric_value_expression;
@@ -118,9 +118,12 @@ struct ADQL_parser
 
     where = ascii::no_case["WHERE"]
       >> ((geometry[at_c<0>(_val)=_1]
-           >> -(ascii::no_case["AND"] >> search_condition[at_c<1>(_val)=_1]))
-           | (search_condition[at_c<1>(_val)=_1]
-              >> -(ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1])));
+           >> -(ascii::no_case["AND"] >> "("
+                >> search_condition[at_c<1>(_val)=_1]
+                >> ")"))
+          | (lit("(") >> search_condition[at_c<1>(_val)=_1] >> ")"
+             >> (ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1]))
+          | (search_condition[at_c<1>(_val)=_1]));
 
     query %= ascii::no_case["SELECT"]
       >> (select_item % ',')

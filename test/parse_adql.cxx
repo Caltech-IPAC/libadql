@@ -17,22 +17,23 @@ int main ()
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
-    "And x<1",
-    "SELECT * FROM my_table1 WHERE x!=3 and "
-    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) ",
+    "And (x<1)",
+    "SELECT * FROM my_table1 WHERE (x!=3) and "
+    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1))",
+    "SELECT * FROM my_table1 WHERE x!=3",
     "SELECT * FROM my_table1",
     "SELECT * FROM my_table1 where x>2",
     "SELECT * FROM my_table1 where x>2 AND x<4",
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
-    "And x<1 And x>2 Or y < 3 Or y >5",
+    "And (x<1 And x>2 Or y < 3 Or y >5)",
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
     "And (x<1 And x>2)",
     "SELECT * FROM my_table1 where (x>2 AND x<4) Or (x>6 and x<10)",
     "SELECT * FROM my_table1 where (x Between 2 AND 4) Or (x>6 and x<10)",
     "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',fp_psc.ra,fp_psc.dec),"
-    "CIRCLE('J2000',1,1,0.08))=1 and ra between 0.95 and 1.05",
+    "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
   };
 
 
@@ -47,7 +48,9 @@ int main ()
     "SELECT * FROM mytable WHERE "
     "1 =CONTAINS(POINT('J2000',ra,ra),CIRCLE('J2000',+10 , -20,-1))",
     "SELECT * FROM mytable WHERE "
-    "1 = CONTAINS(POINT('J2000',dec,dec),CIRCLE('J2000',+10 , -20,-1))"
+    "1 = CONTAINS(POINT('J2000',dec,dec),CIRCLE('J2000',+10 , -20,-1))",
+    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
+    "And x<1 And x>2 Or y < 3 Or y >5"
   };
 
   int result(0);
