@@ -38,6 +38,7 @@ int main ()
     "SELECT * FROM my_table1 where x in (10,20,30)",
     "SELECT All * FROM my_table1",
     "SELECT Distinct * FROM my_table1",
+    "SELECT Top 50 * FROM my_table1",
   };
 
 
@@ -67,6 +68,8 @@ int main ()
           std::cout << "SELECT "
                     << query.all_or_distinct
                     << (query.all_or_distinct.empty() ? "" : " ")
+                    << (query.top!=std::numeric_limits<unsigned long long>::max()
+                        ? "TOP " + std::to_string(query.top) + " " : "")
                     << query.output_columns_string()
                     << " FROM " << query.table;
           if(query.where.search_condition.good())

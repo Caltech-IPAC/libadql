@@ -2,7 +2,8 @@
 #include "ADQL_parser.hxx"
 #include "Check_RA_DEC.hxx"
 
-ADQL::Query::Query (const std::string &input)
+ADQL::Query::Query (const std::string &input):
+  top(std::numeric_limits<unsigned long long>::max())
 {
   ADQL_parser<std::string::const_iterator> parser;
   std::string::const_iterator begin (input.begin ()), end (input.end ());

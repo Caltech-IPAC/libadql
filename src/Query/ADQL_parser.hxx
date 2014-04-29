@@ -30,6 +30,7 @@ struct ADQL_parser
     using boost::spirit::qi::alnum;
     using boost::spirit::qi::digit;
     using boost::spirit::qi::double_;
+    using boost::spirit::qi::ulong_long;
     using boost::spirit::qi::hold;
     using boost::spirit::qi::lower;
     using boost::spirit::qi::omit;
@@ -133,6 +134,7 @@ struct ADQL_parser
 
     query %= ascii::no_case["SELECT"]
       >> -(ascii::no_case[ascii::string("DISTINCT")] | ascii::no_case[ascii::string("ALL")])
+      >> -(ascii::no_case["TOP"] >> ulong_long)
       >> (select_item % ',')
       >> ascii::no_case["FROM"]
       >> identifier
