@@ -101,7 +101,13 @@ struct ADQL_parser
       >> numeric_value_expression
       >> ascii::no_case["AND"] >> numeric_value_expression; 
 
-    predicate %= (comparison_predicate | between_predicate);
+    in_predicate %= numeric_value_expression
+      >> -ascii::no_case[ascii::string("NOT")]
+      >> ascii::no_case["IN"]
+      >> ((lit("(") >> (numeric_value_expression % ',') >> ")")
+          | numeric_value_expression);
+
+    predicate %= (comparison_predicate | between_predicate | in_predicate);
 
     boolean_primary %= predicate | (lit("(") >> search_condition >> ")");
 
@@ -176,6 +182,9 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::Between_Predicate (),
                           boost::spirit::ascii::space_type> between_predicate;
+
+  boost::spirit::qi::rule<Iterator, ADQL::In_Predicate (),
+                          boost::spirit::ascii::space_type> in_predicate;
 
   boost::spirit::qi::rule<Iterator, ADQL::Predicate (),
                           boost::spirit::ascii::space_type> predicate;

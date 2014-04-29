@@ -34,6 +34,8 @@ int main ()
     "SELECT * FROM my_table1 where (x Between 2 AND 4) Or (x>6 and x<10)",
     "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',fp_psc.ra,fp_psc.dec),"
     "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
+    "SELECT * FROM my_table1 where 10 in ra",
+    "SELECT * FROM my_table1 where x in (10,20,30)",
   };
 
 
