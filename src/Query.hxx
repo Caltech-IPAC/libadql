@@ -15,6 +15,7 @@ class Query
 {
 public:
   std::vector<column_variant> output_columns;
+  std::string all_or_distinct;
   std::string table;
   Where where;
 
@@ -36,6 +37,7 @@ public:
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Query,
+                           (std::string, all_or_distinct)
                            (std::vector<ADQL::column_variant>,output_columns)
                            (std::string, table)
                            (ADQL::Where, where)

@@ -132,6 +132,7 @@ struct ADQL_parser
           | (search_condition[at_c<1>(_val)=_1]));
 
     query %= ascii::no_case["SELECT"]
+      >> -(ascii::no_case[ascii::string("DISTINCT")] | ascii::no_case[ascii::string("ALL")])
       >> (select_item % ',')
       >> ascii::no_case["FROM"]
       >> identifier
