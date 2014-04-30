@@ -5,8 +5,6 @@
 
 namespace ADQL
 {
-typedef boost::variant<Boolean_Factor,Boolean_Term> Search_Condition_Variant;
-
 class Search_Condition
 {
 public:
@@ -16,7 +14,9 @@ public:
   /// Search_Condition_Variant creates a Search_Condition, which
   /// creates a Search_Condition_Variant, and so on until we run out
   /// of stack space :(
-  std::vector<Search_Condition_Variant> variant;
+  typedef boost::variant<Boolean_Factor,Boolean_Term> Variant;
+
+  std::vector<Variant> variant;
 
   bool good() const
   {
@@ -97,6 +97,6 @@ inline std::ostream & operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Search_Condition,
-                           (std::vector<ADQL::Search_Condition_Variant>,
+                           (std::vector<ADQL::Search_Condition::Variant>,
                             variant))
 

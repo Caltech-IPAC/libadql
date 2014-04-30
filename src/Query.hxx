@@ -9,38 +9,63 @@
 
 namespace ADQL
 {
-typedef boost::variant<As, std::string> column_variant;
-
 class Query
 {
 public:
-  std::vector<column_variant> output_columns;
+
+  typedef boost::variant<As, std::string> Column_Variant;
+  typedef boost::variant<std::string, std::vector<Column_Variant> > Columns;
+
+  Columns columns;
   std::string all_or_distinct;
   size_t top;
   std::string table;
   Where where;
 
   Query (const std::string &input);
+};
+}
 
-  std::string output_columns_string() const
+class Query_Columns_Visitor
+  : public boost::static_visitor<std::ostream &>
+{
+public:
+  std::ostream &os;
+  Query_Columns_Visitor(std::ostream &OS): os(OS) {}
+  Query_Columns_Visitor()=delete;
+
+  std::ostream & operator()(const std::string &s) const
+  {
+    return os << s;
+  }
+    
+  std::ostream & operator()(const std::vector<ADQL::Query::Column_Variant> &s)
+    const
   {
     std::stringstream ss;
-    for(auto &o: output_columns)
+    for(auto &o: s)
       {
         ss << o << ", ";
       }        
-    std::string result=ss.str();
+    std::string temp=ss.str();
     /// Trim off the trailing comma
-    result=result.substr(0,result.size()-2);
-    return result;
+    temp=temp.substr(0,temp.size()-2);
+    return os << temp;
   }
 };
+
+
+inline std::ostream & operator<<(std::ostream &os,
+                                 const ADQL::Query::Columns &columns)
+{
+  Query_Columns_Visitor visitor(os);
+  return boost::apply_visitor(visitor,columns);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Query,
                            (std::string, all_or_distinct)
                            (size_t, top)
-                           (std::vector<ADQL::column_variant>,output_columns)
+                           (ADQL::Query::Columns, columns)
                            (std::string, table)
                            (ADQL::Where, where)
                            )

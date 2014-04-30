@@ -34,7 +34,7 @@ int main ()
     "SELECT * FROM my_table1 where (x Between 2 AND 4) Or (x>6 and x<10)",
     "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',fp_psc.ra,fp_psc.dec),"
     "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
-    "SELECT * FROM my_table1 where x in (select y from my_table2)",
+    // "SELECT * FROM my_table1 where x in (select y from my_table2)",
     "SELECT * FROM my_table1 where x in (10,20,30)",
     "SELECT All * FROM my_table1",
     "SELECT Distinct * FROM my_table1",
@@ -56,6 +56,7 @@ int main ()
     "1 = CONTAINS(POINT('J2000',dec,dec),CIRCLE('J2000',+10 , -20,-1))",
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
     "And x<1 And x>2 Or y < 3 Or y >5"
+    "SELECT *,ra FROM my_table1",
   };
 
   int result(0);
@@ -70,7 +71,7 @@ int main ()
                     << (query.all_or_distinct.empty() ? "" : " ")
                     << (query.top!=std::numeric_limits<unsigned long long>::max()
                         ? "TOP " + std::to_string(query.top) + " " : "")
-                    << query.output_columns_string()
+                    << query.columns
                     << " FROM " << query.table;
           if(query.where.search_condition.good())
             std::cout << " WHERE " << query.where.search_condition;

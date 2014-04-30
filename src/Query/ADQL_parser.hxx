@@ -86,9 +86,11 @@ struct ADQL_parser
 
     as %= identifier >> ascii::no_case["AS"] >> identifier;
 
-    column_name %=identifier | char_ ("*");
+    column_name %=identifier;
 
     select_item %= as | column_name;
+    select_list %= select_item % ',';
+    columns %= ascii::string("*") | select_list;
 
     comparison_predicate %= numeric_value_expression
       >> (ascii::string("=") | ascii::string("!=") | ascii::string("<>")
@@ -132,10 +134,13 @@ struct ADQL_parser
              >> (ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1]))
           | (search_condition[at_c<1>(_val)=_1]));
 
+
     query %= ascii::no_case["SELECT"]
-      >> -(ascii::no_case[ascii::string("DISTINCT")] | ascii::no_case[ascii::string("ALL")])
+      >> -(ascii::no_case[ascii::string("DISTINCT")]
+           | ascii::no_case[ascii::string("ALL")])
       >> -(ascii::no_case["TOP"] >> ulong_long)
-      >> (select_item % ',')
+      >> columns
+      // >> (ascii::string("*") | (select_item % ','))
       >> ascii::no_case["FROM"]
       >> identifier
       >> (-where);
@@ -156,8 +161,14 @@ struct ADQL_parser
   boost::spirit::qi::rule<Iterator, std::string(),
                           boost::spirit::ascii::space_type> column_name;
 
-  boost::spirit::qi::rule<Iterator, ADQL::column_variant (),
+  boost::spirit::qi::rule<Iterator, ADQL::Query::Column_Variant (),
                           boost::spirit::ascii::space_type> select_item;
+
+  boost::spirit::qi::rule<Iterator, std::vector<ADQL::Query::Column_Variant> (),
+                          boost::spirit::ascii::space_type> select_list;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Query::Columns (),
+                          boost::spirit::ascii::space_type> columns;
 
   boost::spirit::qi::rule<Iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
