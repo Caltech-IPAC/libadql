@@ -14,6 +14,7 @@ public:
 };
 }
 
+namespace {
 class In_Predicate_Visitor
   : public boost::static_visitor<std::ostream &>
 {
@@ -41,7 +42,7 @@ public:
     return os << v;
   }
 };
-
+}
 
 inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::In_Predicate &p)

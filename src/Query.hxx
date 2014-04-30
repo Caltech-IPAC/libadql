@@ -26,6 +26,7 @@ public:
 };
 }
 
+namespace {
 class Query_Columns_Visitor
   : public boost::static_visitor<std::ostream &>
 {
@@ -53,7 +54,7 @@ public:
     return os << temp;
   }
 };
-
+}
 
 inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::Query::Columns &columns)

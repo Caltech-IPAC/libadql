@@ -39,13 +39,14 @@ inline std::ostream & operator<<(std::ostream &os,
 }
 
 
-class Search_Condition_Variant_visitor
+namespace {
+class Search_Condition_Variant_Visitor
   : public boost::static_visitor<std::ostream &>
 {
 public:
   std::ostream &os;
-  Search_Condition_Variant_visitor(std::ostream &OS): os(OS) {}
-  Search_Condition_Variant_visitor()=delete;
+  Search_Condition_Variant_Visitor(std::ostream &OS): os(OS) {}
+  Search_Condition_Variant_Visitor()=delete;
 
   std::ostream & operator()(const ADQL::Boolean_Term &s) const
   {
@@ -57,26 +58,27 @@ public:
     return os << s;
   }
 };
-
+}
 
 inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::Search_Condition &s)
 {
   if(s.good())
     {
-      Search_Condition_Variant_visitor visitor(os);
+      Search_Condition_Variant_Visitor visitor(os);
       return boost::apply_visitor(visitor,s.variant[0]);
     }
   return os;
 }
 
-class Boolean_Primary_Variant_visitor
+namespace {
+class Boolean_Primary_Variant_Visitor
   : public boost::static_visitor<std::ostream &>
 {
 public:
   std::ostream &os;
-  Boolean_Primary_Variant_visitor(std::ostream &OS): os(OS) {}
-  Boolean_Primary_Variant_visitor()=delete;
+  Boolean_Primary_Variant_Visitor(std::ostream &OS): os(OS) {}
+  Boolean_Primary_Variant_Visitor()=delete;
 
   std::ostream & operator()(const ADQL::Predicate &s) const
   {
@@ -88,11 +90,12 @@ public:
     return os << "(" << s.get() << ")";
   }
 };
+}
 
 inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::Boolean_Primary &b)
 {
-  Boolean_Primary_Variant_visitor visitor(os);
+  Boolean_Primary_Variant_Visitor visitor(os);
   return boost::apply_visitor(visitor,b.variant);
 }
 
