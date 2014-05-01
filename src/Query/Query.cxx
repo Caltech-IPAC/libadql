@@ -1,6 +1,5 @@
 #include "../Query.hxx"
 #include "ADQL_parser.hxx"
-#include "Check_RA_DEC.hxx"
 
 ADQL::Query::Query (const std::string &input):
   top(std::numeric_limits<unsigned long long>::max())
@@ -16,14 +15,20 @@ ADQL::Query::Query (const std::string &input):
       throw std::runtime_error ("");
     }
 
+  std::cout << std::boolalpha
+            << "good " << where.geometry.good()
+            << '\n';
   if(where.geometry.good())
     {
-      if (!boost::apply_visitor (Check_RA_DEC (table, "ra"),
-                                 where.geometry.contains.point.coordinate.numbers[0]))
-        throw std::runtime_error ("Invalid value for ra in Contains():\n\t");
+      std::string &ra(where.geometry.contains.point.coordinate.ra),
+        &dec(where.geometry.contains.point.coordinate.dec);
+      if (!(ra=="ra" || ra==table + ".ra"))
+        throw std::runtime_error ("Invalid value for ra in Contains():\n\t"
+                                  + ra);
 
-      if (!boost::apply_visitor (Check_RA_DEC (table, "dec"),
-                                 where.geometry.contains.point.coordinate.numbers[1]))
-        throw std::runtime_error ("Invalid value for dec in Contains():\n\t");
+      if (!(dec=="dec" || dec==table + ".dec"))
+        throw std::runtime_error ("Invalid value for dec in Contains():\n\t"
+                                  + dec);
+      // FIXME: Check for valid numbers in the circle, box, etc.
     }
 }

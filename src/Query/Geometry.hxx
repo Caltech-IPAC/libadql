@@ -10,7 +10,7 @@ public:
   Contains contains;
   bool good() const
   {
-    return !contains.point.coordinate.ra_dec(0).empty();
+    return !contains.point.coordinate.ra.empty();
   }
 };
 }

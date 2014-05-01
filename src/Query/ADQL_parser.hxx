@@ -66,8 +66,6 @@ struct ADQL_parser
     column_reference = -(qualifier >> period)[_val = _1 + _2]
                        >> identifier[_val += _1];
 
-    number %= double_;
-
     unsigned_integer %= +digit;
     exact_numeric_literal %= (unsigned_integer
                               >> -(period >> unsigned_integer))
@@ -130,11 +128,12 @@ struct ADQL_parser
       | (char_('(') >> value_expression >> char_(')'));
 
 
-    // numeric_primary %= value_expression_primary | numeric_value_function;
-    // factor %= -sign >> numeric_primary;
-
     // FIXME: Add functions etc. into factor
-    factor %= number | column_reference;
+    numeric_primary %= value_expression_primary;
+    // numeric_primary %= value_expression_primary | numeric_value_function;
+    factor %= -sign >> numeric_primary;
+
+    // factor %= number | column_reference;
 
     // FIXME: add math (*/) into term
     term %= factor;
@@ -145,6 +144,8 @@ struct ADQL_parser
 
     // FIXME: value_expression should also have a
     // geometry_value_expression, but the database can not handle it.
+    value_expression %=
+      numeric_value_expression;
     // value_expression %=
     //   numeric_value_expression
     //   | string_value_expression;
@@ -239,7 +240,8 @@ struct ADQL_parser
     unsigned_literal, unsigned_value_specification,
     set_function_type, set_quantifier, general_set_function,
     set_function_specification,
-    value_expression_primary, value_expression;
+    value_expression_primary, value_expression,
+    numeric_value_expression, numeric_primary, factor, term;
     
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
@@ -261,13 +263,6 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
-
-  boost::spirit::qi::rule<Iterator, ADQL::Number_Variant (),
-                          boost::spirit::ascii::space_type>
-  numeric_value_expression, factor, term;
-
-  boost::spirit::qi::rule<Iterator, double(), boost::spirit::ascii::space_type>
-  number;
 
   boost::spirit::qi::rule<Iterator, ADQL::Point (),
                           boost::spirit::ascii::space_type> point;
