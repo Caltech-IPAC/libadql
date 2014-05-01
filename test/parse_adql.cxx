@@ -41,7 +41,10 @@ int main ()
     "SELECT Top 50 * FROM my_table1",
     "SELECT * FROM my_table1 where 38*(x+1-3)>2/4",
     "SELECT ra+dec as ra_dec FROM my_table1",
+    "SELECT ra+dec FROM my_table1",
     "SELECT my_tablel1.* FROM my_table1",
+    "SELECT sin(dec),cos(dec),tan(dec),cot(dec),asin(dec),acos(dec),"
+    "atan(dec),atan2(ra,dec) FROM my_table1",
   };
 
 
@@ -60,7 +63,6 @@ int main ()
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
     "And x<1 And x>2 Or y < 3 Or y >5"
     "SELECT *,ra FROM my_table1",
-    "SELECT ra+dec FROM my_table1",
     "SELECT my_tablel1.* as ra_dec FROM my_table1",
   };
 

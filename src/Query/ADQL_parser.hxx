@@ -127,9 +127,28 @@ struct ADQL_parser
       | set_function_specification
       | (char_('(') >> value_expression >> char_(')'));
 
-    // FIXME: Add functions etc. into factor
-    numeric_primary %= value_expression_primary;
-    // numeric_primary %= value_expression_primary | numeric_value_function;
+
+    trig_function %=
+      ((ascii::no_case[ascii::string("ACOS")]
+        | ascii::no_case[ascii::string("ASIN")]
+        | ascii::no_case[ascii::string("ATAN")]
+        | ascii::no_case[ascii::string("COS")]
+        | ascii::no_case[ascii::string("COT")]
+        | ascii::no_case[ascii::string("SIN")]
+        | ascii::no_case[ascii::string("TAN")])
+       >> char_('(')
+       >> numeric_value_expression >> char_(')'))
+      | (ascii::no_case[ascii::string("ATAN2")]
+         >> char_('(')
+         >> numeric_value_expression
+         >> char_(',')
+         >> numeric_value_expression
+         >> char_(')'));
+
+    numeric_value_function %= trig_function;
+    // numeric_value_function %= trig_function | math_function;
+    /// Flipped the order here, because a value_expression can match SIN.
+    numeric_primary %= numeric_value_function | value_expression_primary;
     factor %= -sign >> numeric_primary;
 
     /// This puts term and numeric_value_expression on the left, not
@@ -161,12 +180,8 @@ struct ADQL_parser
     column_name %=identifier;
     as %= value_expression >> ascii::no_case["AS"] >> column_name;
 
-    // // FIXME: This should also have an (| geometry_value_expression),
-    // // but we do not allow geometric expressions in arbitrary places,
-    // value_expression %= numeric_value_expression | string_value_expression;
-    // derived_column %= value_expression >> -(ascii::no_case["AS"] >> identifier);
-    // FIXME: should be
-    select_item %= as | (hold[qualifier >> ascii::string(".*")] | column_name);
+    select_item %= as | (hold[qualifier >> ascii::string(".*")]
+                         | value_expression);
     select_list %= select_item % ',';
     columns %= ascii::string("*") | select_list;
 
@@ -237,7 +252,8 @@ struct ADQL_parser
     set_function_type, set_quantifier, general_set_function,
     set_function_specification,
     value_expression_primary, value_expression,
-    numeric_value_expression, numeric_primary, factor, term;
+    numeric_value_expression, numeric_primary, factor, term,
+    numeric_value_function, trig_function, math_function;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
