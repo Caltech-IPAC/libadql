@@ -158,10 +158,8 @@ struct ADQL_parser
 
     geometry %= (contains >> '=' >> '1') | (lit('1') >> '=' >> contains);
 
-    as %= identifier >> ascii::no_case["AS"] >> identifier;
-
     column_name %=identifier;
-
+    as %= value_expression >> ascii::no_case["AS"] >> column_name;
 
     // // FIXME: This should also have an (| geometry_value_expression),
     // // but we do not allow geometric expressions in arbitrary places,
