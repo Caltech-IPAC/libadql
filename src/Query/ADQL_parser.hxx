@@ -166,8 +166,7 @@ struct ADQL_parser
     // value_expression %= numeric_value_expression | string_value_expression;
     // derived_column %= value_expression >> -(ascii::no_case["AS"] >> identifier);
     // FIXME: should be
-    // select_item %= derived_column | (qualifier >> ".*" )
-    select_item %= as | column_name;
+    select_item %= as | (hold[qualifier >> ascii::string(".*")] | column_name);
     select_list %= select_item % ',';
     columns %= ascii::string("*") | select_list;
 
