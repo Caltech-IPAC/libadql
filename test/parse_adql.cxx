@@ -45,6 +45,10 @@ int main ()
     "SELECT my_tablel1.* FROM my_table1",
     "SELECT sin(dec),cos(dec),tan(dec),cot(dec),asin(dec),acos(dec),"
     "atan(dec),atan2(ra,dec) FROM my_table1",
+    "SELECT abs(ra),ceiling(ra),degrees(ra),exp(ra),floor(ra),log(ra),log10(ra),"
+    "radians(ra),sqrt(ra) FROM my_table1",
+    "SELECT mod(ra,dec),power(ra,dec),pi(),rand(ra),rand(),"
+    "round(ra,10),round(ra),truncate(ra),truncate(ra,10) FROM my_table1",
   };
 
 

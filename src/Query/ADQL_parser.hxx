@@ -145,8 +145,39 @@ struct ADQL_parser
          >> numeric_value_expression
          >> char_(')'));
 
-    numeric_value_function %= trig_function;
-    // numeric_value_function %= trig_function | math_function;
+    math_function %= 
+      ((ascii::no_case[ascii::string("ABS")]
+        | ascii::no_case[ascii::string("CEILING")]
+        | ascii::no_case[ascii::string("DEGREES")]
+        | ascii::no_case[ascii::string("EXP")]
+        | ascii::no_case[ascii::string("FLOOR")]
+        | ascii::no_case[ascii::string("LOG10")]
+        | ascii::no_case[ascii::string("LOG")]
+        | ascii::no_case[ascii::string("RADIANS")]
+        | ascii::no_case[ascii::string("SQRT")])
+       >> char_('(')
+       >> numeric_value_expression >> char_(')'))
+      | ((ascii::no_case[ascii::string("MOD")]
+          | ascii::no_case[ascii::string("POWER")])
+         >> char_('(')
+         >> numeric_value_expression
+         >> char_(',')
+         >> numeric_value_expression
+         >> char_(')'))
+      | (ascii::no_case[ascii::string("PI")]
+         >> char_('(')
+         >> char_(')'))
+      | (ascii::no_case[ascii::string("RAND")]
+         >> char_('(')
+         >> -numeric_value_expression >> char_(')'))
+      | ((ascii::no_case[ascii::string("ROUND")]
+          | ascii::no_case[ascii::string("TRUNCATE")])
+         >> char_('(')
+         >> numeric_value_expression
+         >> -(char_(',') >> signed_integer)
+         >> char_(')'));
+
+    numeric_value_function %= trig_function | math_function;
     /// Flipped the order here, because a value_expression can match SIN.
     numeric_primary %= numeric_value_function | value_expression_primary;
     factor %= -sign >> numeric_primary;
