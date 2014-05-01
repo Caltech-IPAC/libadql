@@ -86,7 +86,8 @@ struct ADQL_parser
     minus_sign %= char_('-');
 
     // FIXME: The ADQL spec is not clear about exactly what this is.
-    // Does it include spaces and newlines?
+    // Does it include spaces and newlines?  Should I use a lexeme()
+    // to inhibit space skipping?
     nonquote_character %= print - quote;
     quote_symbol %= quote >> quote;
     character_representation %= nonquote_character | quote_symbol;
@@ -129,55 +130,72 @@ struct ADQL_parser
 
 
     trig_function %=
-      ((ascii::no_case[ascii::string("ACOS")]
-        | ascii::no_case[ascii::string("ASIN")]
-        | ascii::no_case[ascii::string("ATAN")]
-        | ascii::no_case[ascii::string("COS")]
-        | ascii::no_case[ascii::string("COT")]
-        | ascii::no_case[ascii::string("SIN")]
-        | ascii::no_case[ascii::string("TAN")])
-       >> char_('(')
+      (hold[(ascii::no_case[ascii::string("ACOS")]
+             | ascii::no_case[ascii::string("ASIN")]
+             | ascii::no_case[ascii::string("ATAN")]
+             | ascii::no_case[ascii::string("COS")]
+             | ascii::no_case[ascii::string("COT")]
+             | ascii::no_case[ascii::string("SIN")]
+             | ascii::no_case[ascii::string("TAN")])
+            >> char_('(')]
        >> numeric_value_expression >> char_(')'))
-      | (ascii::no_case[ascii::string("ATAN2")]
-         >> char_('(')
+      | (hold[ascii::no_case[ascii::string("ATAN2")]
+              >> char_('(')]
          >> numeric_value_expression
          >> char_(',')
          >> numeric_value_expression
          >> char_(')'));
 
     math_function %= 
-      ((ascii::no_case[ascii::string("ABS")]
-        | ascii::no_case[ascii::string("CEILING")]
-        | ascii::no_case[ascii::string("DEGREES")]
-        | ascii::no_case[ascii::string("EXP")]
-        | ascii::no_case[ascii::string("FLOOR")]
-        | ascii::no_case[ascii::string("LOG10")]
-        | ascii::no_case[ascii::string("LOG")]
-        | ascii::no_case[ascii::string("RADIANS")]
-        | ascii::no_case[ascii::string("SQRT")])
-       >> char_('(')
+      (hold[(ascii::no_case[ascii::string("ABS")]
+             | ascii::no_case[ascii::string("CEILING")]
+             | ascii::no_case[ascii::string("DEGREES")]
+             | ascii::no_case[ascii::string("EXP")]
+             | ascii::no_case[ascii::string("FLOOR")]
+             | ascii::no_case[ascii::string("LOG10")]
+             | ascii::no_case[ascii::string("LOG")]
+             | ascii::no_case[ascii::string("RADIANS")]
+             | ascii::no_case[ascii::string("SQRT")])
+            >> char_('(')]
        >> numeric_value_expression >> char_(')'))
-      | ((ascii::no_case[ascii::string("MOD")]
-          | ascii::no_case[ascii::string("POWER")])
-         >> char_('(')
+      | (hold[(ascii::no_case[ascii::string("MOD")]
+               | ascii::no_case[ascii::string("POWER")])
+              >> char_('(')]
          >> numeric_value_expression
          >> char_(',')
          >> numeric_value_expression
          >> char_(')'))
-      | (ascii::no_case[ascii::string("PI")]
-         >> char_('(')
+      | (hold[ascii::no_case[ascii::string("PI")]
+              >> char_('(')]
          >> char_(')'))
-      | (ascii::no_case[ascii::string("RAND")]
-         >> char_('(')
+      | (hold[ascii::no_case[ascii::string("RAND")]
+              >> char_('(')]
          >> -numeric_value_expression >> char_(')'))
-      | ((ascii::no_case[ascii::string("ROUND")]
-          | ascii::no_case[ascii::string("TRUNCATE")])
-         >> char_('(')
+      | (hold[(ascii::no_case[ascii::string("ROUND")]
+               | ascii::no_case[ascii::string("TRUNCATE")])
+              >> char_('(')]
          >> numeric_value_expression
          >> -(char_(',') >> signed_integer)
          >> char_(')'));
 
-    numeric_value_function %= trig_function | math_function;
+    default_function_prefix %= ascii::string("udf_");
+    user_defined_function_name %= -default_function_prefix >> regular_identifier;
+    user_defined_function_param %= value_expression;
+    /// Use hold[] here so that it does not greedily slurp up all
+    /// identifiers even if they do not have a parentheses.
+    user_defined_function %= 
+      hold[user_defined_function_name
+           >> char_('(')]
+    /// Use this awkward syntax instead of the usual list parser so
+    /// that the attribute is still a string overall.
+      >> -(user_defined_function_param
+           >> +(char_(',') >> user_defined_function_param))
+      >> char_(')');
+
+    // FIXME: numeric_value_function should have
+    // numeric_geometry_function
+    numeric_value_function %= trig_function | math_function
+      | user_defined_function;
     /// Flipped the order here, because a value_expression can match SIN.
     numeric_primary %= numeric_value_function | value_expression_primary;
     factor %= -sign >> numeric_primary;
@@ -284,7 +302,9 @@ struct ADQL_parser
     set_function_specification,
     value_expression_primary, value_expression,
     numeric_value_expression, numeric_primary, factor, term,
-    numeric_value_function, trig_function, math_function;
+    numeric_value_function, trig_function, math_function,
+    user_defined_function, user_defined_function_name,
+    user_defined_function_param, default_function_prefix;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
