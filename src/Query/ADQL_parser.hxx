@@ -59,10 +59,10 @@ struct ADQL_parser
     table_name %= -(hold[schema_name >> period]) >> identifier;
     correlation_name %= identifier;
 
-    /// Only use table_name, since as the rules are written
-    /// correlation_name will never match.
+    /// The spec says to have correlation_name as an alternate, but
+    /// table_name matches everything that correlation name matches,
+    /// so correlation_name will never match.
     qualifier %= table_name;
-    // qualifier %= correlation_name | table_name;
 
     column_reference %= -(hold[qualifier >> period]) >> identifier;
 
