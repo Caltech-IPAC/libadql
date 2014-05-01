@@ -134,10 +134,11 @@ struct ADQL_parser
 
     /// This puts term and numeric_value_expression on the left, not
     /// right.  Otherwise the rule greedily recurses on itself and
-    /// runs out of stack space.
-    term %= factor | (factor >> char_("*/") >> term);
-    numeric_value_expression %= term
-      | (term >> char_("+-") >> numeric_value_expression);
+    /// runs out of stack space.  Then the first term is always the
+    /// same and the second part becomes optional.
+    term %= factor >> -(char_("*/") >> term);
+    numeric_value_expression %=
+      term >> -(char_("+-") >> numeric_value_expression);
 
     // FIXME: value_expression should also have a
     // geometry_value_expression, but the database can not handle it.
@@ -240,7 +241,6 @@ struct ADQL_parser
     set_function_specification,
     value_expression_primary, value_expression,
     numeric_value_expression, numeric_primary, factor, term;
-    
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;

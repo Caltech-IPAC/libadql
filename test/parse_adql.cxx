@@ -39,6 +39,7 @@ int main ()
     "SELECT All * FROM my_table1",
     "SELECT Distinct * FROM my_table1",
     "SELECT Top 50 * FROM my_table1",
+    "SELECT * FROM my_table1 where 38*(x+1-3)>2/4",
   };
 
 
