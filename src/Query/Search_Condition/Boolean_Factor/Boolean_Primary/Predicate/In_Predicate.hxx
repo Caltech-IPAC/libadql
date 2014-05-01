@@ -1,15 +1,14 @@
 #pragma once
 
-#include "../../../../Number_Variant.hxx"
 namespace ADQL
 {
 class In_Predicate
 {
 public:
-  Number_Variant value;
+  std::string value;
   std::string Not;
 
-  typedef boost::variant<std::vector<Number_Variant>,Number_Variant> Variant;
+  typedef boost::variant<std::vector<std::string>,std::string> Variant;
   Variant variant;
 };
 }
@@ -23,7 +22,7 @@ public:
   In_Predicate_Visitor(std::ostream &OS): os(OS) {}
   In_Predicate_Visitor()=delete;
 
-  std::ostream & operator()(const std::vector<ADQL::Number_Variant> &v) const
+  std::ostream & operator()(const std::vector<std::string> &v) const
   {
     os << "(";
     for(auto n=v.begin(); n!=v.end();)
@@ -37,7 +36,7 @@ public:
     return os;
   }
     
-  std::ostream & operator()(const ADQL::Number_Variant &v) const
+  std::ostream & operator()(const std::string &v) const
   {
     return os << v;
   }
@@ -54,7 +53,7 @@ inline std::ostream & operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::In_Predicate,
-                           (ADQL::Number_Variant, value)
+                           (std::string, value)
                            (std::string, Not)
                            (ADQL::In_Predicate::Variant, variant))
 

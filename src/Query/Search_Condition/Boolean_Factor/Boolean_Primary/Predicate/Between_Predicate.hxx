@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../../../../Number_Variant.hxx"
 namespace ADQL
 {
 class Between_Predicate
 {
 public:
-  Number_Variant value, low, high;
+  std::string value, low, high;
   std::string Not;
 };
 }
@@ -19,8 +18,8 @@ inline std::ostream & operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Between_Predicate,
-                           (ADQL::Number_Variant, value)
+                           (std::string, value)
                            (std::string, Not)
-                           (ADQL::Number_Variant, low)
-                           (ADQL::Number_Variant, high))
+                           (std::string, low)
+                           (std::string, high))
 

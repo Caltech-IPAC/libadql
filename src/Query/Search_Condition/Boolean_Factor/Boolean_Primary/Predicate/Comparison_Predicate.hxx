@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../../../../Number_Variant.hxx"
 namespace ADQL
 {
 class Comparison_Predicate
 {
 public:
-  Number_Variant left, right;
+  std::string left, right;
   std::string op;
 };
 }
@@ -18,7 +17,7 @@ inline std::ostream & operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Comparison_Predicate,
-                           (ADQL::Number_Variant, left)
+                           (std::string, left)
                            (std::string, op)
-                           (ADQL::Number_Variant, right))
+                           (std::string, right))
 
