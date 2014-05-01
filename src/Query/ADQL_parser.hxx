@@ -55,16 +55,16 @@ struct ADQL_parser
 
     catalog_name %= identifier;
     unqualified_schema_name %= identifier;
-    schema_name = -(catalog_name >> period)[_val = _1 + _2]
-                  >> unqualified_schema_name[_val += _1];
-    table_name = -(schema_name >> period)[_val = _1 + _2]
-                 >> identifier[_val += _1];
+    schema_name %= -(hold[catalog_name >> period]) >> unqualified_schema_name;
+    table_name %= -(hold[schema_name >> period]) >> identifier;
     correlation_name %= identifier;
 
-    qualifier %= hold[table_name] | correlation_name;
+    /// Only use table_name, since as the rules are written
+    /// correlation_name will never match.
+    qualifier %= table_name;
+    // qualifier %= correlation_name | table_name;
 
-    column_reference = -(qualifier >> period)[_val = _1 + _2]
-                       >> identifier[_val += _1];
+    column_reference %= -(hold[qualifier >> period]) >> identifier;
 
     unsigned_integer %= +digit;
     exact_numeric_literal %= (unsigned_integer
@@ -127,20 +127,17 @@ struct ADQL_parser
       | set_function_specification
       | (char_('(') >> value_expression >> char_(')'));
 
-
     // FIXME: Add functions etc. into factor
     numeric_primary %= value_expression_primary;
     // numeric_primary %= value_expression_primary | numeric_value_function;
     factor %= -sign >> numeric_primary;
 
-    // factor %= number | column_reference;
-
-    // FIXME: add math (*/) into term
-    term %= factor;
-
-    // FIXME: add math (+-) into numeric_value_expression
-    numeric_value_expression %= term;
-      // | (numeric_value_expression >> char_("+-") >> term);
+    /// This puts term and numeric_value_expression on the left, not
+    /// right.  Otherwise the rule greedily recurses on itself and
+    /// runs out of stack space.
+    term %= factor | (factor >> char_("*/") >> term);
+    numeric_value_expression %= term
+      | (term >> char_("+-") >> numeric_value_expression);
 
     // FIXME: value_expression should also have a
     // geometry_value_expression, but the database can not handle it.
@@ -170,28 +167,29 @@ struct ADQL_parser
     // value_expression %= numeric_value_expression | string_value_expression;
     // derived_column %= value_expression >> -(ascii::no_case["AS"] >> identifier);
     // FIXME: should be
-    // select_item %= derived_colum | (qualifier >> ".*" )
+    // select_item %= derived_column | (qualifier >> ".*" )
     select_item %= as | column_name;
     select_list %= select_item % ',';
     columns %= ascii::string("*") | select_list;
 
-    comparison_predicate %= numeric_value_expression
+    comparison_predicate %= value_expression
       >> (ascii::string("=") | ascii::string("!=") | ascii::string("<>")
           | ascii::string("<") | ascii::string("<=") | ascii::string(">")
           | ascii::string(">="))
-      >> numeric_value_expression;
+      >> value_expression;
 
-    between_predicate %= numeric_value_expression
+    between_predicate %= value_expression
       >> -ascii::no_case[ascii::string("NOT")]
       >> ascii::no_case["BETWEEN"]
-      >> numeric_value_expression
-      >> ascii::no_case["AND"] >> numeric_value_expression; 
+      >> value_expression
+      >> ascii::no_case["AND"] >> value_expression; 
 
-    in_predicate %= numeric_value_expression
+    in_predicate %= value_expression
       >> -ascii::no_case[ascii::string("NOT")]
       >> ascii::no_case["IN"]
-      >> ((lit('(') >> (numeric_value_expression % ',') >> ')')
-          | numeric_value_expression);
+    // FIXME: This should be table_subquery, not value_expression
+      >> (value_expression
+          | (lit('(') >> (value_expression % ',') >> ')'));
 
     predicate %= (comparison_predicate | between_predicate | in_predicate);
 
