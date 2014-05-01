@@ -34,6 +34,7 @@ struct ADQL_parser
     using boost::spirit::qi::hold;
     using boost::spirit::qi::lower;
     using boost::spirit::qi::omit;
+    using boost::spirit::qi::print;
     namespace ascii=boost::spirit::ascii;
 
     simple_Latin_letter %= char_ ("a-zA-Z");
@@ -50,20 +51,87 @@ struct ADQL_parser
                               = ADQL::Coord_Sys::Reference_Position::GEOCENTER]
                 >> '\'';
 
+    period %= char_('.');
+
     catalog_name %= identifier;
     unqualified_schema_name %= identifier;
-    schema_name = -(catalog_name >> char_ ("."))[_val = _1 + _2]
+    schema_name = -(catalog_name >> period)[_val = _1 + _2]
                   >> unqualified_schema_name[_val += _1];
-    table_name = -(schema_name >> char_ ("."))[_val = _1 + _2]
+    table_name = -(schema_name >> period)[_val = _1 + _2]
                  >> identifier[_val += _1];
     correlation_name %= identifier;
 
     qualifier %= hold[table_name] | correlation_name;
 
-    column_reference = -(qualifier >> char_ ("."))[_val = _1 + _2]
+    column_reference = -(qualifier >> period)[_val = _1 + _2]
                        >> identifier[_val += _1];
 
     number %= double_;
+
+    unsigned_integer %= +digit;
+    exact_numeric_literal %= (unsigned_integer
+                              >> -(period >> unsigned_integer))
+      | (period >> unsigned_integer);
+
+    sign %= char_('+') | char_('-');
+    signed_integer %= -sign >> unsigned_integer;
+    mantissa %= exact_numeric_literal;
+    exponent %= signed_integer;
+    approximate_numeric_literal %= mantissa >> char_('E') >> exponent;
+    unsigned_numeric_literal %= 
+      exact_numeric_literal | approximate_numeric_literal;
+
+
+    quote %= char_('\'');
+    space %= char_(' ');
+    newline %= char_('\n');
+    minus_sign %= char_('-');
+
+    // FIXME: The ADQL spec is not clear about exactly what this is.
+    // Does it include spaces and newlines?
+    nonquote_character %= print - quote;
+    quote_symbol %= quote >> quote;
+    character_representation %= nonquote_character | quote_symbol;
+
+    comment_introducer %= minus_sign >> +minus_sign;
+    comment_character %= nonquote_character | quote;
+    comment %= comment_introducer >> *comment_character >> newline;
+
+    separator %= comment | space | newline;
+    
+    character_string_literal %=
+      quote >> *character_representation >> quote
+            >> -(+separator >> quote >> *character_representation >> quote);
+
+    general_literal %= character_string_literal;
+    unsigned_literal %= unsigned_numeric_literal | general_literal;
+    unsigned_value_specification %= unsigned_literal;
+
+    set_function_type %= ascii::no_case[ascii::string("AVG")]
+      | ascii::no_case[ascii::string("MAX")]
+      | ascii::no_case[ascii::string("MIN")]
+      | ascii::no_case[ascii::string("SUM")]
+      | ascii::no_case[ascii::string("COUNT")];
+    set_quantifier %=ascii::no_case[ascii::string("DISTINCT")]
+      | ascii::no_case[ascii::string("ALL")];
+
+    general_set_function %= set_function_type
+      >> char_('(') >> -set_quantifier >> value_expression >> char_(')');
+
+    set_function_specification %=
+      (ascii::no_case[ascii::string("COUNT")]
+       >> char_('(') >> char_('*') >> char_(')'))
+      | general_set_function;
+
+    value_expression_primary %=
+      unsigned_value_specification
+      | column_reference
+      | set_function_specification
+      | (char_('(') >> value_expression >> char_(')'));
+
+
+    // numeric_primary %= value_expression_primary | numeric_value_function;
+    // factor %= -sign >> numeric_primary;
 
     // FIXME: Add functions etc. into factor
     factor %= number | column_reference;
@@ -73,21 +141,35 @@ struct ADQL_parser
 
     // FIXME: add math (+-) into numeric_value_expression
     numeric_value_expression %= term;
+      // | (numeric_value_expression >> char_("+-") >> term);
+
+    // FIXME: value_expression should also have a
+    // geometry_value_expression, but the database can not handle it.
+    // value_expression %=
+    //   numeric_value_expression
+    //   | string_value_expression;
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
-    point %= ascii::no_case["POINT("] >> coord_sys >> "," >> coord >> ")";
+    point %= ascii::no_case["POINT("] >> coord_sys >> ',' >> coord >> ')';
 
-    circle %= ascii::no_case["CIRCLE("] >> coord_sys >> "," >> coord >> ','
-              >> boost::spirit::qi::double_ >> ")";
+    circle %= ascii::no_case["CIRCLE("] >> coord_sys >> ',' >> coord >> ','
+              >> boost::spirit::qi::double_ >> ')';
 
-    contains %= ascii::no_case["CONTAINS("] >> point >> "," >> circle >> ")";
+    contains %= ascii::no_case["CONTAINS("] >> point >> ',' >> circle >> ')';
 
-    geometry %= (contains >> "=" >> "1") | (lit("1") >> "=" >> contains);
+    geometry %= (contains >> '=' >> '1') | (lit('1') >> '=' >> contains);
 
     as %= identifier >> ascii::no_case["AS"] >> identifier;
 
     column_name %=identifier;
 
+
+    // // FIXME: This should also have an (| geometry_value_expression),
+    // // but we do not allow geometric expressions in arbitrary places,
+    // value_expression %= numeric_value_expression | string_value_expression;
+    // derived_column %= value_expression >> -(ascii::no_case["AS"] >> identifier);
+    // FIXME: should be
+    // select_item %= derived_colum | (qualifier >> ".*" )
     select_item %= as | column_name;
     select_list %= select_item % ',';
     columns %= ascii::string("*") | select_list;
@@ -107,12 +189,12 @@ struct ADQL_parser
     in_predicate %= numeric_value_expression
       >> -ascii::no_case[ascii::string("NOT")]
       >> ascii::no_case["IN"]
-      >> ((lit("(") >> (numeric_value_expression % ',') >> ")")
+      >> ((lit('(') >> (numeric_value_expression % ',') >> ')')
           | numeric_value_expression);
 
     predicate %= (comparison_predicate | between_predicate | in_predicate);
 
-    boolean_primary %= predicate | (lit("(") >> search_condition >> ")");
+    boolean_primary %= predicate | (lit('(') >> search_condition >> ')');
 
     boolean_factor %= -ascii::no_case[ascii::string("NOT")]
       >> boolean_primary;
@@ -127,20 +209,18 @@ struct ADQL_parser
 
     where = ascii::no_case["WHERE"]
       >> ((geometry[at_c<0>(_val)=_1]
-           >> -(ascii::no_case["AND"] >> "("
+           >> -(ascii::no_case["AND"] >> '('
                 >> search_condition[at_c<1>(_val)=_1]
-                >> ")"))
-          | (lit("(") >> search_condition[at_c<1>(_val)=_1] >> ")"
+                >> ')'))
+          | (lit('(') >> search_condition[at_c<1>(_val)=_1] >> ')'
              >> (ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1]))
           | (search_condition[at_c<1>(_val)=_1]));
 
 
     query %= ascii::no_case["SELECT"]
-      >> -(ascii::no_case[ascii::string("DISTINCT")]
-           | ascii::no_case[ascii::string("ALL")])
+      >> -set_quantifier
       >> -(ascii::no_case["TOP"] >> ulong_long)
       >> columns
-      // >> (ascii::string("*") | (select_item % ','))
       >> ascii::no_case["FROM"]
       >> identifier
       >> (-where);
@@ -149,9 +229,18 @@ struct ADQL_parser
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
 
   boost::spirit::qi::rule<Iterator, std::string ()> regular_identifier,
-      identifier, column_reference, qualifier, correlation_name,
-      table_name, schema_name, unqualified_schema_name, catalog_name, sign,
-      unsigned_integer, signed_integer, exponent, exact_numeric_literal;
+    identifier, column_reference, qualifier, correlation_name,
+    table_name, schema_name, unqualified_schema_name, catalog_name, sign,
+    period, unsigned_integer, exact_numeric_literal, signed_integer, mantissa,
+    exponent, approximate_numeric_literal, unsigned_numeric_literal,
+    quote, nonquote_character, quote_symbol, character_representation,
+    space, newline, minus_sign, comment_introducer, comment_character,
+    comment, separator, character_string_literal, general_literal,
+    unsigned_literal, unsigned_value_specification,
+    set_function_type, set_quantifier, general_set_function,
+    set_function_specification,
+    value_expression_primary, value_expression;
+    
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
