@@ -15,9 +15,6 @@ ADQL::Query::Query (const std::string &input):
       throw std::runtime_error ("");
     }
 
-  std::cout << std::boolalpha
-            << "good " << where.geometry.good()
-            << '\n';
   if(where.geometry.good())
     {
       std::string &ra(where.geometry.contains.point.coordinate.ra),
