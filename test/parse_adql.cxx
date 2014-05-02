@@ -45,13 +45,30 @@ int main ()
     "SELECT my_tablel1.* FROM my_table1",
     "SELECT sin(dec),cos(dec),tan(dec),cot(dec),asin(dec),acos(dec),"
     "atan(dec),atan2(ra,dec) FROM my_table1",
-    "SELECT abs(ra),ceiling(ra),degrees(ra),exp(ra),floor(ra),log(ra),log10(ra),"
+    "SELECT abs(ra),ceiling(ra), degrees(ra),exp(ra),floor(ra),log(ra),log10(ra),"
     "radians(ra),sqrt(ra) FROM my_table1",
-    "SELECT mod(ra,dec),power(ra,dec),pi(),rand(ra),rand(),"
+    "SELECT mod(ra, dec),power( ra,dec ),pi(),rand(ra),rand(),"
     "round(ra,10),round(ra),truncate(ra),truncate(ra,10) FROM my_table1",
+    "SELECT modern() FROM my_table1",
+    "SELECT my_modern_function(ra,dec) FROM my_table1",
     "SELECT my_modern_function(ra,dec), modern() FROM my_table1",
     "select 'a b c','a','a ''bv' from b",
     "select \"a b\",\"a \"\" b\" from b",
+    "select 'a' 'b' from b",
+    "select 'a' --This is a useful comment\n 'b' from b",
+    "select (a), sum(a), max(all a), min(distinct a), count(a), avg ( a ) ,"
+    "min(a) from a",
+    "select max(all a) from a",
+    "select count ( * ) from a",
+    "select count(*) from a",
+    "select count(a) from a",
+    "select count(all a) from a",
+    "select count(distinct a) from a",
+    "select sum(a) from a",
+    "select sum(all a) from a",
+    "select sum(DISTINCT a) from a",
+    "select sum(DISTINCTa) from a",
+    "select single from a",
   };
 
 
@@ -71,7 +88,9 @@ int main ()
     "And x<1 And x>2 Or y < 3 Or y >5"
     "SELECT *,ra FROM my_table1",
     "SELECT my_tablel1.* as ra_dec FROM my_table1",
-    // "SELECT sin as ra_dec FROM my_table1",
+    "SELECT sin as ra_dec FROM my_table1",
+    "select sum(a,b) from a",
+    "select abs(a,b) from a",
   };
 
   int result(0);
