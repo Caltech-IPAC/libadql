@@ -50,6 +50,8 @@ int main ()
     "SELECT mod(ra,dec),power(ra,dec),pi(),rand(ra),rand(),"
     "round(ra,10),round(ra),truncate(ra),truncate(ra,10) FROM my_table1",
     "SELECT my_modern_function(ra,dec), modern() FROM my_table1",
+    "select 'a b c','a','a ''bv' from b",
+    "select \"a b\",\"a \"\" b\" from b",
   };
 
 
@@ -69,7 +71,7 @@ int main ()
     "And x<1 And x>2 Or y < 3 Or y >5"
     "SELECT *,ra FROM my_table1",
     "SELECT my_tablel1.* as ra_dec FROM my_table1",
-    "SELECT sin as ra_dec FROM my_table1",
+    // "SELECT sin as ra_dec FROM my_table1",
   };
 
   int result(0);

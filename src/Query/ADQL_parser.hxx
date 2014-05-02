@@ -35,14 +35,44 @@ struct ADQL_parser
     using boost::spirit::qi::lower;
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
+    using boost::spirit::qi::lexeme;
     namespace ascii=boost::spirit::ascii;
 
     simple_Latin_letter %= char_ ("a-zA-Z");
     regular_identifier %= simple_Latin_letter
                           >> *(digit | simple_Latin_letter | char_ ("_"));
 
+
+    SQL_special_character %= char_(' ')
+      | char_('"')
+      | char_('%')
+      | char_('&')
+      | char_('\'')
+      | char_('(')
+      | char_(')')
+      | char_('*')
+      | char_('+')
+      | char_(',')
+      | char_('-')
+      | char_('.')
+      | char_('/')
+      | char_(':')
+      | char_(';')
+      | char_('<')
+      | char_('>')
+      | char_('=')
+      | char_('?')
+      | char_('_')
+      | char_('|');
+    SQL_language_character %= alnum | SQL_special_character;
+    nondoublequote_character %= SQL_language_character - char_("\"");
+    delimited_identifier_part %= nondoublequote_character | ascii::string("\"\"");
+    delimited_identifier_body %= +delimited_identifier_part;
+    delimited_identifier %= lexeme[char_("\"") >> delimited_identifier_body
+                                   >> char_("\"")];
+
     // FIXME: add delimited identifier
-    identifier %= regular_identifier;
+    identifier %= regular_identifier | delimited_identifier;
 
     coord_sys
       %= '\'' >> -ascii::no_case["J2000"][at_c<0>(_val)
@@ -88,13 +118,13 @@ struct ADQL_parser
     // FIXME: The ADQL spec is not clear about exactly what this is.
     // Does it include spaces and newlines?  Should I use a lexeme()
     // to inhibit space skipping?
-    nonquote_character %= print - quote;
-    quote_symbol %= quote >> quote;
-    character_representation %= nonquote_character | quote_symbol;
+    nonquote_character %= SQL_language_character - quote;
+    character_representation %= nonquote_character | ascii::string("''");
 
     comment_introducer %= minus_sign >> +minus_sign;
     comment_character %= nonquote_character | quote;
-    comment %= comment_introducer >> *comment_character >> newline;
+    comment_introducer %= ascii::string("--") >> *char_('-');
+    comment %= lexeme[comment_introducer >> *comment_character >> newline];
 
     separator %= comment | space | newline;
     
@@ -212,9 +242,7 @@ struct ADQL_parser
     // geometry_value_expression, but the database can not handle it.
     value_expression %=
       numeric_value_expression;
-    // value_expression %=
-    //   numeric_value_expression
-    //   | string_value_expression;
+    // value_expression %= numeric_value_expression | string_value_expression;
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
     point %= ascii::no_case["POINT("] >> coord_sys >> ',' >> coord >> ')';
@@ -287,14 +315,15 @@ struct ADQL_parser
       >> (-where);
   }
 
-  boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter;
+  boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter, SQL_language_character,
+    SQL_special_character, nondoublequote_character;
 
   boost::spirit::qi::rule<Iterator, std::string ()> regular_identifier,
     identifier, column_reference, qualifier, correlation_name,
     table_name, schema_name, unqualified_schema_name, catalog_name, sign,
     period, unsigned_integer, exact_numeric_literal, signed_integer, mantissa,
     exponent, approximate_numeric_literal, unsigned_numeric_literal,
-    quote, nonquote_character, quote_symbol, character_representation,
+    quote, nonquote_character, character_representation,
     space, newline, minus_sign, comment_introducer, comment_character,
     comment, separator, character_string_literal, general_literal,
     unsigned_literal, unsigned_value_specification,
@@ -304,7 +333,9 @@ struct ADQL_parser
     numeric_value_expression, numeric_primary, factor, term,
     numeric_value_function, trig_function, math_function,
     user_defined_function, user_defined_function_name,
-    user_defined_function_param, default_function_prefix;
+    user_defined_function_param, default_function_prefix,
+    delimited_identifier_part, delimited_identifier_body,
+    delimited_identifier;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
