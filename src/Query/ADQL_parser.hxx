@@ -579,6 +579,12 @@ struct ADQL_parser
              >> (ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1]))
           | (search_condition[at_c<1>(_val)=_1]));
 
+    grouping_column_reference %= column_reference;
+    grouping_column_reference_list %= grouping_column_reference
+      >> *(char_(',') >> column_reference);
+    group_by_clause %= ascii::no_case["GROUP"]
+      >> ascii::no_case["BY"]
+      >> grouping_column_reference_list;
 
     // FIXME: Add group, having, order.
     query %= ascii::no_case["SELECT"]
@@ -588,7 +594,8 @@ struct ADQL_parser
       >> ascii::no_case["FROM"]
       // FIXME: should be a table_reference
       >> identifier
-      >> (-where);
+      >> (-where)
+      >> (-group_by_clause);
   }
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter, SQL_language_character,
@@ -618,7 +625,9 @@ struct ADQL_parser
     numeric_value_expression, numeric_primary, factor, term,
     numeric_value_function, trig_function, math_function,
     user_defined_function, user_defined_function_name,
-    user_defined_function_param, default_function_prefix;
+    user_defined_function_param, default_function_prefix,
+    grouping_column_reference, grouping_column_reference_list,
+    group_by_clause;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;

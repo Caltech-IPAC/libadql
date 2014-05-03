@@ -69,6 +69,7 @@ int main ()
     "select sum(DISTINCT a) from a",
     "select sum(DISTINCTa) from a",
     "select single from a",
+    "select a,b from a group by a",
   };
 
 
