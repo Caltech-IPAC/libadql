@@ -2,8 +2,9 @@
 #include <iostream>
 #include "../src/Query.hxx"
 
-int main ()
+int main (int argc, char *argv[])
 {
+  bool quiet(argc>1 && argv[1]==std::string("-q"));
   std::vector<std::string> pass = {
     "Select ra1,dec2,flux From mytable Where "
     "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))= 1",
@@ -36,6 +37,7 @@ int main ()
     "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
     // "SELECT * FROM my_table1 where x in (select y from my_table2)",
     "SELECT * FROM my_table1 where x in (10,20,30)",
+    "SELECT * FROM my_table1 where x not in (10,20,30)",
     "SELECT All * FROM my_table1",
     "SELECT Distinct * FROM my_table1",
     "SELECT Top 50 * FROM my_table1",
@@ -71,6 +73,8 @@ int main ()
     "select single from a",
     "select a,b from a group by a",
     "select a,b from a group by a having x>2",
+    "SELECT * FROM my_table1 where x in(10,20,30)",
+    "SELECT * FROM my_table1 where x not in(10,20,30)",
   };
 
 
@@ -93,6 +97,12 @@ int main ()
     "SELECT sin as ra_dec FROM my_table1",
     "select sum(a,b) from a",
     "select abs(a,b) from a",
+    "select a,b from a groupby a",
+    "select a asb from a groupby a",
+    "SELECT * FROM my_table1 where (x notBetween 2 AND 4)",
+    "SELECT * FROM my_table1 where x notin (10,20,30)",
+    "SELECT * FROM mytable WHERE"
+    "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
   };
 
   int result(0);
@@ -101,17 +111,20 @@ int main ()
       try
         {
           ADQL::Query query (i);
-          std::cout << "PASS: " << i << "\n";
-          std::cout << "SELECT "
-                    << query.all_or_distinct
-                    << (query.all_or_distinct.empty() ? "" : " ")
-                    << (query.top!=std::numeric_limits<unsigned long long>::max()
-                        ? "TOP " + std::to_string(query.top) + " " : "")
-                    << query.columns
-                    << " FROM " << query.table;
-          if(query.where.search_condition.good())
-            std::cout << " WHERE " << query.where.search_condition;
-          std::cout << "\n";
+          if(!quiet)
+            {
+              std::cout << "PASS: " << i << "\n";
+              std::cout << "SELECT "
+                        << query.all_or_distinct
+                        << (query.all_or_distinct.empty() ? "" : " ")
+                        << (query.top!=std::numeric_limits<unsigned long long>::max()
+                            ? "TOP " + std::to_string(query.top) + " " : "")
+                        << query.columns
+                        << " FROM " << query.table;
+              if(query.where.search_condition.good())
+                std::cout << " WHERE " << query.where.search_condition;
+              std::cout << "\n";
+            }
         }
       catch (std::runtime_error &e)
         {
@@ -132,7 +145,8 @@ int main ()
         }
       catch (std::runtime_error &e)
         {
-          std::cout << "PASS: " << i << "\n";
+          if(!quiet)
+            std::cout << "PASS: " << i << "\n";
         }
     }
 

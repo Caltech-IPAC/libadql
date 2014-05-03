@@ -36,6 +36,7 @@ struct ADQL_parser
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
     using boost::spirit::qi::lexeme;
+    using boost::spirit::qi::no_skip;
     namespace ascii=boost::spirit::ascii;
 
     /// Reverse sort to avoid early matches.
@@ -309,8 +310,12 @@ struct ADQL_parser
       >> &!(digit | simple_Latin_letter | char_ ("_"));
     
     simple_Latin_letter %= char_ ("a-zA-Z");
-    all_identifiers %= simple_Latin_letter
-      >> *(digit | simple_Latin_letter | char_ ("_"));
+    identifier_character %= digit | simple_Latin_letter | char_ ("_");
+    /// nonidentifier_character is to signal that, for example, in an
+    /// AND, clause, AND is followed by something that is not an
+    /// identifier (e.g. a space or parentheses).
+    nonidentifier_character %= char_ - identifier_character;
+    all_identifiers %= simple_Latin_letter >> *(identifier_character);
     regular_identifier %= all_identifiers - keyword;
 
     SQL_special_character %= char_(' ')
@@ -518,17 +523,22 @@ struct ADQL_parser
     // value_expression %= numeric_value_expression | string_value_expression;
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
-    point %= ascii::no_case["POINT("] >> coord_sys >> ',' >> coord >> ')';
+    point %= ascii::no_case["POINT"] >> '(' >> coord_sys >> ','
+                                     >> coord >> ')';
 
-    circle %= ascii::no_case["CIRCLE("] >> coord_sys >> ',' >> coord >> ','
+    circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys >> ',' >> coord >> ','
               >> boost::spirit::qi::double_ >> ')';
 
-    contains %= ascii::no_case["CONTAINS("] >> point >> ',' >> circle >> ')';
+    contains %= ascii::no_case["CONTAINS"] >> '(' >> point >> ',' >> circle
+                                           >> ')';
 
     geometry %= (contains >> '=' >> '1') | (lit('1') >> '=' >> contains);
 
     column_name %=identifier;
-    as %= value_expression >> ascii::no_case["AS"] >> column_name;
+
+    as %= value_expression
+      >> lexeme[ascii::no_case["AS"] >> &nonidentifier_character]
+      >> column_name;
 
     select_item %= as | (hold[qualifier >> ascii::string(".*")]
                          | value_expression);
@@ -542,14 +552,20 @@ struct ADQL_parser
       >> value_expression;
 
     between_predicate %= value_expression
-      >> -ascii::no_case[ascii::string("NOT")]
-      >> ascii::no_case["BETWEEN"]
+      >> lexeme[-(ascii::no_case[ascii::string("NOT")]
+                  >> boost::spirit::qi::space)
+                >> ascii::no_case["BETWEEN"]
+                >> &nonidentifier_character]
       >> value_expression
-      >> ascii::no_case["AND"] >> value_expression; 
+      >> lexeme[ascii::no_case["AND"]
+                >> &nonidentifier_character]
+      >> value_expression; 
 
     in_predicate %= value_expression
-      >> -ascii::no_case[ascii::string("NOT")]
-      >> ascii::no_case["IN"]
+      >> lexeme[-(ascii::no_case[ascii::string("NOT")]
+                  >> boost::spirit::qi::space)
+                >> ascii::no_case["IN"]
+                >> &nonidentifier_character]
     // FIXME: This should be table_subquery, not value_expression
       >> (value_expression
           | (lit('(') >> (value_expression % ',') >> ')'));
@@ -559,45 +575,62 @@ struct ADQL_parser
 
     boolean_primary %= predicate | (lit('(') >> search_condition >> ')');
 
-    boolean_factor %= -ascii::no_case[ascii::string("NOT")]
+    boolean_factor %= 
+      lexeme[-(ascii::no_case[ascii::string("NOT")]
+               >> &nonidentifier_character)]
       >> boolean_primary;
 
     boolean_term %= boolean_factor
-      >> (ascii::no_case[ascii::string("AND")]
-          | ascii::no_case[ascii::string("OR")])
+      >> lexeme[(ascii::no_case[ascii::string("AND")]
+                 | ascii::no_case[ascii::string("OR")])
+                >> &nonidentifier_character]
       >> search_condition;
 
     search_condition =
       (boolean_term | boolean_factor)[push_back(at_c<0>(_val), _1)];
 
-    where = ascii::no_case["WHERE"]
+    where = lexeme[ascii::no_case["WHERE"] >> &nonidentifier_character]
       >> ((geometry[at_c<0>(_val)=_1]
            >> -(ascii::no_case["AND"] >> '('
                 >> search_condition[at_c<1>(_val)=_1]
                 >> ')'))
           | (lit('(') >> search_condition[at_c<1>(_val)=_1] >> ')'
-             >> (ascii::no_case["AND"] >> geometry[at_c<0>(_val)=_1]))
+             >> (lexeme[ascii::no_case["AND"]
+                        >> &nonidentifier_character]
+                 >> geometry[at_c<0>(_val)=_1]))
           | (search_condition[at_c<1>(_val)=_1]));
 
     grouping_column_reference %= column_reference;
     grouping_column_reference_list %= grouping_column_reference
       >> *(char_(',') >> column_reference);
-    group_by_clause %= ascii::no_case["GROUP"]
-      >> ascii::no_case["BY"]
+    group_by_clause %= lexeme[ascii::no_case["GROUP"]
+                              >> boost::spirit::qi::space
+                              >> ascii::no_case["BY"]
+                              >> &nonidentifier_character]
       >> grouping_column_reference_list;
 
     // FIXME: This is duplicated from search_condition.  It should
     // just use search_condition, but Search_Condition is not written
     // to be accomodating this way.
-    having_clause = ascii::no_case["HAVING"]
+    having_clause = lexeme[ascii::no_case["HAVING"] >> &nonidentifier_character]
       >> (boolean_term | boolean_factor)[push_back(at_c<0>(_val), _1)];
 
+    // ordering_specification %= ascii::no_case[ascii::string("ASC")]
+    //   | ascii::no_case[ascii::string("DESC")];
+    // sort_specification %= sort_key >> ordering_specification;
+    // sort_specification_list %= sort_specification
+    //   >> *(char_(',') >> sort_specification);
+    // order_by_clause %= ascii::no_case["ORDER"] >> ascii::no_case["BY"]
+    //                                            >> sort_specification_list;
     // FIXME: Add order.
-    query %= ascii::no_case["SELECT"]
+    // FIXME: Not sure whether this first nonidentifier_character
+    // should be a ::space
+    query %= lexeme[ascii::no_case["SELECT"] >> &nonidentifier_character]
       >> -set_quantifier
-      >> -(ascii::no_case["TOP"] >> ulong_long)
+      >> -(lexeme[ascii::no_case["TOP"] >> boost::spirit::qi::space]
+           >> ulong_long)
       >> columns
-      >> ascii::no_case["FROM"]
+      >> lexeme[ascii::no_case["FROM"] >> &nonidentifier_character]
       // FIXME: should be a table_reference
       >> identifier
       >> (-where)
@@ -605,10 +638,10 @@ struct ADQL_parser
       >> (-having_clause);
   }
 
-  boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter, SQL_language_character,
-    SQL_special_character, nondoublequote_character, quote, space, newline, tab, minus_sign,
-    nonquote_character, sign,
-    period;
+  boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter,
+    identifier_character, nonidentifier_character, SQL_language_character, SQL_special_character,
+    nondoublequote_character, quote, space, newline, tab, minus_sign,
+    nonquote_character, sign, period;
 
   boost::spirit::qi::rule<Iterator, std::string ()> comment,
     comment_introducer, comment_character,
