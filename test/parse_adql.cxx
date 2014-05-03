@@ -70,6 +70,7 @@ int main ()
     "select sum(DISTINCTa) from a",
     "select single from a",
     "select a,b from a group by a",
+    "select a,b from a group by a having x>2",
   };
 
 

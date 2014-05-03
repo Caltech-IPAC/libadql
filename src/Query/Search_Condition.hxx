@@ -8,11 +8,11 @@ namespace ADQL
 class Search_Condition
 {
 public:
-  /// There is only going to be zero or one Search_Condition_Variant,
+  /// There is only going to be zero or one Search_Condition::Variant,
   /// but we need to put it into a structure that does not create a
-  /// Search_Condition_Variant by default.  Otherwise,
-  /// Search_Condition_Variant creates a Search_Condition, which
-  /// creates a Search_Condition_Variant, and so on until we run out
+  /// Search_Condition::Variant by default.  Otherwise,
+  /// Search_Condition::Variant creates a Search_Condition, which
+  /// creates a Search_Condition::Variant, and so on until we run out
   /// of stack space :(
   typedef boost::variant<Boolean_Factor,Boolean_Term> Variant;
 

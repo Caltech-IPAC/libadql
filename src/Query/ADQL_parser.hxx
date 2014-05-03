@@ -586,7 +586,13 @@ struct ADQL_parser
       >> ascii::no_case["BY"]
       >> grouping_column_reference_list;
 
-    // FIXME: Add group, having, order.
+    // FIXME: This is duplicated from search_condition.  It should
+    // just use search_condition, but Search_Condition is not written
+    // to be accomodating this way.
+    having_clause = ascii::no_case["HAVING"]
+      >> (boolean_term | boolean_factor)[push_back(at_c<0>(_val), _1)];
+
+    // FIXME: Add order.
     query %= ascii::no_case["SELECT"]
       >> -set_quantifier
       >> -(ascii::no_case["TOP"] >> ulong_long)
@@ -595,7 +601,8 @@ struct ADQL_parser
       // FIXME: should be a table_reference
       >> identifier
       >> (-where)
-      >> (-group_by_clause);
+      >> (-group_by_clause)
+      >> (-having_clause);
   }
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter, SQL_language_character,
@@ -682,7 +689,8 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> boolean_term;
 
   boost::spirit::qi::rule<Iterator, ADQL::Search_Condition (),
-                          boost::spirit::ascii::space_type> search_condition;
+                          boost::spirit::ascii::space_type> search_condition,
+    having_clause;
 
   boost::spirit::qi::rule<Iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where;
