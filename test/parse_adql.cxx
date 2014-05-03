@@ -75,6 +75,9 @@ int main (int argc, char *argv[])
     "select a,b from a group by a having x>2",
     "SELECT * FROM my_table1 where x in(10,20,30)",
     "SELECT * FROM my_table1 where x not in(10,20,30)",
+    "SELECT * FROM my_table1 order by x",
+    "SELECT * FROM my_table1 order by x asc",
+    "SELECT * FROM my_table1 order by x desc",
   };
 
 

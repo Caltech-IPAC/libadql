@@ -21,7 +21,7 @@ public:
   size_t top;
   std::string table;
   Where where;
-  std::string group_by;
+  std::string group_by, order;
   Search_Condition having;
   Query (const std::string &input);
 };
@@ -72,6 +72,6 @@ BOOST_FUSION_ADAPT_STRUCT (ADQL::Query,
                            (ADQL::Where, where)
                            (std::string, group_by)
                            (ADQL::Search_Condition, having)
-                           // (std::string, order)
+                           (std::string, order)
                            )
 

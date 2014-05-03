@@ -484,12 +484,10 @@ struct ADQL_parser
          >> -(char_(',') >> signed_integer)
          >> char_(')'));
 
-    /// This prefix is a bit useless since it is optional.
+    /// default_function_prefix is a bit useless since it is optional.
     default_function_prefix %= ascii::string("udf_");
     user_defined_function_name %= -default_function_prefix >> regular_identifier;
     user_defined_function_param %= value_expression;
-    /// Use hold[] here so that it does not greedily slurp up all
-    /// identifiers or functions even if they do not have a parentheses.
     user_defined_function %= 
       hold[user_defined_function_name
            >> char_('(')]
@@ -615,14 +613,16 @@ struct ADQL_parser
     having_clause = lexeme[ascii::no_case["HAVING"] >> &nonidentifier_character]
       >> (boolean_term | boolean_factor)[push_back(at_c<0>(_val), _1)];
 
-    // ordering_specification %= ascii::no_case[ascii::string("ASC")]
-    //   | ascii::no_case[ascii::string("DESC")];
-    // sort_specification %= sort_key >> ordering_specification;
-    // sort_specification_list %= sort_specification
-    //   >> *(char_(',') >> sort_specification);
-    // order_by_clause %= ascii::no_case["ORDER"] >> ascii::no_case["BY"]
-    //                                            >> sort_specification_list;
-    // FIXME: Add order.
+    sort_key %= column_name | unsigned_integer;
+    ordering_specification %= ascii::no_case[ascii::string("ASC")]
+      | ascii::no_case[ascii::string("DESC")];
+    sort_specification %= sort_key >> -ordering_specification;
+    sort_specification_list %= sort_specification
+      >> *(char_(',') >> sort_specification);
+    order_by_clause %= lexeme[ascii::no_case["ORDER"]
+                              >> boost::spirit::qi::space]
+      >> lexeme[ascii::no_case["BY"] >> boost::spirit::qi::space]
+      >> sort_specification_list;
     // FIXME: Not sure whether this first nonidentifier_character
     // should be a ::space
     query %= lexeme[ascii::no_case["SELECT"] >> &nonidentifier_character]
@@ -635,28 +635,30 @@ struct ADQL_parser
       >> identifier
       >> (-where)
       >> (-group_by_clause)
-      >> (-having_clause);
+      >> (-having_clause)
+      >> (-order_by_clause);
   }
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter,
-    identifier_character, nonidentifier_character, SQL_language_character, SQL_special_character,
+    identifier_character, nonidentifier_character, SQL_language_character,
+    SQL_special_character,
     nondoublequote_character, quote, space, newline, tab, minus_sign,
     nonquote_character, sign, period;
 
-  boost::spirit::qi::rule<Iterator, std::string ()> comment,
-    comment_introducer, comment_character,
-    delimited_identifier,
-    delimited_identifier_part, delimited_identifier_body,
+  boost::spirit::qi::rule<Iterator, std::string ()> unsigned_integer,
+    exact_numeric_literal, signed_integer, mantissa,
+    exponent, approximate_numeric_literal, unsigned_numeric_literal,
+    comment, comment_introducer, comment_character,
+    delimited_identifier, delimited_identifier_part, delimited_identifier_body,
     character_representation, ADQL_reserved_word,
     SQL_reserved_word, keyword, all_identifiers, regular_identifier,
-    identifier, set_quantifier, character_string_literal, separator;
+    identifier, set_quantifier, character_string_literal, separator,
+    column_name, sort_key, ordering_specification;
 
   boost::spirit::qi::rule<Iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
     qualifier, correlation_name,
     table_name, schema_name, unqualified_schema_name, catalog_name,
-    unsigned_integer, exact_numeric_literal, signed_integer, mantissa,
-    exponent, approximate_numeric_literal, unsigned_numeric_literal,
     general_literal,
     unsigned_literal, unsigned_value_specification,
     set_function_type, general_set_function,
@@ -667,15 +669,13 @@ struct ADQL_parser
     user_defined_function, user_defined_function_name,
     user_defined_function_param, default_function_prefix,
     grouping_column_reference, grouping_column_reference_list,
-    group_by_clause;
+    group_by_clause,
+    sort_specification, sort_specification_list, order_by_clause;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
   boost::spirit::qi::rule<Iterator, ADQL::Coordinate (),
                           boost::spirit::ascii::space_type> coord;
-
-  boost::spirit::qi::rule<Iterator, std::string(),
-                          boost::spirit::ascii::space_type> column_name;
 
   boost::spirit::qi::rule<Iterator, ADQL::Query::Column_Variant (),
                           boost::spirit::ascii::space_type> select_item;
