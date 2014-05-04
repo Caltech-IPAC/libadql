@@ -8,9 +8,9 @@ class Geometry
 {
 public:
   Contains contains;
-  bool good() const
+  bool empty() const
   {
-    return !contains.point.coordinate.ra.empty();
+    return contains.point.coordinate.ra.empty();
   }
 };
 }

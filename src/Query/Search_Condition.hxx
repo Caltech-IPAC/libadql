@@ -18,9 +18,9 @@ public:
 
   std::vector<Variant> variant;
 
-  bool good() const
+  bool empty() const
   {
-    return !variant.empty();
+    return variant.empty();
   }
 };
 }
@@ -63,7 +63,7 @@ public:
 inline std::ostream & operator<<(std::ostream &os,
                                  const ADQL::Search_Condition &s)
 {
-  if(s.good())
+  if(!s.empty())
     {
       Search_Condition_Variant_Visitor visitor(os);
       return boost::apply_visitor(visitor,s.variant[0]);

@@ -126,8 +126,14 @@ int main (int argc, char *argv[])
                             ? "TOP " + std::to_string(query.top) + " " : "")
                         << query.columns
                         << " FROM " << query.table;
-              if(query.where.search_condition.good())
+              if(!query.where.search_condition.empty())
                 std::cout << " WHERE " << query.where.search_condition;
+              if(!query.group_by.empty())
+                std::cout << " GROUP BY " << query.group_by;
+              if(!query.having.search_condition.empty())
+                std::cout << " HAVING " << query.having.search_condition;
+              if(!query.order.empty())
+                std::cout << " ORDER BY " << query.order;
               std::cout << "\n";
             }
         }
