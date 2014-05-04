@@ -11,6 +11,9 @@
 
 #include "../Query.hxx"
 
+/// This parser does not have a separate lexer.  I have a feeling that
+/// there are some corner cases errors because of that.
+
 template <typename Iterator>
 struct ADQL_parser
     : boost::spirit::qi::grammar<Iterator, ADQL::Query (),
@@ -607,11 +610,9 @@ struct ADQL_parser
                               >> &nonidentifier_character]
       >> grouping_column_reference_list;
 
-    // FIXME: This is duplicated from search_condition.  It should
-    // just use search_condition, but Search_Condition is not written
-    // to be accomodating this way.
-    having_clause = lexeme[ascii::no_case["HAVING"] >> &nonidentifier_character]
-      >> (boolean_term | boolean_factor)[push_back(at_c<0>(_val), _1)];
+    having_clause %= lexeme[ascii::no_case["HAVING"]
+                            >> &nonidentifier_character]
+      >> search_condition;
 
     sort_key %= column_name | unsigned_integer;
     ordering_specification %= ascii::no_case[ascii::string("ASC")]
@@ -623,8 +624,7 @@ struct ADQL_parser
                               >> boost::spirit::qi::space]
       >> lexeme[ascii::no_case["BY"] >> boost::spirit::qi::space]
       >> sort_specification_list;
-    // FIXME: Not sure whether this first nonidentifier_character
-    // should be a ::space
+
     query %= lexeme[ascii::no_case["SELECT"] >> &nonidentifier_character]
       >> -set_quantifier
       >> -(lexeme[ascii::no_case["TOP"] >> boost::spirit::qi::space]
@@ -722,8 +722,10 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> boolean_term;
 
   boost::spirit::qi::rule<Iterator, ADQL::Search_Condition (),
-                          boost::spirit::ascii::space_type> search_condition,
-    having_clause;
+                          boost::spirit::ascii::space_type> search_condition;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Having (),
+                          boost::spirit::ascii::space_type> having_clause;
 
   boost::spirit::qi::rule<Iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where;

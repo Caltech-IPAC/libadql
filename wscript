@@ -76,15 +76,15 @@ def build(ctx):
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
         use=['boost','cxx11']
     )
-    # shared library
-    ctx.shlib(
-        source=cxx_sources,
-        includes='',
-        target='adql_query',
-        name='adql_query_sh',
-        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['boost','cxx11']
-    )
+    # # shared library
+    # ctx.shlib(
+    #     source=cxx_sources,
+    #     includes='',
+    #     target='adql_query',
+    #     name='adql_query_sh',
+    #     install_path=os.path.join(ctx.env.PREFIX, 'lib'),
+    #     use=['boost','cxx11']
+    # )
 
     # Install headers
 
