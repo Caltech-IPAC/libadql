@@ -576,7 +576,7 @@ struct ADQL_parser
       >> -lexeme[ascii::no_case[ascii::string("NOT")]
                  >> boost::spirit::qi::space]
       >> ascii::no_case["NULL"];
-    // FIXME: add like, null, and exists
+    // FIXME: add like, and exists
     predicate %= (comparison_predicate | between_predicate | in_predicate
                   | null_predicate);
 
@@ -623,12 +623,16 @@ struct ADQL_parser
     sort_key %= column_name | unsigned_integer;
     ordering_specification %= ascii::no_case[ascii::string("ASC")]
       | ascii::no_case[ascii::string("DESC")];
-    sort_specification %= sort_key >> -ordering_specification;
+    /// I have the vague feeling that there are cases where there are
+    /// no spaces between the sort_key and ordering_specification, but
+    /// I can not think of any.
+    sort_specification %= sort_key
+      >> -(boost::spirit::qi::space >> ordering_specification);
     sort_specification_list %= sort_specification
       >> *(char_(',') >> sort_specification);
     order_by_clause %= lexeme[ascii::no_case["ORDER"]
-                              >> boost::spirit::qi::space]
-      >> lexeme[ascii::no_case["BY"] >> boost::spirit::qi::space]
+                              >> &boost::spirit::qi::space]
+      >> lexeme[ascii::no_case["BY"] >> &boost::spirit::qi::space]
       >> sort_specification_list;
 
     query %= lexeme[ascii::no_case["SELECT"] >> &nonidentifier_character]
@@ -659,7 +663,7 @@ struct ADQL_parser
     character_representation, ADQL_reserved_word,
     SQL_reserved_word, keyword, all_identifiers, regular_identifier,
     identifier, set_quantifier, character_string_literal, separator,
-    column_name, sort_key, ordering_specification;
+    column_name, sort_key, ordering_specification, sort_specification;
 
   boost::spirit::qi::rule<Iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
@@ -676,7 +680,7 @@ struct ADQL_parser
     user_defined_function_param, default_function_prefix,
     grouping_column_reference, grouping_column_reference_list,
     group_by_clause,
-    sort_specification, sort_specification_list, order_by_clause;
+    sort_specification_list, order_by_clause;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
