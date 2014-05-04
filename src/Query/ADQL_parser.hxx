@@ -572,10 +572,11 @@ struct ADQL_parser
           | (lit('(') >> (value_expression % ',') >> ')'));
 
     null_predicate %= value_expression
-      >> lexeme[ascii::no_case["IS"] >> boost::spirit::qi::space]
+      >> lexeme[ascii::no_case["IS"] >> &boost::spirit::qi::space]
       >> -lexeme[ascii::no_case[ascii::string("NOT")]
-                 >> boost::spirit::qi::space]
+                 >> &boost::spirit::qi::space]
       >> ascii::no_case["NULL"];
+
     // FIXME: add like, and exists
     predicate %= (comparison_predicate | between_predicate | in_predicate
                   | null_predicate);
@@ -611,9 +612,8 @@ struct ADQL_parser
     grouping_column_reference_list %= grouping_column_reference
       >> *(char_(',') >> column_reference);
     group_by_clause %= lexeme[ascii::no_case["GROUP"]
-                              >> boost::spirit::qi::space
-                              >> ascii::no_case["BY"]
-                              >> &nonidentifier_character]
+                              >> &boost::spirit::qi::space]
+      >> lexeme[ascii::no_case["BY"] >> &nonidentifier_character]
       >> grouping_column_reference_list;
 
     having_clause %= lexeme[ascii::no_case["HAVING"]
