@@ -571,8 +571,14 @@ struct ADQL_parser
       >> (value_expression
           | (lit('(') >> (value_expression % ',') >> ')'));
 
+    null_predicate %= value_expression
+      >> lexeme[ascii::no_case["IS"] >> boost::spirit::qi::space]
+      >> -lexeme[ascii::no_case[ascii::string("NOT")]
+                 >> boost::spirit::qi::space]
+      >> ascii::no_case["NULL"];
     // FIXME: add like, null, and exists
-    predicate %= (comparison_predicate | between_predicate | in_predicate);
+    predicate %= (comparison_predicate | between_predicate | in_predicate
+                  | null_predicate);
 
     boolean_primary %= predicate | (lit('(') >> search_condition >> ')');
 
@@ -708,6 +714,9 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::In_Predicate (),
                           boost::spirit::ascii::space_type> in_predicate;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Null_Predicate (),
+                          boost::spirit::ascii::space_type> null_predicate;
 
   boost::spirit::qi::rule<Iterator, ADQL::Predicate (),
                           boost::spirit::ascii::space_type> predicate;
