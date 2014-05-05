@@ -529,15 +529,22 @@ struct ADQL_parser
     concatenation_operator %= ascii::string("||");
     /// Flip the order of character_factor and
     /// character_value_expression to prevent recursion.
-
     character_value_expression %= character_factor
       >> -(concatenation_operator >> character_value_expression);
 
+    string_value_expression %= character_value_expression;
     // FIXME: value_expression should also have a
     // geometry_value_expression, but the database can not handle it.
-    value_expression %=
-      numeric_value_expression;
-    // value_expression %= numeric_value_expression | string_value_expression;
+
+    /// This expression first checks for a concatenation operator.
+    /// Otherwise a numeric_value_expression would match the first
+    /// half of a concatenation, meaning the concatenation operator
+    /// would cause the parse to fail.  We can not put
+    /// string_value_expression first, because that would partially
+    /// match arithmetic.  For 'a+b', it matches 'a' but not the '+'.
+    value_expression %= (hold[character_factor >> concatenation_operator]
+                         >> character_value_expression)
+      | numeric_value_expression | string_value_expression;
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
     point %= ascii::no_case["POINT"] >> '(' >> coord_sys >> ','
@@ -707,10 +714,8 @@ struct ADQL_parser
     grouping_column_reference, grouping_column_reference_list,
     group_by_clause,
     sort_specification_list, order_by_clause, string_value_function,
-    character_primary, character_factor, concatenation,
-
-    character_value_expressio,
-    character_value_expression, match_value, pattern;
+    character_primary, character_factor,
+    character_value_expression, match_value, pattern, string_value_expression;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;

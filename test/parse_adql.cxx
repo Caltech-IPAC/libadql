@@ -56,6 +56,7 @@ int main (int argc, char *argv[])
     "SELECT modern() FROM my_table1",
     "SELECT my_modern_function(ra,dec) FROM my_table1",
     "SELECT my_modern_function(ra,dec), modern() FROM my_table1",
+    "SELECT my_modern_function(ra,dec) || modern() FROM my_table1",
     "select 'a b c','a','a ''bv' from b",
     "select \"a b\",\"a \"\" b\" from b",
     "select 'a' 'b' from b",
@@ -83,7 +84,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x like y",
     "SELECT * FROM my_table1 where x like y || z",
     "SELECT * FROM my_table1 where x not like my_sin(x)",
-    "SELECT * FROM my_table1 where x like my_sin(x)",
+    "SELECT * FROM my_table1 where x like my_sin(x) || x",
   };
 
 
