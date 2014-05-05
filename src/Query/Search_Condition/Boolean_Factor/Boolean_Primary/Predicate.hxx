@@ -4,6 +4,7 @@
 #include "Predicate/Between_Predicate.hxx"
 #include "Predicate/In_Predicate.hxx"
 #include "Predicate/Null_Predicate.hxx"
+#include "Predicate/Like_Predicate.hxx"
 
 namespace ADQL
 {
@@ -11,7 +12,7 @@ class Predicate
 {
 public:
   typedef boost::variant<Comparison_Predicate,Between_Predicate,
-                         In_Predicate, Null_Predicate> Variant;
+                         In_Predicate, Null_Predicate, Like_Predicate> Variant;
   Variant variant;
 };
 }
@@ -38,6 +39,10 @@ public:
     return os << s;
   }
   std::ostream & operator()(const ADQL::Null_Predicate &s) const
+  {
+    return os << s;
+  }
+  std::ostream & operator()(const ADQL::Like_Predicate &s) const
   {
     return os << s;
   }

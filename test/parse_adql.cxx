@@ -80,6 +80,10 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 order by x",
     "SELECT * FROM my_table1 order by x asc",
     "SELECT * FROM my_table1 order by x desc",
+    "SELECT * FROM my_table1 where x like y",
+    "SELECT * FROM my_table1 where x like y || z",
+    "SELECT * FROM my_table1 where x not like my_sin(x)",
+    "SELECT * FROM my_table1 where x like my_sin(x)",
   };
 
 

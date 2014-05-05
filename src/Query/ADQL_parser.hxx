@@ -11,7 +11,10 @@
 
 #include "../Query.hxx"
 
-/// This parser does not have a separate lexer.  I have a feeling that
+/// This parser does not have a separate lexer.  That makes things a
+/// little more complicated because I have to be sure to check for
+/// things my LOG10 before LOG or my_identifier() before
+/// my_identifier.  I think it all works, but I have a feeling that
 /// there are some corner cases errors because of that.
 
 template <typename Iterator>
@@ -437,7 +440,6 @@ struct ADQL_parser
       | set_function_specification
       | (char_('(') >> value_expression >> char_(')'));
 
-
     trig_function %=
       (hold[(ascii::no_case[ascii::string("ACOS")]
              | ascii::no_case[ascii::string("ASIN")]
@@ -497,7 +499,7 @@ struct ADQL_parser
       /// Use this awkward syntax instead of the usual list parser so
       /// that the attribute is still a string overall.
       >> -(user_defined_function_param
-           >> +(char_(',') >> user_defined_function_param))
+           >> *(char_(',') >> user_defined_function_param))
       >> char_(')');
 
     // FIXME: numeric_value_function should have
@@ -516,6 +518,20 @@ struct ADQL_parser
     term %= factor >> -(char_("*/") >> term);
     numeric_value_expression %=
       term >> -(char_("+-") >> numeric_value_expression);
+
+    // FIXME: string_value_function should have a string_geometry_function;
+    string_value_function %= user_defined_function;
+    /// Flipped the order here because a value_expression_primary can
+    /// match a function name that should be matched by
+    /// string_value_function
+    character_primary %= string_value_function | value_expression_primary;
+    character_factor %= character_primary;
+    concatenation_operator %= ascii::string("||");
+    /// Flip the order of character_factor and
+    /// character_value_expression to prevent recursion.
+
+    character_value_expression %= character_factor
+      >> -(concatenation_operator >> character_value_expression);
 
     // FIXME: value_expression should also have a
     // geometry_value_expression, but the database can not handle it.
@@ -577,9 +593,18 @@ struct ADQL_parser
                  >> &boost::spirit::qi::space]
       >> ascii::no_case["NULL"];
 
-    // FIXME: add like, and exists
+    match_value %= character_value_expression;
+    pattern %= character_value_expression;
+
+    like_predicate %= match_value
+      >> -lexeme[ascii::no_case[ascii::string("NOT")]
+                 >> &boost::spirit::qi::space]
+      >> lexeme[ascii::no_case["LIKE"] >> &boost::spirit::qi::space]
+      >> pattern;
+
+    // FIXME: add exists
     predicate %= (comparison_predicate | between_predicate | in_predicate
-                  | null_predicate);
+                  | null_predicate | like_predicate);
 
     boolean_primary %= predicate | (lit('(') >> search_condition >> ')');
 
@@ -663,7 +688,8 @@ struct ADQL_parser
     character_representation, ADQL_reserved_word,
     SQL_reserved_word, keyword, all_identifiers, regular_identifier,
     identifier, set_quantifier, character_string_literal, separator,
-    column_name, sort_key, ordering_specification, sort_specification;
+    column_name, sort_key, ordering_specification, sort_specification,
+    concatenation_operator;
 
   boost::spirit::qi::rule<Iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
@@ -680,7 +706,11 @@ struct ADQL_parser
     user_defined_function_param, default_function_prefix,
     grouping_column_reference, grouping_column_reference_list,
     group_by_clause,
-    sort_specification_list, order_by_clause;
+    sort_specification_list, order_by_clause, string_value_function,
+    character_primary, character_factor, concatenation,
+
+    character_value_expressio,
+    character_value_expression, match_value, pattern;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -721,6 +751,9 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::Null_Predicate (),
                           boost::spirit::ascii::space_type> null_predicate;
+
+  boost::spirit::qi::rule<Iterator, ADQL::Like_Predicate (),
+                          boost::spirit::ascii::space_type> like_predicate;
 
   boost::spirit::qi::rule<Iterator, ADQL::Predicate (),
                           boost::spirit::ascii::space_type> predicate;
