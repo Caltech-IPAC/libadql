@@ -14,5 +14,5 @@ public:
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Where,
-                           (ADQL::Geometry, geometry)
-                           (ADQL::Search_Condition, search_condition))
+                           (ADQL::Geometry, geometry)(ADQL::Search_Condition,
+                                                      search_condition))

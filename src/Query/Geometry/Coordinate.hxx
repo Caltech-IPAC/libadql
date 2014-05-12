@@ -14,6 +14,4 @@ public:
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Coordinate,
-                           (std::string, ra)
-                           (std::string, dec))
-
+                           (std::string, ra)(std::string, dec))

@@ -14,7 +14,8 @@ public:
 };
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Boolean_Term,
-                           (ADQL::Boolean_Factor, boolean_factor)
-                           (std::string, logical_op)
-                           (ADQL::Search_Condition_Wrap, search_condition_wrap))
+BOOST_FUSION_ADAPT_STRUCT (
+    ADQL::Boolean_Term,
+    (ADQL::Boolean_Factor,
+     boolean_factor)(std::string, logical_op)(ADQL::Search_Condition_Wrap,
+                                              search_condition_wrap))

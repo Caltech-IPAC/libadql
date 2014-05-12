@@ -10,15 +10,13 @@ public:
 };
 }
 
-inline std::ostream & operator<<(std::ostream &os,
-                                 const ADQL::Like_Predicate &c)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Like_Predicate &c)
 {
-  return os << c.match << " " << c.Not << (c.Not.empty() ? "" : " ")
+  return os << c.match << " " << c.Not << (c.Not.empty () ? "" : " ")
             << "LIKE " << c.pattern;
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Like_Predicate,
-                           (std::string, match)
-                           (std::string, Not)
-                           (std::string, pattern))
-
+                           (std::string, match)(std::string, Not)(std::string,
+                                                                  pattern))

@@ -8,52 +8,46 @@ public:
   std::string value;
   std::string Not;
 
-  typedef boost::variant<std::vector<std::string>,std::string> Variant;
+  typedef boost::variant<std::vector<std::string>, std::string> Variant;
   Variant variant;
 };
 }
 
-namespace {
-class In_Predicate_Visitor
-  : public boost::static_visitor<std::ostream &>
+namespace
+{
+class In_Predicate_Visitor : public boost::static_visitor<std::ostream &>
 {
 public:
   std::ostream &os;
-  In_Predicate_Visitor(std::ostream &OS): os(OS) {}
-  In_Predicate_Visitor()=delete;
+  In_Predicate_Visitor (std::ostream &OS) : os (OS) {}
+  In_Predicate_Visitor () = delete;
 
-  std::ostream & operator()(const std::vector<std::string> &v) const
+  std::ostream &operator()(const std::vector<std::string> &v) const
   {
     os << "(";
-    for(auto n=v.begin(); n!=v.end();)
+    for (auto n = v.begin (); n != v.end ();)
       {
         os << *n;
         ++n;
-        if(n!=v.end())
+        if (n != v.end ())
           os << ", ";
       }
     os << ")";
     return os;
   }
-    
-  std::ostream & operator()(const std::string &v) const
-  {
-    return os << v;
-  }
+
+  std::ostream &operator()(const std::string &v) const { return os << v; }
 };
 }
 
-inline std::ostream & operator<<(std::ostream &os,
-                                 const ADQL::In_Predicate &p)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::In_Predicate &p)
 {
-  return os << p.value << " " << p.Not << (p.Not.empty() ? "" : " ")
-            << "IN ";
-  In_Predicate_Visitor visitor(os);
-  return boost::apply_visitor(visitor,p.variant);
+  return os << p.value << " " << p.Not << (p.Not.empty () ? "" : " ") << "IN ";
+  In_Predicate_Visitor visitor (os);
+  return boost::apply_visitor (visitor, p.variant);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::In_Predicate,
-                           (std::string, value)
-                           (std::string, Not)
-                           (ADQL::In_Predicate::Variant, variant))
-
+                           (std::string,
+                            value)(std::string,
+                                   Not)(ADQL::In_Predicate::Variant, variant))
