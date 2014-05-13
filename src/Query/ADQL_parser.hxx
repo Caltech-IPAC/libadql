@@ -549,8 +549,9 @@ struct ADQL_parser
     between_predicate
         %= value_expression
            >> lexeme[-(ascii::no_case[ascii::string ("NOT")]
-                       >> boost::spirit::qi::space) >> ascii::no_case["BETWEEN"]
-                     >> &nonidentifier_character] >> value_expression
+                       >> boost::spirit::qi::space)
+                     >> ascii::no_case["BETWEEN"] >> &nonidentifier_character]
+           >> value_expression
            >> lexeme[ascii::no_case["AND"] >> &nonidentifier_character]
            >> value_expression;
 
@@ -584,8 +585,9 @@ struct ADQL_parser
 
     boolean_primary %= predicate | (lit ('(') >> search_condition >> ')');
 
-    boolean_factor %= lexeme[-(ascii::no_case[ascii::string ("NOT")] 
-                               >> &nonidentifier_character)] >> boolean_primary;
+    boolean_factor %= lexeme[-(ascii::no_case[ascii::string ("NOT")]
+                               >> &nonidentifier_character)]
+                      >> boolean_primary;
 
     boolean_term %= boolean_factor
                     >> lexeme[(ascii::no_case[ascii::string ("AND")]
@@ -595,14 +597,15 @@ struct ADQL_parser
     search_condition
         = (boolean_term | boolean_factor)[push_back (at_c<0>(_val), _1)];
 
-    where = lexeme[ascii::no_case["WHERE"] >> &nonidentifier_character]
-            >> ((geometry[at_c<0>(_val) = _1]
-                 >> -(ascii::no_case["AND"] >> '('
-                      >> search_condition[at_c<1>(_val) = _1] >> ')'))
-                | (lit ('(') >> search_condition[at_c<1>(_val) = _1] >> ')' 
-                   >> (lexeme[ascii::no_case["AND"] >> &nonidentifier_character]
-                      >> geometry[at_c<0>(_val) = _1]))
-                | (search_condition[at_c<1>(_val) = _1]));
+    where
+        = lexeme[ascii::no_case["WHERE"] >> &nonidentifier_character]
+          >> ((geometry[at_c<0>(_val) = _1]
+               >> -(ascii::no_case["AND"] >> '('
+                    >> search_condition[at_c<1>(_val) = _1] >> ')'))
+              | (lit ('(') >> search_condition[at_c<1>(_val) = _1] >> ')'
+                 >> (lexeme[ascii::no_case["AND"] >> &nonidentifier_character]
+                     >> geometry[at_c<0>(_val) = _1]))
+              | (search_condition[at_c<1>(_val) = _1]));
 
     grouping_column_reference %= column_reference;
     grouping_column_reference_list %= grouping_column_reference

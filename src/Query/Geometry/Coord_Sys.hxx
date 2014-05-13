@@ -10,14 +10,10 @@ class Coord_Sys
 {
 public:
   enum class Reference_Frame
-  {
-    J2000,
-    ICRS
-  } frame;
+  { J2000,
+    ICRS } frame;
   enum class Reference_Position
-  {
-    GEOCENTER
-  } position;
+  { GEOCENTER } position;
 };
 }
 
