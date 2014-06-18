@@ -135,8 +135,8 @@ int main (int argc, char *argv[])
                 std::cout << " WHERE " << query.where.search_condition;
               if(!query.group_by.empty())
                 std::cout << " GROUP BY " << query.group_by;
-              if(!query.having.search_condition.empty())
-                std::cout << " HAVING " << query.having.search_condition;
+              if(!query.having.empty())
+                std::cout << " HAVING " << query.having;
               if(!query.order_by.empty())
                 std::cout << " ORDER BY " << query.order_by;
               std::cout << "\n";
