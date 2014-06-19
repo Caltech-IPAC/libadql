@@ -24,6 +24,16 @@ public:
   std::string group_by, order_by;
   Having having;
   Query (const std::string &input);
+
+  std::vector<std::pair<std::string,std::string> > simplified_columns() const;
+
+  bool simple_query() const
+  {
+    return (all_or_distinct.empty() || all_or_distinct=="ALL")
+      && where.search_condition.empty()
+      && group_by.empty() && order_by.empty()
+      && having.empty();
+  }
 };
 }
 
@@ -64,7 +74,8 @@ inline std::ostream &operator<<(std::ostream &os,
 BOOST_FUSION_ADAPT_STRUCT (
     ADQL::Query,
     (std::string, all_or_distinct)(size_t, top)(ADQL::Query::Columns,
-                                                columns)(std::string, table)(
+                                                columns)
+    (std::string, table)(
         ADQL::Where, where)(std::string, group_by)(ADQL::Having,
                                                    having)(std::string,
                                                            order_by))
