@@ -636,7 +636,7 @@ struct ADQL_parser
 
     query %= lexeme[ascii::no_case["SELECT"] >> &nonidentifier_character]
              >> -set_quantifier
-             >> -(lexeme[ascii::no_case["TOP"] >> boost::spirit::qi::space]
+             >> -(lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]
                   >> ulong_long) >> columns
              >> lexeme[ascii::no_case["FROM"] >> &nonidentifier_character]
              // FIXME: should be a table_reference

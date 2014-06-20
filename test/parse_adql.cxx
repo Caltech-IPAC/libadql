@@ -42,7 +42,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x not in (10,20,30)",
     "SELECT All * FROM my_table1",
     "SELECT Distinct * FROM my_table1",
-    "SELECT Top 50 * FROM my_table1",
+    "SELECT Top 14223 * FROM my_table1",
     "SELECT * FROM my_table1 where 38*(x+1-3)>2/4",
     "SELECT ra+dec as ra_dec FROM my_table1",
     "SELECT ra+dec FROM my_table1",
@@ -121,6 +121,11 @@ int main (int argc, char *argv[])
       try
         {
           ADQL::Query query (i);
+
+          if(query.top!=std::numeric_limits<unsigned long long>::max()
+             && query.top!=14223)
+            throw std::runtime_error("Wrong value for TOP: "
+                                     + std::to_string(query.top));
           if(!quiet)
             {
               std::cout << "PASS: " << i << "\n";
