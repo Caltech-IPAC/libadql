@@ -542,9 +542,10 @@ struct ADQL_parser
 
     comparison_predicate %= value_expression
                             >> (ascii::string ("=") | ascii::string ("!=")
-                                | ascii::string ("<>") | ascii::string ("<")
-                                | ascii::string ("<=") | ascii::string (">")
-                                | ascii::string (">=")) >> value_expression;
+                                | ascii::string ("<>")
+                                | ascii::string ("<=") | ascii::string (">=")
+                                | ascii::string ("<") | ascii::string (">")
+                                ) >> value_expression;
 
     between_predicate
         %= value_expression
