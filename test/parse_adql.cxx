@@ -86,6 +86,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x not like my_sin(x)",
     "SELECT * FROM my_table1 where x like my_sin(x) || x",
     "SELECT * FROM my_table WHERE (mjd>=55550.0 and mjd<=65650.5)",
+    "SELECT my_table1.*,'table' from my_table1",
   };
 
 
