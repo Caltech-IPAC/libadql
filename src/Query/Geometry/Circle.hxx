@@ -9,14 +9,14 @@ class Circle
 {
 public:
   Coord_Sys coord_sys;
-  Coordinate coordinate;
+  Coordinate center;
   double radius;
 };
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle,
                            (ADQL::Coord_Sys, coord_sys)(ADQL::Coordinate,
-                                                        coordinate)(double,
-                                                                    radius))
+                                                        center)(double,
+                                                                radius))
 
 
