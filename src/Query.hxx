@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 #include <boost/fusion/include/io.hpp>
 #include "boost/variant.hpp"
 #include "Query/As.hxx"
