@@ -14,9 +14,6 @@ public:
 };
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle,
-                           (ADQL::Coord_Sys, coord_sys)(ADQL::Coordinate,
-                                                        center)(double,
-                                                                radius))
-
-
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle, (ADQL::Coord_Sys,
+                                          coord_sys)(ADQL::Coordinate,
+                                                     center)(double, radius))

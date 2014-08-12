@@ -521,8 +521,20 @@ struct ADQL_parser
     point %= ascii::no_case["POINT"] >> '(' >> coord_sys >> ',' >> coord
              >> ')';
 
+    // FIXME: In theory, the radius should be an expression, not a
+    // number.  In practice, we can only handle numbers.
     circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys >> ',' >> coord
               >> ',' >> boost::spirit::qi::double_ >> ')';
+    ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> coord_sys >> ',' >> coord
+              >> ',' >> boost::spirit::qi::double_
+              >> ',' >> boost::spirit::qi::double_
+              >> ',' >> boost::spirit::qi::double_ >> ')';
+    box %= ascii::no_case["BOX"] >> '(' >> coord_sys >> ',' >> coord
+              >> ',' >> boost::spirit::qi::double_
+              >> ',' >> boost::spirit::qi::double_ >> ')';
+    coord_list %= coord % ',';
+    polygon %= ascii::no_case["POLYGON"] >> '(' >> coord_sys >> ','
+              >> coord_list >> ')';
 
     contains %= ascii::no_case["CONTAINS"] >> '(' >> point >> ',' >> circle
                 >> ')';
@@ -697,6 +709,14 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> point;
   boost::spirit::qi::rule<Iterator, ADQL::Circle (),
                           boost::spirit::ascii::space_type> circle;
+  boost::spirit::qi::rule<Iterator, ADQL::Ellipse (),
+                          boost::spirit::ascii::space_type> ellipse;
+  boost::spirit::qi::rule<Iterator, ADQL::Box (),
+                          boost::spirit::ascii::space_type> box;
+  boost::spirit::qi::rule<Iterator, ADQL::Polygon (),
+                          boost::spirit::ascii::space_type> polygon;
+  boost::spirit::qi::rule<Iterator, std::vector<ADQL::Coordinate>(),
+                          boost::spirit::ascii::space_type> coord_list;
 
   boost::spirit::qi::rule<Iterator, ADQL::Contains (),
                           boost::spirit::ascii::space_type> contains;

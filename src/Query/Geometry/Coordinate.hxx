@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <sstream>
+#include <string>
 #include <boost/fusion/include/adapt_struct.hpp>
 
 namespace ADQL
