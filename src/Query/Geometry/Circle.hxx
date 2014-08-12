@@ -1,5 +1,4 @@
-#ifndef ADQL_CIRCLE_HXX
-#define ADQL_CIRCLE_HXX
+#pragma once
 
 #include "Coord_Sys.hxx"
 #include "Coordinate.hxx"
@@ -20,4 +19,4 @@ BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle,
                                                         coordinate)(double,
                                                                     radius))
 
-#endif
+

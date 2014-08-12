@@ -1,5 +1,4 @@
-#ifndef ADQL_CONTAINS_HXX
-#define ADQL_CONTAINS_HXX
+#pragma once
 
 #include "Point.hxx"
 #include "Circle.hxx"
@@ -17,4 +16,3 @@ public:
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Contains,
                            (ADQL::Point, point)(ADQL::Circle, circle))
 
-#endif

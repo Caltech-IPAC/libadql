@@ -1,5 +1,4 @@
-#ifndef ADQL_COORD_SYS_HXX
-#define ADQL_COORD_SYS_HXX
+#pragma once
 
 #include <iostream>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -36,4 +35,4 @@ BOOST_FUSION_ADAPT_STRUCT (ADQL::Coord_Sys,
                             frame)(ADQL::Coord_Sys::Reference_Position,
                                    position))
 
-#endif
+
