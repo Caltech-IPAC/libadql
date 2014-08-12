@@ -10,6 +10,12 @@ int main (int argc, char *argv[])
     "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
     "CONTAINS(POINT('J2000 Geocenter',ra,dec),CIRCLE('J2000',+10 , -20,-1))= 1",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),BOX('J2000',+10 , -20,1,2))= 1",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),ELLIPSE('J2000',+10 , -20,1,2,3))= 1",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),POLYGON('J2000',0,1,2,3,4,5,6,7,8,9,10,11,12,13))= 1",
     "SELECT * FROM mytable WHERE "
     "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
     "SELECT * FROM my_table WHERE "

@@ -536,7 +536,8 @@ struct ADQL_parser
     polygon %= ascii::no_case["POLYGON"] >> '(' >> coord_sys >> ','
               >> coord_list >> ')';
 
-    contains %= ascii::no_case["CONTAINS"] >> '(' >> point >> ',' >> circle
+    shape %= circle | box | ellipse | polygon;
+    contains %= ascii::no_case["CONTAINS"] >> '(' >> point >> ',' >> shape
                 >> ')';
 
     geometry %= (contains >> '=' >> '1') | (lit ('1') >> '=' >> contains);
@@ -720,6 +721,8 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::Contains (),
                           boost::spirit::ascii::space_type> contains;
+  boost::spirit::qi::rule<Iterator, ADQL::Contains::Shape(),
+                          boost::spirit::ascii::space_type> shape;
 
   boost::spirit::qi::rule<Iterator, ADQL::Geometry (),
                           boost::spirit::ascii::space_type> geometry;

@@ -11,11 +11,13 @@ namespace ADQL
 class Contains
 {
 public:
+  typedef boost::variant<Circle, Box, Ellipse, Polygon> Shape;
+
   Point point;
-  Circle circle;
+  Shape shape;
 };
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Contains,
-                           (ADQL::Point, point)(ADQL::Circle, circle))
+                           (ADQL::Point, point)(ADQL::Contains::Shape, shape))
 
