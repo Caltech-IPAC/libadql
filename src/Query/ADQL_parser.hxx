@@ -83,232 +83,264 @@ struct ADQL_parser
                           | ascii::no_case[ascii::string ("ACOS")]
                           | ascii::no_case[ascii::string ("ABS")];
 
-    SQL_reserved_word %= ascii::no_case[ascii::string ("ZONE")]
-                         | ascii::no_case[ascii::string ("YEAR")]
-                         | ascii::no_case[ascii::string ("WRITE")]
-                         | ascii::no_case[ascii::string ("WORK")]
-                         | ascii::no_case[ascii::string ("WITH")]
-                         | ascii::no_case[ascii::string ("WHERE")]
-                         | ascii::no_case[ascii::string ("WHENEVER")]
-                         | ascii::no_case[ascii::string ("WHEN")]
-                         | ascii::no_case[ascii::string ("VIEW")]
-                         | ascii::no_case[ascii::string ("VARYING")]
-                         | ascii::no_case[ascii::string ("VARCHAR")]
-                         | ascii::no_case[ascii::string ("VALUES")]
-                         | ascii::no_case[ascii::string ("VALUE")]
-                         | ascii::no_case[ascii::string ("USING")]
-                         | ascii::no_case[ascii::string ("USER")]
-                         | ascii::no_case[ascii::string ("USAGE")]
-                         | ascii::no_case[ascii::string ("UPPER")]
-                         | ascii::no_case[ascii::string ("UPDATE")]
-                         | ascii::no_case[ascii::string ("UNKNOWN")]
-                         | ascii::no_case[ascii::string ("UNIQUE")]
-                         | ascii::no_case[ascii::string ("UNION")]
-                         | ascii::no_case[ascii::string ("TRUE")]
-                         | ascii::no_case[ascii::string ("TRIM")]
-                         | ascii::no_case[ascii::string ("TRANSLATION")]
-                         | ascii::no_case[ascii::string ("TRANSLATE")]
-                         | ascii::no_case[ascii::string ("TRANSACTION")]
-                         | ascii::no_case[ascii::string ("TRAILING")]
-                         | ascii::no_case[ascii::string ("TO")]
-                         | ascii::no_case[ascii::string ("TIMEZONE_MINUTE")]
-                         | ascii::no_case[ascii::string ("TIMEZONE_HOUR")]
-                         | ascii::no_case[ascii::string ("TIMESTAMP")]
-                         | ascii::no_case[ascii::string ("TIME")]
-                         | ascii::no_case[ascii::string ("THEN")]
-                         | ascii::no_case[ascii::string ("TEMPORARY")]
-                         | ascii::no_case[ascii::string ("TABLE")]
-                         | ascii::no_case[ascii::string ("SYSTEM_USER")]
-                         | ascii::no_case[ascii::string ("SUM")]
-                         | ascii::no_case[ascii::string ("SUBSTRING")]
-                         | ascii::no_case[ascii::string ("SQLSTATE")]
-                         | ascii::no_case[ascii::string ("SQLERROR")]
-                         | ascii::no_case[ascii::string ("SQLCODE")]
-                         | ascii::no_case[ascii::string ("SQL")]
-                         | ascii::no_case[ascii::string ("SPACE")]
-                         | ascii::no_case[ascii::string ("SOME")]
-                         | ascii::no_case[ascii::string ("SMALLINT")]
-                         | ascii::no_case[ascii::string ("SIZE")]
-                         | ascii::no_case[ascii::string ("SET")]
-                         | ascii::no_case[ascii::string ("SESSION_USER")]
-                         | ascii::no_case[ascii::string ("SESSION")]
-                         | ascii::no_case[ascii::string ("SELECT")]
-                         | ascii::no_case[ascii::string ("SECTION")]
-                         | ascii::no_case[ascii::string ("SECOND")]
-                         | ascii::no_case[ascii::string ("SCROLL")]
-                         | ascii::no_case[ascii::string ("SCHEMA")]
-                         | ascii::no_case[ascii::string ("ROWS")]
-                         | ascii::no_case[ascii::string ("ROLLBACK")]
-                         | ascii::no_case[ascii::string ("RIGHT")]
-                         | ascii::no_case[ascii::string ("REVOKE")]
-                         | ascii::no_case[ascii::string ("RESTRICT")]
-                         | ascii::no_case[ascii::string ("RELATIVE")]
-                         | ascii::no_case[ascii::string ("REFERENCES")]
-                         | ascii::no_case[ascii::string ("REAL")]
-                         | ascii::no_case[ascii::string ("READ")]
-                         | ascii::no_case[ascii::string ("PUBLIC")]
-                         | ascii::no_case[ascii::string ("PROCEDURE")]
-                         | ascii::no_case[ascii::string ("PRIVILEGES")]
-                         | ascii::no_case[ascii::string ("PRIOR")]
-                         | ascii::no_case[ascii::string ("PRIMARY")]
-                         | ascii::no_case[ascii::string ("PRESERVE")]
-                         | ascii::no_case[ascii::string ("PREPARE")]
-                         | ascii::no_case[ascii::string ("PRECISION")]
-                         | ascii::no_case[ascii::string ("POSITION")]
-                         | ascii::no_case[ascii::string ("PARTIAL")]
-                         | ascii::no_case[ascii::string ("PAD")]
-                         | ascii::no_case[ascii::string ("OVERLAPS")]
-                         | ascii::no_case[ascii::string ("OUTPUT")]
-                         | ascii::no_case[ascii::string ("OUTER")]
-                         | ascii::no_case[ascii::string ("ORDER")]
-                         | ascii::no_case[ascii::string ("OR")]
-                         | ascii::no_case[ascii::string ("OPTION")]
-                         | ascii::no_case[ascii::string ("OPEN")]
-                         | ascii::no_case[ascii::string ("ONLY")]
-                         | ascii::no_case[ascii::string ("ON")]
-                         | ascii::no_case[ascii::string ("OF")]
-                         | ascii::no_case[ascii::string ("OCTET_LENGTH")]
-                         | ascii::no_case[ascii::string ("NUMERIC")]
-                         | ascii::no_case[ascii::string ("NULLIF")]
-                         | ascii::no_case[ascii::string ("NULL")]
-                         | ascii::no_case[ascii::string ("NOT")]
-                         | ascii::no_case[ascii::string ("NO")]
-                         | ascii::no_case[ascii::string ("NEXT")]
-                         | ascii::no_case[ascii::string ("NCHAR")]
-                         | ascii::no_case[ascii::string ("NATURAL")]
-                         | ascii::no_case[ascii::string ("NATIONAL")]
-                         | ascii::no_case[ascii::string ("NAMES")]
-                         | ascii::no_case[ascii::string ("MONTH")]
-                         | ascii::no_case[ascii::string ("MODULE")]
-                         | ascii::no_case[ascii::string ("MINUTE")]
-                         | ascii::no_case[ascii::string ("MIN")]
-                         | ascii::no_case[ascii::string ("MAX")]
-                         | ascii::no_case[ascii::string ("MATCH")]
-                         | ascii::no_case[ascii::string ("LOWER")]
-                         | ascii::no_case[ascii::string ("LOCAL")]
-                         | ascii::no_case[ascii::string ("LIKE")]
-                         | ascii::no_case[ascii::string ("LEVEL")]
-                         | ascii::no_case[ascii::string ("LEFT")]
-                         | ascii::no_case[ascii::string ("LEADING")]
-                         | ascii::no_case[ascii::string ("LAST")]
-                         | ascii::no_case[ascii::string ("LANGUAGE")]
-                         | ascii::no_case[ascii::string ("KEY")]
-                         | ascii::no_case[ascii::string ("JOIN")]
-                         | ascii::no_case[ascii::string ("ISOLATION")]
-                         | ascii::no_case[ascii::string ("IS")]
-                         | ascii::no_case[ascii::string ("INTO")]
-                         | ascii::no_case[ascii::string ("INTERVAL")]
-                         | ascii::no_case[ascii::string ("INTERSECT")]
-                         | ascii::no_case[ascii::string ("INTEGER")]
-                         | ascii::no_case[ascii::string ("INT")]
-                         | ascii::no_case[ascii::string ("INSERT")]
-                         | ascii::no_case[ascii::string ("INSENSITIVE")]
-                         | ascii::no_case[ascii::string ("INPUT")]
-                         | ascii::no_case[ascii::string ("INNER")]
-                         | ascii::no_case[ascii::string ("INITIALLY")]
-                         | ascii::no_case[ascii::string ("INDICATOR")]
-                         | ascii::no_case[ascii::string ("IN")]
-                         | ascii::no_case[ascii::string ("IMMEDIATE")]
-                         | ascii::no_case[ascii::string ("IDENTITY")]
-                         | ascii::no_case[ascii::string ("HOUR")]
-                         | ascii::no_case[ascii::string ("HAVING")]
-                         | ascii::no_case[ascii::string ("GROUP")]
-                         | ascii::no_case[ascii::string ("GRANT")]
-                         | ascii::no_case[ascii::string ("GOTO")]
-                         | ascii::no_case[ascii::string ("GO")]
-                         | ascii::no_case[ascii::string ("GLOBAL")]
-                         | ascii::no_case[ascii::string ("GET")]
-                         | ascii::no_case[ascii::string ("FULL")]
-                         | ascii::no_case[ascii::string ("FROM")]
-                         | ascii::no_case[ascii::string ("FOUND")]
-                         | ascii::no_case[ascii::string ("FOREIGN")]
-                         | ascii::no_case[ascii::string ("FOR")]
-                         | ascii::no_case[ascii::string ("FLOAT")]
-                         | ascii::no_case[ascii::string ("FIRST")]
-                         | ascii::no_case[ascii::string ("FETCH")]
-                         | ascii::no_case[ascii::string ("FALSE")]
-                         | ascii::no_case[ascii::string ("EXTRACT")]
-                         | ascii::no_case[ascii::string ("EXTERNAL")]
-                         | ascii::no_case[ascii::string ("EXISTS")]
-                         | ascii::no_case[ascii::string ("EXECUTE")]
-                         | ascii::no_case[ascii::string ("EXEC")]
-                         | ascii::no_case[ascii::string ("EXCEPTION")]
-                         | ascii::no_case[ascii::string ("EXCEPT")]
-                         | ascii::no_case[ascii::string ("ESCAPE")]
-                         | ascii::no_case[ascii::string ("END-EXEC")]
-                         | ascii::no_case[ascii::string ("END")]
-                         | ascii::no_case[ascii::string ("ELSE")]
-                         | ascii::no_case[ascii::string ("DROP")]
-                         | ascii::no_case[ascii::string ("DOUBLE")]
-                         | ascii::no_case[ascii::string ("DOMAIN")]
-                         | ascii::no_case[ascii::string ("DISTINCT")]
-                         | ascii::no_case[ascii::string ("DISCONNECT")]
-                         | ascii::no_case[ascii::string ("DIAGNOSTICS")]
-                         | ascii::no_case[ascii::string ("DESCRIPTOR")]
-                         | ascii::no_case[ascii::string ("DESCRIBE")]
-                         | ascii::no_case[ascii::string ("DESC")]
-                         | ascii::no_case[ascii::string ("DELETE")]
-                         | ascii::no_case[ascii::string ("DEFERRED")]
-                         | ascii::no_case[ascii::string ("DEFERRABLE")]
-                         | ascii::no_case[ascii::string ("DEFAULT")]
-                         | ascii::no_case[ascii::string ("DECLARE")]
-                         | ascii::no_case[ascii::string ("DECIMAL")]
-                         | ascii::no_case[ascii::string ("DEALLOCATE")]
-                         | ascii::no_case[ascii::string ("DAY")]
-                         | ascii::no_case[ascii::string ("DATE")]
-                         | ascii::no_case[ascii::string ("CURSOR")]
-                         | ascii::no_case[ascii::string ("CURRENT_USER")]
-                         | ascii::no_case[ascii::string ("CURRENT_TIMESTAMP")]
-                         | ascii::no_case[ascii::string ("CURRENT_TIME")]
-                         | ascii::no_case[ascii::string ("CURRENT_DATE")]
-                         | ascii::no_case[ascii::string ("CURRENT")]
-                         | ascii::no_case[ascii::string ("CROSS")]
-                         | ascii::no_case[ascii::string ("CREATE")]
-                         | ascii::no_case[ascii::string ("COUNT")]
-                         | ascii::no_case[ascii::string ("CORRESPONDING")]
-                         | ascii::no_case[ascii::string ("CONVERT")]
-                         | ascii::no_case[ascii::string ("CONTINUE")]
-                         | ascii::no_case[ascii::string ("CONSTRAINTS")]
-                         | ascii::no_case[ascii::string ("CONSTRAINT")]
-                         | ascii::no_case[ascii::string ("CONNECTION")]
-                         | ascii::no_case[ascii::string ("CONNECT")]
-                         | ascii::no_case[ascii::string ("COMMIT")]
-                         | ascii::no_case[ascii::string ("COLUMN")]
-                         | ascii::no_case[ascii::string ("COLLATION")]
-                         | ascii::no_case[ascii::string ("COLLATE")]
-                         | ascii::no_case[ascii::string ("COALESCE")]
-                         | ascii::no_case[ascii::string ("CLOSE")]
-                         | ascii::no_case[ascii::string ("CHECK")]
-                         | ascii::no_case[ascii::string ("CHAR_LENGTH")]
-                         | ascii::no_case[ascii::string ("CHARACTER_LENGTH")]
-                         | ascii::no_case[ascii::string ("CHARACTER")]
-                         | ascii::no_case[ascii::string ("CHAR")]
-                         | ascii::no_case[ascii::string ("CATALOG")]
-                         | ascii::no_case[ascii::string ("CAST")]
-                         | ascii::no_case[ascii::string ("CASE")]
-                         | ascii::no_case[ascii::string ("CASCADED")]
-                         | ascii::no_case[ascii::string ("CASCADE")]
-                         | ascii::no_case[ascii::string ("BY")]
-                         | ascii::no_case[ascii::string ("BOTH")]
-                         | ascii::no_case[ascii::string ("BIT_LENGTH")]
-                         | ascii::no_case[ascii::string ("BIT")]
-                         | ascii::no_case[ascii::string ("BETWEEN")]
-                         | ascii::no_case[ascii::string ("BEGIN")]
-                         | ascii::no_case[ascii::string ("AVG")]
-                         | ascii::no_case[ascii::string ("AUTHORIZATION")]
-                         | ascii::no_case[ascii::string ("AT")]
-                         | ascii::no_case[ascii::string ("ASSERTION")]
-                         | ascii::no_case[ascii::string ("ASC")]
-                         | ascii::no_case[ascii::string ("AS")]
-                         | ascii::no_case[ascii::string ("ARE")]
-                         | ascii::no_case[ascii::string ("ANY")]
-                         | ascii::no_case[ascii::string ("AND")]
-                         | ascii::no_case[ascii::string ("ALTER")]
-                         | ascii::no_case[ascii::string ("ALLOCATE")]
-                         | ascii::no_case[ascii::string ("ALL")]
-                         | ascii::no_case[ascii::string ("ADD")]
-                         | ascii::no_case[ascii::string ("ACTION")]
-                         | ascii::no_case[ascii::string ("ABSOLUTE")];
+    /// Split up SQL_reserved_word to help memory usage and compile times.
+    SQL_reserved_word_00 %= ascii::no_case[ascii::string ("ZONE")]
+                            | ascii::no_case[ascii::string ("YEAR")]
+                            | ascii::no_case[ascii::string ("WRITE")]
+                            | ascii::no_case[ascii::string ("WORK")]
+                            | ascii::no_case[ascii::string ("WITH")]
+                            | ascii::no_case[ascii::string ("WHERE")]
+                            | ascii::no_case[ascii::string ("WHENEVER")]
+                            | ascii::no_case[ascii::string ("WHEN")]
+                            | ascii::no_case[ascii::string ("VIEW")]
+                            | ascii::no_case[ascii::string ("VARYING")]
+                            | ascii::no_case[ascii::string ("VARCHAR")]
+                            | ascii::no_case[ascii::string ("VALUES")]
+                            | ascii::no_case[ascii::string ("VALUE")]
+                            | ascii::no_case[ascii::string ("USING")]
+                            | ascii::no_case[ascii::string ("USER")]
+                            | ascii::no_case[ascii::string ("USAGE")];
+
+    SQL_reserved_word_01 %= ascii::no_case[ascii::string ("UPPER")]
+                            | ascii::no_case[ascii::string ("UPDATE")]
+                            | ascii::no_case[ascii::string ("UNKNOWN")]
+                            | ascii::no_case[ascii::string ("UNIQUE")]
+                            | ascii::no_case[ascii::string ("UNION")]
+                            | ascii::no_case[ascii::string ("TRUE")]
+                            | ascii::no_case[ascii::string ("TRIM")]
+                            | ascii::no_case[ascii::string ("TRANSLATION")]
+                            | ascii::no_case[ascii::string ("TRANSLATE")]
+                            | ascii::no_case[ascii::string ("TRANSACTION")]
+                            | ascii::no_case[ascii::string ("TRAILING")]
+                            | ascii::no_case[ascii::string ("TO")]
+                            | ascii::no_case[ascii::string ("TIMEZONE_MINUTE")]
+                            | ascii::no_case[ascii::string ("TIMEZONE_HOUR")]
+                            | ascii::no_case[ascii::string ("TIMESTAMP")];
+
+    SQL_reserved_word_02 %= ascii::no_case[ascii::string ("TIME")]
+                            | ascii::no_case[ascii::string ("THEN")]
+                            | ascii::no_case[ascii::string ("TEMPORARY")]
+                            | ascii::no_case[ascii::string ("TABLE")]
+                            | ascii::no_case[ascii::string ("SYSTEM_USER")]
+                            | ascii::no_case[ascii::string ("SUM")]
+                            | ascii::no_case[ascii::string ("SUBSTRING")]
+                            | ascii::no_case[ascii::string ("SQLSTATE")]
+                            | ascii::no_case[ascii::string ("SQLERROR")]
+                            | ascii::no_case[ascii::string ("SQLCODE")]
+                            | ascii::no_case[ascii::string ("SQL")]
+                            | ascii::no_case[ascii::string ("SPACE")]
+                            | ascii::no_case[ascii::string ("SOME")]
+                            | ascii::no_case[ascii::string ("SMALLINT")]
+                            | ascii::no_case[ascii::string ("SIZE")]
+                            | ascii::no_case[ascii::string ("SET")];
+
+    SQL_reserved_word_03 %= ascii::no_case[ascii::string ("SESSION_USER")]
+                            | ascii::no_case[ascii::string ("SESSION")]
+                            | ascii::no_case[ascii::string ("SELECT")]
+                            | ascii::no_case[ascii::string ("SECTION")]
+                            | ascii::no_case[ascii::string ("SECOND")]
+                            | ascii::no_case[ascii::string ("SCROLL")]
+                            | ascii::no_case[ascii::string ("SCHEMA")]
+                            | ascii::no_case[ascii::string ("ROWS")]
+                            | ascii::no_case[ascii::string ("ROLLBACK")]
+                            | ascii::no_case[ascii::string ("RIGHT")]
+                            | ascii::no_case[ascii::string ("REVOKE")]
+                            | ascii::no_case[ascii::string ("RESTRICT")]
+                            | ascii::no_case[ascii::string ("RELATIVE")]
+                            | ascii::no_case[ascii::string ("REFERENCES")]
+                            | ascii::no_case[ascii::string ("REAL")]
+                            | ascii::no_case[ascii::string ("READ")];
+
+    SQL_reserved_word_10 %= ascii::no_case[ascii::string ("PUBLIC")]
+                            | ascii::no_case[ascii::string ("PROCEDURE")]
+                            | ascii::no_case[ascii::string ("PRIVILEGES")]
+                            | ascii::no_case[ascii::string ("PRIOR")]
+                            | ascii::no_case[ascii::string ("PRIMARY")]
+                            | ascii::no_case[ascii::string ("PRESERVE")]
+                            | ascii::no_case[ascii::string ("PREPARE")]
+                            | ascii::no_case[ascii::string ("PRECISION")]
+                            | ascii::no_case[ascii::string ("POSITION")]
+                            | ascii::no_case[ascii::string ("PARTIAL")]
+                            | ascii::no_case[ascii::string ("PAD")]
+                            | ascii::no_case[ascii::string ("OVERLAPS")]
+                            | ascii::no_case[ascii::string ("OUTPUT")]
+                            | ascii::no_case[ascii::string ("OUTER")]
+                            | ascii::no_case[ascii::string ("ORDER")]
+                            | ascii::no_case[ascii::string ("OR")];
+
+    SQL_reserved_word_11 %= ascii::no_case[ascii::string ("OPTION")]
+                            | ascii::no_case[ascii::string ("OPEN")]
+                            | ascii::no_case[ascii::string ("ONLY")]
+                            | ascii::no_case[ascii::string ("ON")]
+                            | ascii::no_case[ascii::string ("OF")]
+                            | ascii::no_case[ascii::string ("OCTET_LENGTH")]
+                            | ascii::no_case[ascii::string ("NUMERIC")]
+                            | ascii::no_case[ascii::string ("NULLIF")]
+                            | ascii::no_case[ascii::string ("NULL")]
+                            | ascii::no_case[ascii::string ("NOT")]
+                            | ascii::no_case[ascii::string ("NO")]
+                            | ascii::no_case[ascii::string ("NEXT")]
+                            | ascii::no_case[ascii::string ("NCHAR")]
+                            | ascii::no_case[ascii::string ("NATURAL")]
+                            | ascii::no_case[ascii::string ("NATIONAL")];
+
+    SQL_reserved_word_12 %= ascii::no_case[ascii::string ("NAMES")]
+                            | ascii::no_case[ascii::string ("MONTH")]
+                            | ascii::no_case[ascii::string ("MODULE")]
+                            | ascii::no_case[ascii::string ("MINUTE")]
+                            | ascii::no_case[ascii::string ("MIN")]
+                            | ascii::no_case[ascii::string ("MAX")]
+                            | ascii::no_case[ascii::string ("MATCH")]
+                            | ascii::no_case[ascii::string ("LOWER")]
+                            | ascii::no_case[ascii::string ("LOCAL")]
+                            | ascii::no_case[ascii::string ("LIKE")]
+                            | ascii::no_case[ascii::string ("LEVEL")]
+                            | ascii::no_case[ascii::string ("LEFT")]
+                            | ascii::no_case[ascii::string ("LEADING")]
+                            | ascii::no_case[ascii::string ("LAST")]
+                            | ascii::no_case[ascii::string ("LANGUAGE")]
+                            | ascii::no_case[ascii::string ("KEY")];
+
+    SQL_reserved_word_13 %= ascii::no_case[ascii::string ("JOIN")]
+                            | ascii::no_case[ascii::string ("ISOLATION")]
+                            | ascii::no_case[ascii::string ("IS")]
+                            | ascii::no_case[ascii::string ("INTO")]
+                            | ascii::no_case[ascii::string ("INTERVAL")]
+                            | ascii::no_case[ascii::string ("INTERSECT")]
+                            | ascii::no_case[ascii::string ("INTEGER")]
+                            | ascii::no_case[ascii::string ("INT")]
+                            | ascii::no_case[ascii::string ("INSERT")]
+                            | ascii::no_case[ascii::string ("INSENSITIVE")]
+                            | ascii::no_case[ascii::string ("INPUT")]
+                            | ascii::no_case[ascii::string ("INNER")]
+                            | ascii::no_case[ascii::string ("INITIALLY")]
+                            | ascii::no_case[ascii::string ("INDICATOR")]
+                            | ascii::no_case[ascii::string ("IN")]
+                            | ascii::no_case[ascii::string ("IMMEDIATE")];
+
+    SQL_reserved_word_20 %= ascii::no_case[ascii::string ("IDENTITY")]
+                            | ascii::no_case[ascii::string ("HOUR")]
+                            | ascii::no_case[ascii::string ("HAVING")]
+                            | ascii::no_case[ascii::string ("GROUP")]
+                            | ascii::no_case[ascii::string ("GRANT")]
+                            | ascii::no_case[ascii::string ("GOTO")]
+                            | ascii::no_case[ascii::string ("GO")]
+                            | ascii::no_case[ascii::string ("GLOBAL")]
+                            | ascii::no_case[ascii::string ("GET")]
+                            | ascii::no_case[ascii::string ("FULL")]
+                            | ascii::no_case[ascii::string ("FROM")]
+                            | ascii::no_case[ascii::string ("FOUND")]
+                            | ascii::no_case[ascii::string ("FOREIGN")]
+                            | ascii::no_case[ascii::string ("FOR")]
+                            | ascii::no_case[ascii::string ("FLOAT")]
+                            | ascii::no_case[ascii::string ("FIRST")];
+
+    SQL_reserved_word_21 %= ascii::no_case[ascii::string ("FETCH")]
+                            | ascii::no_case[ascii::string ("FALSE")]
+                            | ascii::no_case[ascii::string ("EXTRACT")]
+                            | ascii::no_case[ascii::string ("EXTERNAL")]
+                            | ascii::no_case[ascii::string ("EXISTS")]
+                            | ascii::no_case[ascii::string ("EXECUTE")]
+                            | ascii::no_case[ascii::string ("EXEC")]
+                            | ascii::no_case[ascii::string ("EXCEPTION")]
+                            | ascii::no_case[ascii::string ("EXCEPT")]
+                            | ascii::no_case[ascii::string ("ESCAPE")]
+                            | ascii::no_case[ascii::string ("END-EXEC")]
+                            | ascii::no_case[ascii::string ("END")]
+                            | ascii::no_case[ascii::string ("ELSE")]
+                            | ascii::no_case[ascii::string ("DROP")]
+                            | ascii::no_case[ascii::string ("DOUBLE")]
+                            | ascii::no_case[ascii::string ("DOMAIN")];
+
+    SQL_reserved_word_22 %= ascii::no_case[ascii::string ("DISTINCT")]
+                            | ascii::no_case[ascii::string ("DISCONNECT")]
+                            | ascii::no_case[ascii::string ("DIAGNOSTICS")]
+                            | ascii::no_case[ascii::string ("DESCRIPTOR")]
+                            | ascii::no_case[ascii::string ("DESCRIBE")]
+                            | ascii::no_case[ascii::string ("DESC")]
+                            | ascii::no_case[ascii::string ("DELETE")]
+                            | ascii::no_case[ascii::string ("DEFERRED")]
+                            | ascii::no_case[ascii::string ("DEFERRABLE")]
+                            | ascii::no_case[ascii::string ("DEFAULT")]
+                            | ascii::no_case[ascii::string ("DECLARE")]
+                            | ascii::no_case[ascii::string ("DECIMAL")]
+                            | ascii::no_case[ascii::string ("DEALLOCATE")]
+                            | ascii::no_case[ascii::string ("DAY")]
+                            | ascii::no_case[ascii::string ("DATE")]
+                            | ascii::no_case[ascii::string ("CURSOR")];
+
+    SQL_reserved_word_23
+        %= ascii::no_case[ascii::string ("CURRENT_USER")]
+           | ascii::no_case[ascii::string ("CURRENT_TIMESTAMP")]
+           | ascii::no_case[ascii::string ("CURRENT_TIME")]
+           | ascii::no_case[ascii::string ("CURRENT_DATE")]
+           | ascii::no_case[ascii::string ("CURRENT")]
+           | ascii::no_case[ascii::string ("CROSS")]
+           | ascii::no_case[ascii::string ("CREATE")]
+           | ascii::no_case[ascii::string ("COUNT")]
+           | ascii::no_case[ascii::string ("CORRESPONDING")]
+           | ascii::no_case[ascii::string ("CONVERT")]
+           | ascii::no_case[ascii::string ("CONTINUE")]
+           | ascii::no_case[ascii::string ("CONSTRAINTS")]
+           | ascii::no_case[ascii::string ("CONSTRAINT")]
+           | ascii::no_case[ascii::string ("CONNECTION")]
+           | ascii::no_case[ascii::string ("CONNECT")]
+           | ascii::no_case[ascii::string ("COMMIT")];
+
+    SQL_reserved_word_30
+        %= ascii::no_case[ascii::string ("COLUMN")]
+           | ascii::no_case[ascii::string ("COLLATION")]
+           | ascii::no_case[ascii::string ("COLLATE")]
+           | ascii::no_case[ascii::string ("COALESCE")]
+           | ascii::no_case[ascii::string ("CLOSE")]
+           | ascii::no_case[ascii::string ("CHECK")]
+           | ascii::no_case[ascii::string ("CHAR_LENGTH")]
+           | ascii::no_case[ascii::string ("CHARACTER_LENGTH")]
+           | ascii::no_case[ascii::string ("CHARACTER")]
+           | ascii::no_case[ascii::string ("CHAR")]
+           | ascii::no_case[ascii::string ("CATALOG")]
+           | ascii::no_case[ascii::string ("CAST")]
+           | ascii::no_case[ascii::string ("CASE")]
+           | ascii::no_case[ascii::string ("CASCADED")]
+           | ascii::no_case[ascii::string ("CASCADE")]
+           | ascii::no_case[ascii::string ("BY")];
+
+    SQL_reserved_word_31 %= ascii::no_case[ascii::string ("BOTH")]
+                            | ascii::no_case[ascii::string ("BIT_LENGTH")]
+                            | ascii::no_case[ascii::string ("BIT")]
+                            | ascii::no_case[ascii::string ("BETWEEN")]
+                            | ascii::no_case[ascii::string ("BEGIN")]
+                            | ascii::no_case[ascii::string ("AVG")]
+                            | ascii::no_case[ascii::string ("AUTHORIZATION")]
+                            | ascii::no_case[ascii::string ("AT")]
+                            | ascii::no_case[ascii::string ("ASSERTION")]
+                            | ascii::no_case[ascii::string ("ASC")]
+                            | ascii::no_case[ascii::string ("AS")]
+                            | ascii::no_case[ascii::string ("ARE")]
+                            | ascii::no_case[ascii::string ("ANY")]
+                            | ascii::no_case[ascii::string ("AND")]
+                            | ascii::no_case[ascii::string ("ALTER")]
+                            | ascii::no_case[ascii::string ("ALLOCATE")];
+
+    SQL_reserved_word_32 %= ascii::no_case[ascii::string ("ALL")]
+                            | ascii::no_case[ascii::string ("ADD")]
+                            | ascii::no_case[ascii::string ("ACTION")]
+                            | ascii::no_case[ascii::string ("ABSOLUTE")];
+
+    SQL_reserved_word_0 %= SQL_reserved_word_00 | SQL_reserved_word_01
+                           | SQL_reserved_word_02 | SQL_reserved_word_03;
+
+    SQL_reserved_word_1 %= SQL_reserved_word_10 | SQL_reserved_word_11
+                           | SQL_reserved_word_12 | SQL_reserved_word_13;
+
+    SQL_reserved_word_2 %= SQL_reserved_word_20 | SQL_reserved_word_21
+                           | SQL_reserved_word_22 | SQL_reserved_word_23;
+
+    SQL_reserved_word_3 %= SQL_reserved_word_30 | SQL_reserved_word_31
+                           | SQL_reserved_word_32;
+
+    SQL_reserved_word %= SQL_reserved_word_0 | SQL_reserved_word_1
+                         | SQL_reserved_word_2 | SQL_reserved_word_3;
 
     keyword %= (SQL_reserved_word | ADQL_reserved_word)
                >> &!(digit | simple_Latin_letter | char_ ("_"));
@@ -526,15 +558,15 @@ struct ADQL_parser
     circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys >> ',' >> coord
               >> ',' >> boost::spirit::qi::double_ >> ')';
     ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> coord_sys >> ',' >> coord
-              >> ',' >> boost::spirit::qi::double_
-              >> ',' >> boost::spirit::qi::double_
-              >> ',' >> boost::spirit::qi::double_ >> ')';
-    box %= ascii::no_case["BOX"] >> '(' >> coord_sys >> ',' >> coord
-              >> ',' >> boost::spirit::qi::double_
-              >> ',' >> boost::spirit::qi::double_ >> ')';
+               >> ',' >> boost::spirit::qi::double_ >> ','
+               >> boost::spirit::qi::double_ >> ','
+               >> boost::spirit::qi::double_ >> ')';
+    box %= ascii::no_case["BOX"] >> '(' >> coord_sys >> ',' >> coord >> ','
+           >> boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_
+           >> ')';
     coord_list %= coord % ',';
     polygon %= ascii::no_case["POLYGON"] >> '(' >> coord_sys >> ','
-              >> coord_list >> ')';
+               >> coord_list >> ')';
 
     shape %= circle | box | ellipse | polygon;
     contains %= ascii::no_case["CONTAINS"] >> '(' >> point >> ',' >> shape
@@ -555,10 +587,9 @@ struct ADQL_parser
 
     comparison_predicate %= value_expression
                             >> (ascii::string ("=") | ascii::string ("!=")
-                                | ascii::string ("<>")
-                                | ascii::string ("<=") | ascii::string (">=")
-                                | ascii::string ("<") | ascii::string (">")
-                                ) >> value_expression;
+                                | ascii::string ("<>") | ascii::string ("<=")
+                                | ascii::string (">=") | ascii::string ("<")
+                                | ascii::string (">")) >> value_expression;
 
     between_predicate
         %= value_expression
@@ -668,10 +699,17 @@ struct ADQL_parser
       approximate_numeric_literal, unsigned_numeric_literal, comment,
       comment_introducer, comment_character, delimited_identifier,
       delimited_identifier_part, delimited_identifier_body,
-      character_representation, ADQL_reserved_word, SQL_reserved_word, keyword,
-      all_identifiers, regular_identifier, identifier, set_quantifier,
-      character_string_literal, separator, column_name, sort_key,
-      ordering_specification, sort_specification, concatenation_operator;
+      character_representation, ADQL_reserved_word, SQL_reserved_word,
+      SQL_reserved_word_0, SQL_reserved_word_1, SQL_reserved_word_2,
+      SQL_reserved_word_3, SQL_reserved_word_00, SQL_reserved_word_01,
+      SQL_reserved_word_02, SQL_reserved_word_03, SQL_reserved_word_10,
+      SQL_reserved_word_11, SQL_reserved_word_12, SQL_reserved_word_13,
+      SQL_reserved_word_20, SQL_reserved_word_21, SQL_reserved_word_22,
+      SQL_reserved_word_23, SQL_reserved_word_30, SQL_reserved_word_31,
+      SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
+      identifier, set_quantifier, character_string_literal, separator,
+      column_name, sort_key, ordering_specification, sort_specification,
+      concatenation_operator;
 
   boost::spirit::qi::rule<Iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
@@ -721,7 +759,7 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::Contains (),
                           boost::spirit::ascii::space_type> contains;
-  boost::spirit::qi::rule<Iterator, ADQL::Contains::Shape(),
+  boost::spirit::qi::rule<Iterator, ADQL::Contains::Shape (),
                           boost::spirit::ascii::space_type> shape;
 
   boost::spirit::qi::rule<Iterator, ADQL::Geometry (),
