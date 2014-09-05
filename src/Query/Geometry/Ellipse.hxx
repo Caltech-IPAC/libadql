@@ -21,7 +21,7 @@ inline std::ostream &operator<<(std::ostream &os,
 {
   os << "ELLIPSE(\'" << ellipse.coord_sys << "\'," << ellipse.center << ","
      << ellipse.semi_major_axis << ","
-     << ellipse.rotation << "," << ellipse.ratio << ")";
+     << ellipse.ratio << "," << ellipse.rotation << ")";
   return os;
 }
 }
