@@ -14,9 +14,13 @@ public:
   }
 };
 }
+
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Having &having)
 {
-  return os << "HAVING " << having.search_condition;
+  return os << having.search_condition;
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Having,

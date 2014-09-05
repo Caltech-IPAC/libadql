@@ -14,7 +14,10 @@ public:
 };
 }
 
+namespace std
+{
 std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b);
+}
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Boolean_Primary,
                            (ADQL::Boolean_Primary_Variant, variant))

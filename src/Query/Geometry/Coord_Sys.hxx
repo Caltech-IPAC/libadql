@@ -16,6 +16,8 @@ public:
 };
 }
 
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
 {
   switch (c.frame)
@@ -27,7 +29,9 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
       os << "ICRS";
       break;
     }
+  os << " GEOCENTER";
   return os;
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Coord_Sys,

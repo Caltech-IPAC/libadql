@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 #include <iostream>
 #include "../src/Query.hxx"
 
@@ -9,7 +10,7 @@ int main (int argc, char *argv[])
     "Select ra1,dec2,flux From mytable Where "
     "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
-    "CONTAINS(POINT('J2000 Geocenter',ra,dec),CIRCLE('J2000',+10 , -20,-1))= 1",
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),CIRCLE('J2000 Geocenter',+10 , -20,-1))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
     "CONTAINS(POINT('J2000 Geocenter',ra,dec),BOX('J2000',+10 , -20,1,2))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
@@ -129,6 +130,13 @@ int main (int argc, char *argv[])
       try
         {
           ADQL::Query query (i);
+          std::string formatted_query=query.string();
+          ADQL::Query parsed_query(formatted_query);
+          if(formatted_query!=parsed_query.string())
+            throw std::runtime_error("Reformatting formatted query gave different result:\n"
+                                     "  Original:    " + i + "\n"
+                                     + "  Formatted:   " + formatted_query + "\n"
+                                     + "  Reformatted: " + parsed_query.string());
 
           if(query.top!=std::numeric_limits<unsigned long long>::max()
              && query.top!=14223)

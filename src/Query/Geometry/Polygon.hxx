@@ -13,6 +13,19 @@ public:
 };
 }
 
+namespace std
+{
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Polygon& polygon)
+{
+  os << "POLYGON(\'" << polygon.coord_sys << "\'";
+  for(auto &c: polygon.coordinates)
+    os << "," << c;
+  os << ")";
+  return os;
+}
+}
+
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Polygon,
                            (ADQL::Coord_Sys,
                             coord_sys)

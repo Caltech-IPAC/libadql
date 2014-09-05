@@ -22,6 +22,8 @@ public:
 };
 }
 
+namespace std
+{
 std::ostream &operator<<(std::ostream &os, const ADQL::Search_Condition &s);
 
 /// We have to define this operator here, because Search_Condition is
@@ -31,6 +33,7 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Term &s)
 {
   return os << s.boolean_factor << " " << boost::to_upper_copy (s.logical_op)
             << " " << s.search_condition_wrap.get ();
+}
 }
 
 namespace
@@ -55,6 +58,8 @@ public:
 };
 }
 
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Search_Condition &s)
 {
@@ -64,6 +69,7 @@ inline std::ostream &operator<<(std::ostream &os,
       return boost::apply_visitor (visitor, s.variant[0]);
     }
   return os;
+}
 }
 
 namespace
@@ -85,11 +91,14 @@ public:
 };
 }
 
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Boolean_Primary &b)
 {
   Boolean_Primary_Variant_Visitor visitor (os);
   return boost::apply_visitor (visitor, b.variant);
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Search_Condition,

@@ -35,6 +35,8 @@ public:
       && group_by.empty() && order_by.empty()
       && having.empty();
   }
+
+  std::string string() const;
 };
 }
 
@@ -65,11 +67,36 @@ public:
 };
 }
 
+
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Query::Columns &columns)
 {
   Query_Columns_Visitor visitor (os);
   return boost::apply_visitor (visitor, columns);
+}
+
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Query &query)
+{
+  os << "SELECT "
+     << query.all_or_distinct
+     << (query.all_or_distinct.empty() ? "" : " ")
+     << (query.top!=std::numeric_limits<unsigned long long>::max()
+         ? "TOP " + std::to_string(query.top) + " " : "")
+     << query.columns
+     << " FROM " << query.table;
+  if(!query.where.empty())
+    os << " WHERE " << query.where;
+  if(!query.group_by.empty())
+    os << " GROUP BY " << query.group_by;
+  if(!query.having.empty())
+    os << " HAVING " << query.having;
+  if(!query.order_by.empty())
+    os << " ORDER BY " << query.order_by;
+  return os;
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (

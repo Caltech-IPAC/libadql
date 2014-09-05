@@ -67,6 +67,7 @@ def configure(ctx):
 def build(ctx):
 
     cxx_sources=['src/Query/Query.cxx',
+                 'src/Query/string.cxx',
                  'src/Query/simplified_columns.cxx']
     
     ctx.stlib(
