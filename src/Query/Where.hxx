@@ -26,7 +26,7 @@ inline std::ostream &operator<<(std::ostream &os,
     {
       os << where.geometry;
       if(!where.search_condition.empty())
-        os << " AND " << where.search_condition;
+        os << " AND (" << where.search_condition << ")";
     }
   else if(!where.search_condition.empty())
     os << where.search_condition;
