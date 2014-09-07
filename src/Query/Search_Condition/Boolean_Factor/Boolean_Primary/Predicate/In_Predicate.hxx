@@ -40,11 +40,14 @@ public:
 };
 }
 
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os, const ADQL::In_Predicate &p)
 {
-  return os << p.value << " " << p.Not << (p.Not.empty () ? "" : " ") << "IN ";
+  os << p.value << " " << (p.Not.empty () ? "" : "NOT ") << "IN ";
   In_Predicate_Visitor visitor (os);
   return boost::apply_visitor (visitor, p.variant);
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::In_Predicate,
