@@ -393,7 +393,7 @@ struct ADQL_parser
 
     character_string_literal
         %= quote >> *character_representation >> quote
-           >> *(+separator >> quote >> *character_representation >> quote);
+           >> *hold[+separator >> quote >> *character_representation >> quote];
 
     general_literal %= character_string_literal;
     unsigned_literal %= unsigned_numeric_literal | general_literal;
