@@ -408,7 +408,7 @@ struct ADQL_parser
     /// between the set_quantifier and whatever follows it.
     set_quantifier %= hold[(ascii::no_case[ascii::string ("DISTINCT")]
                             | ascii::no_case[ascii::string ("ALL")])
-                           >> (space | tab | newline)];
+                           >> &(space | tab | newline)];
 
     general_set_function %= set_function_type >> char_ ('(') >> -set_quantifier
                             >> value_expression >> char_ (')');
