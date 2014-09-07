@@ -49,10 +49,13 @@ public:
 };
 }
 
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Predicate &p)
 {
   Predicate_Variant_Visitor visitor (os);
   return boost::apply_visitor (visitor, p.variant);
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Predicate,

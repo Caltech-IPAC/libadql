@@ -12,8 +12,11 @@ class As
 public:
   std::string expression, as;
 };
+}
 
-inline std::ostream &operator<<(std::ostream &os, const As &as)
+namespace std
+{
+inline std::ostream &operator<<(std::ostream &os, const ADQL::As &as)
 {
   return os << as.expression << " AS " << as.as;
 }

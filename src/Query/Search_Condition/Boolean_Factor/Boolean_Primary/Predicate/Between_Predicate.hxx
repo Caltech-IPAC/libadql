@@ -10,11 +10,14 @@ public:
 };
 }
 
+namespace std
+{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Between_Predicate &b)
 {
   return os << b.value << " " << b.Not << (b.Not.empty () ? "" : " ")
             << "BETWEEN " << b.low << " AND " << b.high;
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Between_Predicate,
