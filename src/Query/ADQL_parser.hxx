@@ -548,8 +548,9 @@ struct ADQL_parser
           >> lexeme[ascii::no_case["AS"] >> &nonidentifier_character]
           >> column_name;
 
-    select_item
-        %= as | (hold[qualifier >> ascii::string (".*")] | value_expression);
+    select_non_as_item %= hold[qualifier >> ascii::string (".*")]
+      | value_expression;
+    select_item %= as | select_non_as_item;
     select_list %= select_item % ',';
     columns %= ascii::string ("*") | select_list;
 
@@ -687,7 +688,7 @@ struct ADQL_parser
       group_by_clause, sort_specification_list, order_by_clause,
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
-      string_value_expression;
+      string_value_expression, select_non_as_item;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
