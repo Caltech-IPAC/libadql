@@ -68,7 +68,7 @@ public:
 }
 
 
-namespace std
+namespace ADQL
 {
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Query::Columns &columns)

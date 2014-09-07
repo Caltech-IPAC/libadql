@@ -15,10 +15,7 @@ public:
     return geometry.empty() && search_condition.empty();
   }
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Where& where)
 {

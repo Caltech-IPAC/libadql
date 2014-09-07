@@ -16,10 +16,7 @@ public:
   Point point;
   Shape shape;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Contains& contains)
 {

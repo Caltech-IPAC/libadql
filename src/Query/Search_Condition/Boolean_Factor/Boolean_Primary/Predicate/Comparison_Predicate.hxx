@@ -8,10 +8,7 @@ public:
   std::string left, right;
   std::string op;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Comparison_Predicate &c)
 {

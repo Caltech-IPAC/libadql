@@ -12,10 +12,7 @@ public:
   Coordinate center;
   double radius;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Circle& circle)
 {

@@ -12,10 +12,7 @@ class Boolean_Primary
 public:
   Boolean_Primary_Variant variant;
 };
-}
 
-namespace std
-{
 std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b);
 }
 

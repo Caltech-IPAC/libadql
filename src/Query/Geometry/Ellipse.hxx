@@ -12,10 +12,7 @@ public:
   Coordinate center;
   double semi_major_axis, ratio, rotation;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Ellipse& ellipse)
 {

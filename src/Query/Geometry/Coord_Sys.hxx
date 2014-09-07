@@ -14,10 +14,7 @@ public:
   enum class Reference_Position
   { GEOCENTER } position;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
 {
   switch (c.frame)

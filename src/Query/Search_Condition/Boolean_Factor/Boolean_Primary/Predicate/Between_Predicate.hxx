@@ -8,10 +8,7 @@ public:
   std::string value, low, high;
   std::string Not;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Between_Predicate &b)
 {

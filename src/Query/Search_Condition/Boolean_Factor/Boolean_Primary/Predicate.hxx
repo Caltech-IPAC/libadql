@@ -49,7 +49,7 @@ public:
 };
 }
 
-namespace std
+namespace ADQL
 {
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Predicate &p)
 {

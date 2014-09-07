@@ -8,10 +8,7 @@ public:
   std::string match, pattern;
   std::string Not;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Like_Predicate &c)
 {

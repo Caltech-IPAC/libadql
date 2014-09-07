@@ -10,10 +10,7 @@ public:
   std::string Not;
   Boolean_Primary boolean_primary;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Boolean_Factor &b)
 {

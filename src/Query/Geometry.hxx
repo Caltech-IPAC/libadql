@@ -10,10 +10,7 @@ public:
   Contains contains;
   bool empty () const { return contains.point.coordinate.ra.empty (); }
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Geometry& geometry)
 {

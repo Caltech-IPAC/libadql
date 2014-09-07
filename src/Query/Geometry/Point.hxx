@@ -11,10 +11,7 @@ public:
   Coord_Sys coord_sys;
   Coordinate coordinate;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Point& point)
 {

@@ -8,10 +8,7 @@ public:
   std::string column;
   std::string Not;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Null_Predicate &c)
 {

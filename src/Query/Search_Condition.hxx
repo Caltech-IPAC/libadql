@@ -20,10 +20,7 @@ public:
 
   bool empty () const { return variant.empty (); }
 };
-}
 
-namespace std
-{
 std::ostream &operator<<(std::ostream &os, const ADQL::Search_Condition &s);
 
 /// We have to define this operator here, because Search_Condition is
@@ -58,7 +55,7 @@ public:
 };
 }
 
-namespace std
+namespace ADQL
 {
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Search_Condition &s)
@@ -91,7 +88,7 @@ public:
 };
 }
 
-namespace std
+namespace ADQL
 {
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Boolean_Primary &b)

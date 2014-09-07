@@ -10,10 +10,7 @@ struct Coordinate
 public:
   std::string ra, dec;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Coordinate& coordinate)
 {

@@ -13,10 +13,7 @@ public:
     return search_condition.empty();
   }
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Having &having)
 {
   return os << having.search_condition;

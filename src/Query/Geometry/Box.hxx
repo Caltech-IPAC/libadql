@@ -12,10 +12,7 @@ public:
   Coordinate center;
   double width, height;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Box& box)
 {

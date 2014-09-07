@@ -11,10 +11,7 @@ public:
   Coord_Sys coord_sys;
   std::vector<Coordinate> coordinates;
 };
-}
 
-namespace std
-{
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Polygon& polygon)
 {
