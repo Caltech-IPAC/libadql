@@ -143,25 +143,7 @@ int main (int argc, char *argv[])
             throw std::runtime_error("Wrong value for TOP: "
                                      + std::to_string(query.top));
           if(!quiet)
-            {
-              std::cout << "PASS: " << i << "\n";
-              std::cout << "SELECT "
-                        << query.all_or_distinct
-                        << (query.all_or_distinct.empty() ? "" : " ")
-                        << (query.top!=std::numeric_limits<unsigned long long>::max()
-                            ? "TOP " + std::to_string(query.top) + " " : "")
-                        << query.columns
-                        << " FROM " << query.table;
-              if(!query.where.search_condition.empty())
-                std::cout << " WHERE " << query.where.search_condition;
-              if(!query.group_by.empty())
-                std::cout << " GROUP BY " << query.group_by;
-              if(!query.having.empty())
-                std::cout << " HAVING " << query.having;
-              if(!query.order_by.empty())
-                std::cout << " ORDER BY " << query.order_by;
-              std::cout << "\n";
-            }
+            std::cout << "PASS: " << query << "\n";
         }
       catch (std::runtime_error &e)
         {
