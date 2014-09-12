@@ -94,6 +94,17 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x like my_sin(x) || x",
     "SELECT * FROM my_table WHERE (mjd>=55550.0 and mjd<=65650.5)",
     "SELECT my_table1.*,'table' from my_table1",
+    "SELECT myschema.mytable.* from myschema.mytable",
+    "SELECT * from mycatalog.myschema.mytable",
+    "SELECT * from myschema.mytable",
+    "SELECT mycatalog.myschema.mytable.* from mycatalog.myschema.mytable",
+    "SELECT * from myschema.mytable as mine",
+    "SELECT * from myschema.mytable mine",
+    "SELECT * from myschema.mytable, yourscheme.yourtable mine",
+    "SELECT * from TAP_UPLOAD.mytable",
+    "SELECT * from tapmod.mytable",
+    "SELECT TAP_UPLOAD.mytable.b from TAP_UPLOAD.mytable",
+    "SELECT TAP_UPLOAD.mytable.* from TAP_UPLOAD.mytable",
   };
 
 
@@ -129,7 +140,7 @@ int main (int argc, char *argv[])
     {
       try
         {
-          ADQL::Query query (i);
+          ADQL::Query query (i, "TAPMOD.");
           std::string formatted_query=query.string();
           ADQL::Query parsed_query(formatted_query);
           if(formatted_query!=parsed_query.string())
@@ -145,22 +156,7 @@ int main (int argc, char *argv[])
           if(!quiet)
             {
               std::cout << "PASS: " << i << "\n";
-              std::cout << "SELECT "
-                        << query.all_or_distinct
-                        << (query.all_or_distinct.empty() ? "" : " ")
-                        << (query.top!=std::numeric_limits<unsigned long long>::max()
-                            ? "TOP " + std::to_string(query.top) + " " : "")
-                        << query.columns
-                        << " FROM " << query.table;
-              if(!query.where.search_condition.empty())
-                std::cout << " WHERE " << query.where.search_condition;
-              if(!query.group_by.empty())
-                std::cout << " GROUP BY " << query.group_by;
-              if(!query.having.empty())
-                std::cout << " HAVING " << query.having;
-              if(!query.order_by.empty())
-                std::cout << " ORDER BY " << query.order_by;
-              std::cout << "\n";
+              std::cout << formatted_query << "\n";
             }
         }
       catch (std::runtime_error &e)

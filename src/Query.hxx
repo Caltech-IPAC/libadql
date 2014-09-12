@@ -24,7 +24,8 @@ public:
   Where where;
   std::string group_by, order_by;
   Having having;
-  Query (const std::string &input);
+  Query (const std::string &input, const std::string &tap_upload_schema);
+  Query (const std::string &input): Query(input,"TAP_UPLOAD") {}
 
   std::vector<std::pair<std::string,std::string> > simplified_columns() const;
 

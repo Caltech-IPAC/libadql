@@ -22,7 +22,7 @@ struct ADQL_parser
     : boost::spirit::qi::grammar<Iterator, ADQL::Query (),
                                  boost::spirit::ascii::space_type>
 {
-  ADQL_parser () : ADQL_parser::base_type (query)
+  ADQL_parser (const std::string &tap_upload_schema) : ADQL_parser::base_type (query)
   {
     using boost::phoenix::at_c;
     using boost::phoenix::push_back;
@@ -384,16 +384,38 @@ struct ADQL_parser
 
     catalog_name %= identifier;
     unqualified_schema_name %= identifier;
-    schema_name %= -(hold[catalog_name >> period]) >> unqualified_schema_name;
-    table_name %= -(hold[schema_name >> period]) >> identifier;
+
     correlation_name %= identifier;
+    correlation_specification %= -lexeme[ascii::no_case[ascii::string("AS")]
+                                         >> &nonidentifier_character]
+      >> correlation_name;
 
     /// The spec says to have correlation_name as an alternate, but
     /// table_name matches everything that correlation name matches,
     /// so correlation_name will never match.
     qualifier %= table_name;
 
-    column_reference %= -(hold[qualifier >> period]) >> identifier;
+    /// I have to manually expand the possibilities in
+    /// column_reference and table name, because a catalog.schema can
+    /// match against schema.table or table.column, gobbling up the
+    /// table or column name and making the parse fail.
+    table_name %= 
+      (ascii::string("TAP_UPLOAD.")[_val = tap_upload_schema]
+       >> identifier)
+      | hold[catalog_name >> period >> unqualified_schema_name >> period
+             >> identifier]
+      | hold[unqualified_schema_name >> period >> identifier]
+      | identifier;
+
+    column_reference %= (ascii::string("TAP_UPLOAD.")[_val = tap_upload_schema]
+                         >> identifier >> period >> identifier)
+      | hold[catalog_name >> period >> unqualified_schema_name
+                             >> period >> identifier >> period >> identifier]
+      | hold[unqualified_schema_name >> period >> identifier >> period
+             >> identifier]
+      | hold[identifier >> period >> identifier]
+      | identifier;
+
 
     unsigned_integer %= +digit;
     exact_numeric_literal
@@ -586,6 +608,15 @@ struct ADQL_parser
     select_list %= select_item % ',';
     columns %= ascii::string ("*") | select_list;
 
+    table_reference %=
+      (table_name >> -correlation_specification);
+    // FIXME: table_reference is supposed to include derived_table and joined_table
+    // | (derived_table >> correlation_specification)
+    // | joined_table;
+
+    from_clause %= lexeme[ascii::no_case["FROM"] >> &nonidentifier_character]
+      >> table_reference % ",";
+
     comparison_predicate %= value_expression
                             >> (ascii::string ("=") | ascii::string ("!=")
                                 | ascii::string ("<>") | ascii::string ("<=")
@@ -684,9 +715,7 @@ struct ADQL_parser
              >> -set_quantifier
              >> -(lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]
                   >> ulong_long) >> columns
-             >> lexeme[ascii::no_case["FROM"] >> &nonidentifier_character]
-             // FIXME: should be a table_reference
-             >> identifier >> (-where) >> (-group_by_clause)
+             >> from_clause >> (-where) >> (-group_by_clause)
              >> (-having_clause) >> (-order_by_clause);
   }
 
@@ -714,7 +743,7 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
-      qualifier, correlation_name, table_name, schema_name,
+      qualifier, correlation_name, table_name,
       unqualified_schema_name, catalog_name, general_literal, unsigned_literal,
       unsigned_value_specification, set_function_type, general_set_function,
       set_function_specification, value_expression_primary, value_expression,
@@ -726,7 +755,8 @@ struct ADQL_parser
       group_by_clause, sort_specification_list, order_by_clause,
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
-      string_value_expression, select_non_as_item;
+      string_value_expression, select_non_as_item, from_clause, table_reference,
+      correlation_specification;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
