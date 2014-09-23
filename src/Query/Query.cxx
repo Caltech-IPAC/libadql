@@ -14,18 +14,4 @@ ADQL::Query::Query (const std::string &input, const std::string &tap_upload_sche
     {
       throw std::runtime_error ("");
     }
-
-  if (!where.geometry.empty ())
-    {
-      std::string &ra (where.geometry.contains.point.coordinate.ra),
-          &dec (where.geometry.contains.point.coordinate.dec);
-      if (!(ra == "ra" || ra == table + ".ra"))
-        throw std::runtime_error ("Invalid value for ra in Contains():\n\t"
-                                  + ra);
-
-      if (!(dec == "dec" || dec == table + ".dec"))
-        throw std::runtime_error ("Invalid value for dec in Contains():\n\t"
-                                  + dec);
-      // FIXME: Check for valid numbers in the circle, box, etc.
-    }
 }
