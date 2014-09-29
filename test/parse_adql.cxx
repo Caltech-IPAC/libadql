@@ -1,3 +1,4 @@
+#include <map>
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
@@ -138,7 +139,8 @@ int main (int argc, char *argv[])
     {
       try
         {
-          ADQL::Query query (i, "TAPMOD.");
+          std::map<std::string,std::string> table_mapping={{"mytable","xyzzy"}};
+          ADQL::Query query (i, table_mapping);
           std::string formatted_query=query.string();
           ADQL::Query parsed_query(formatted_query);
           if(formatted_query!=parsed_query.string())

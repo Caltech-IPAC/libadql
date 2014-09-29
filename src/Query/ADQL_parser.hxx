@@ -22,7 +22,8 @@ struct ADQL_parser
     : boost::spirit::qi::grammar<Iterator, ADQL::Query (),
                                  boost::spirit::ascii::space_type>
 {
-  ADQL_parser (const std::string &tap_upload_schema) : ADQL_parser::base_type (query)
+  ADQL_parser (const std::map<std::string,std::string> &Table_mapping)
+    : ADQL_parser::base_type (query), table_mapping(Table_mapping)
   {
     using boost::phoenix::at_c;
     using boost::phoenix::push_back;
@@ -400,15 +401,16 @@ struct ADQL_parser
     /// match against schema.table or table.column, gobbling up the
     /// table or column name and making the parse fail.
     table_name %= 
-      (ascii::string("TAP_UPLOAD.")[_val = tap_upload_schema]
-       >> identifier)
+      ("TAP_UPLOAD."
+       >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]])
       | hold[catalog_name >> period >> unqualified_schema_name >> period
              >> identifier]
       | hold[unqualified_schema_name >> period >> identifier]
       | identifier;
 
-    column_reference %= (ascii::string("TAP_UPLOAD.")[_val = tap_upload_schema]
-                         >> identifier >> period >> identifier)
+    column_reference %=
+      ("TAP_UPLOAD."
+       >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]] >> period >> identifier)
       | hold[catalog_name >> period >> unqualified_schema_name
                              >> period >> identifier >> period >> identifier]
       | hold[unqualified_schema_name >> period >> identifier >> period
@@ -718,6 +720,8 @@ struct ADQL_parser
              >> from_clause >> (-where) >> (-group_by_clause)
              >> (-having_clause) >> (-order_by_clause);
   }
+
+  std::map<std::string,std::string> table_mapping;
 
   boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter,
       identifier_character, nonidentifier_character, SQL_language_character,
