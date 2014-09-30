@@ -49,6 +49,7 @@ struct ADQL_parser
     /// Reverse sort to avoid early matches.
     ADQL_reserved_word %= ascii::no_case["TRUNCATE"]
                           | ascii::no_case["TOP"]
+                          | ascii::no_case["TAP_UPLOAD"]
                           | ascii::no_case["TAN"]
                           | ascii::no_case["SQRT"]
                           | ascii::no_case["SIN"]
@@ -396,23 +397,25 @@ struct ADQL_parser
     /// so correlation_name will never match.
     qualifier %= table_name;
 
+
+    tap_upload %= "TAP_UPLOAD."
+      >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]];
+
     /// I have to manually expand the possibilities in
     /// column_reference and table name, because a catalog.schema can
     /// match against schema.table or table.column, gobbling up the
     /// table or column name and making the parse fail.
     table_name %= 
-      ("TAP_UPLOAD."
-       >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]])
+      tap_upload
       | hold[catalog_name >> period >> unqualified_schema_name >> period
-             >> identifier]
+           >> identifier]
       | hold[unqualified_schema_name >> period >> identifier]
       | identifier;
 
     column_reference %=
-      ("TAP_UPLOAD."
-       >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]] >> period >> identifier)
+      hold[tap_upload >> period >> identifier]
       | hold[catalog_name >> period >> unqualified_schema_name
-                             >> period >> identifier >> period >> identifier]
+           >> period >> identifier >> period >> identifier]
       | hold[unqualified_schema_name >> period >> identifier >> period
              >> identifier]
       | hold[identifier >> period >> identifier]
@@ -747,7 +750,7 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
-      qualifier, correlation_name, table_name,
+      qualifier, correlation_name, table_name, tap_upload,
       unqualified_schema_name, catalog_name, general_literal, unsigned_literal,
       unsigned_value_specification, set_function_type, general_set_function,
       set_function_specification, value_expression_primary, value_expression,

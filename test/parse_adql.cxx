@@ -132,14 +132,18 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x notin (10,20,30)",
     "SELECT * FROM mytable WHERE"
     "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
+    "SELECT * from TAP_UPLOAD.wrong_table",
+    "SELECT TAP_UPLOAD.wrong_table from TAP_UPLOAD.mytable",
+    "SELECT TAP_UPLOAD.wrong_table.* from TAP_UPLOAD.mytable",
+    "SELECT TAP_UPLOAD.wrong_table.ra from TAP_UPLOAD.mytable",
   };
 
   int result(0);
+  std::map<std::string,std::string> table_mapping={{"mytable","xyzzy"}};
   for (auto &i : pass)
     {
       try
         {
-          std::map<std::string,std::string> table_mapping={{"mytable","xyzzy"}};
           ADQL::Query query (i, table_mapping);
           std::string formatted_query=query.string();
           ADQL::Query parsed_query(formatted_query);
@@ -172,7 +176,11 @@ int main (int argc, char *argv[])
     {
       try
         {
-          ADQL::Query query (i);
+          ADQL::Query query (i,table_mapping);
+          std::string formatted_query=query.string();
+          ADQL::Query parsed_query(formatted_query);
+          if(formatted_query!=parsed_query.string())
+            throw std::runtime_error("");
           std::cout << "FAIL: Unexpected parse: " << i << "\n";
           result=1;
         }
