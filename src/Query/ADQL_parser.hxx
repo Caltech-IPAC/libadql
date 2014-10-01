@@ -374,9 +374,12 @@ struct ADQL_parser
     identifier %= regular_identifier | delimited_identifier;
 
     coord_sys
-        %= '\'' >> -ascii::no_case["J2000"]
-                                  [at_c<0>(_val)
-                                   = ADQL::Coord_Sys::Reference_Frame::J2000]
+        %= '\'' >> -(ascii::no_case["J2000"]
+                                    [at_c<0>(_val)
+                                     = ADQL::Coord_Sys::Reference_Frame::J2000]
+                     | ascii::no_case["GALACTIC"]
+                                      [at_c<0>(_val)
+                                       = ADQL::Coord_Sys::Reference_Frame::Galactic])
            >> -ascii::no_case["GEOCENTER"]
                              [at_c<1>(_val)
                               = ADQL::Coord_Sys::Reference_Position::GEOCENTER]

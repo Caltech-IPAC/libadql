@@ -10,6 +10,8 @@ int main (int argc, char *argv[])
   std::vector<std::string> pass = {
     "Select ra1,dec2,flux From mytable Where "
     "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))= 1",
+    "Select ra1,dec2,flux From mytable Where "
+    "Contains(Point('galactic',ra,dec),Circle('galactic',+10 , -20,-1))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
     "CONTAINS(POINT('J2000 Geocenter',ra,dec),CIRCLE('J2000 Geocenter',+10 , -20,-1))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "

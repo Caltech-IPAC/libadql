@@ -9,8 +9,8 @@ class Coord_Sys
 {
 public:
   enum class Reference_Frame
-  { J2000,
-    ICRS } frame;
+  { J2000, ICRS, Galactic } frame;
+      
   enum class Reference_Position
   { GEOCENTER } position;
 };
@@ -24,6 +24,9 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
       break;
     case ADQL::Coord_Sys::Reference_Frame::ICRS:
       os << "ICRS";
+      break;
+    case ADQL::Coord_Sys::Reference_Frame::Galactic:
+      os << "GALACTIC";
       break;
     }
   os << " GEOCENTER";
