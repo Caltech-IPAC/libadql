@@ -765,7 +765,7 @@ struct ADQL_parser
       group_by_clause, sort_specification_list, order_by_clause,
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
-      string_value_expression, select_non_as_item, from_clause, table_reference,
+      string_value_expression, select_non_as_item, table_reference,
       correlation_specification;
 
   boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
@@ -784,6 +784,9 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<Iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
+
+  boost::spirit::qi::rule<Iterator, std::vector<std::string>(),
+                          boost::spirit::ascii::space_type> from_clause;
 
   boost::spirit::qi::rule<Iterator, ADQL::Point (),
                           boost::spirit::ascii::space_type> point;

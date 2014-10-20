@@ -108,6 +108,7 @@ int main (int argc, char *argv[])
     "SELECT * from tapmod.mytable",
     "SELECT TAP_UPLOAD.mytable.b from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.mytable.* from TAP_UPLOAD.mytable",
+    "SELECT TAP_UPLOAD.mytable.*, fp_psc.* from TAP_UPLOAD.mytable, fp_psc",
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
     "CIRCLE('J2000',+10 , -20,-1)) ",

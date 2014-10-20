@@ -21,7 +21,7 @@ public:
   Columns columns;
   std::string all_or_distinct;
   size_t top;
-  std::string table;
+  std::vector<std::string> tables;
   Where where;
   std::string group_by, order_by;
   Having having;
@@ -88,7 +88,9 @@ inline std::ostream &operator<<(std::ostream &os,
      << (query.top!=std::numeric_limits<unsigned long long>::max()
          ? "TOP " + std::to_string(query.top) + " " : "")
      << query.columns
-     << " FROM " << query.table;
+     << " FROM " << query.tables.at(0);
+  for(size_t i=1; i<query.tables.size(); ++i)
+    os << ", " << query.tables.at(i);
   if(!query.where.empty())
     os << " WHERE " << query.where;
   if(!query.group_by.empty())
@@ -105,7 +107,7 @@ BOOST_FUSION_ADAPT_STRUCT (
     ADQL::Query,
     (std::string, all_or_distinct)(size_t, top)(ADQL::Query::Columns,
                                                 columns)
-    (std::string, table)(
+    (std::vector<std::string>, tables)(
         ADQL::Where, where)(std::string, group_by)(ADQL::Having,
                                                    having)(std::string,
                                                            order_by))
