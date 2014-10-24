@@ -1,5 +1,10 @@
 #pragma once
 
+#include <string>
+#include <sstream>
+#include <boost/fusion/include/adapt_struct.hpp>
+#include "boost/variant.hpp"
+
 namespace ADQL
 {
 class In_Predicate

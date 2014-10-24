@@ -3,6 +3,7 @@
 #include <boost/algorithm/string.hpp>
 #include "Search_Condition/Boolean_Term.hxx"
 
+
 namespace ADQL
 {
 class Search_Condition
@@ -19,8 +20,10 @@ public:
   std::vector<Variant> variant;
 
   bool empty () const { return variant.empty (); }
+  std::string string() const;
 };
 
+// FIXME: Should this be in the ADQL namespace?
 std::ostream &operator<<(std::ostream &os, const ADQL::Search_Condition &s);
 
 /// We have to define this operator here, because Search_Condition is

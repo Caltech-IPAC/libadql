@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#include <sstream>
+#include <boost/fusion/include/adapt_struct.hpp>
+
 namespace ADQL
 {
 class Comparison_Predicate
