@@ -13,7 +13,7 @@
 
 /// This parser does not have a separate lexer.  That makes things a
 /// little more complicated because I have to be sure to check for
-/// things my LOG10 before LOG or my_identifier() before
+/// things like LOG10 before LOG or my_identifier() before
 /// my_identifier.  I think it all works, but I have a feeling that
 /// there are some corner cases errors because of that.
 
@@ -379,7 +379,10 @@ struct ADQL_parser
                                      = ADQL::Coord_Sys::Reference_Frame::J2000]
                      | ascii::no_case["GALACTIC"]
                                       [at_c<0>(_val)
-                                       = ADQL::Coord_Sys::Reference_Frame::Galactic])
+                                       = ADQL::Coord_Sys::Reference_Frame::Galactic]
+                     | ascii::no_case["ICRS"]
+                                      [at_c<0>(_val)
+                                       = ADQL::Coord_Sys::Reference_Frame::ICRS])
            >> -ascii::no_case["GEOCENTER"]
                              [at_c<1>(_val)
                               = ADQL::Coord_Sys::Reference_Position::GEOCENTER]
