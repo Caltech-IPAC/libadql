@@ -12,6 +12,9 @@ ADQL::Query::Query (const std::string &input, const std::map<std::string,std::st
 
   if (!(valid && begin == end))
     {
-      throw std::runtime_error ("");
+      auto error=parser.error_stream.str ();
+      if (error.empty ())
+        error="Expecting <SELECT> here: \"" + input + "\"";;
+      throw std::runtime_error (error);
     }
 }

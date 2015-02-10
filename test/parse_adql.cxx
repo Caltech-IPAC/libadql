@@ -88,8 +88,6 @@ int main (int argc, char *argv[])
     "select single from a",
     "select a,b from a group by a",
     "select a,b from a group by a having x>2",
-    "SELECT * FROM my_table1 where x in(10,20,30)",
-    "SELECT * FROM my_table1 where x not in(10,20,30)",
     "SELECT * FROM my_table1 order by x",
     "SELECT * FROM my_table1 order by x asc",
     "SELECT * FROM my_table1 order by x desc",
@@ -122,6 +120,12 @@ int main (int argc, char *argv[])
 
   std::vector<std::string> fail = {
     "POINT('foo',10 20)", "POINT('foo',1.0, 20)", "POINT('foo',10 ,-2.0)",
+    "SELECTTOP 100 * FROM my_table1",
+    "SELECT TOP100 * FROM my_table1",
+    "SELECT TOP 100* FROM my_table1",
+    "SELECT TOP hundred * FROM my_table1",
+    "SELECT * FROM my_table1 where x in(10,20,30)",
+    "SELECT * FROM my_table1 where x not in(10,20,30)",
     "SELECT FROM WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , "
     "20,1))",
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
@@ -184,6 +188,7 @@ int main (int argc, char *argv[])
           ADQL::Query query (i,table_mapping);
           std::string formatted_query=query.string();
           ADQL::Query parsed_query(formatted_query);
+
           if(formatted_query!=parsed_query.string())
             throw std::runtime_error("");
           std::cout << "FAIL: Unexpected parse: " << i << "\n";
@@ -191,6 +196,8 @@ int main (int argc, char *argv[])
         }
       catch (std::runtime_error &e)
         {
+          std::cout << "Query: " << i << "\n";
+          std::cout << "error: " << e.what() << "\n";
           if(!quiet)
             std::cout << "PASS: " << i << "\n";
         }
