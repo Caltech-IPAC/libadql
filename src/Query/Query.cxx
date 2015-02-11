@@ -14,7 +14,7 @@ ADQL::Query::Query (const std::string &input, const std::map<std::string,std::st
     {
       auto error=parser.error_stream.str ();
       if (error.empty ())
-        error="Expecting <SELECT> here: \"" + input + "\"";;
+        error="Error: Expecting <SELECT> here: \"" + input + "\"";;
       throw std::runtime_error (error);
     }
 }

@@ -663,7 +663,7 @@ struct ADQL_parser
 
     boost::spirit::qi::on_error<boost::spirit::qi::fail>(
         query, boost::phoenix::ref ((std::ostream &)error_stream)
-               << boost::phoenix::val ("Error! Expecting ")
+               << boost::phoenix::val ("Error: Expecting ")
                << boost::spirit::qi::labels::_4
                << boost::phoenix::val (" here: \"")
                << boost::phoenix::construct<std::string>(_3, _2)
