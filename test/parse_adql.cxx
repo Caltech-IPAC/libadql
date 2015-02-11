@@ -159,6 +159,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM mytable WHERE"
     "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
     "SELECT * from TAP_UPLOAD.wrong_table",
+    "SELECT TAP_UPLOAD.* from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table.* from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table.ra from TAP_UPLOAD.mytable",
