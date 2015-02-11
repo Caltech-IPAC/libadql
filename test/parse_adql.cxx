@@ -115,6 +115,9 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
     "CIRCLE('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,-1)) ",
+    "SELECT max(alligator) from a",
+    "SELECT maximus from a",
+    "SELECT ast from a",
   };
 
 
@@ -132,10 +135,24 @@ int main (int argc, char *argv[])
     "And x<1 And x>2 Or y < 3 Or y >5"
     "SELECT *,ra FROM my_table1",
     "SELECT my_tablel1.* as ra_dec FROM my_table1",
-    "SELECT sin as ra_dec FROM my_table1",
     "select sum(a,b) from a",
+    "select sum from a",
+    "select sum( from a",
     "select abs(a,b) from a",
-    "select a,b from a groupby a",
+    "select sin from a",
+    "select sin() from a",
+    "select sin( from a",
+    "select atan2 from a",
+    "select atan2() from a",
+    "select atan2(a) from a",
+    "select atan2(a,) from a",
+    "select atan2(a,b from a",
+    "select round from a",
+    "select round() from a",
+    "select round(a,) from a",
+    "select round(a,b from a",
+    "select count(* from a",
+    "select b from a groupby a",
     "select a asb from a groupby a",
     "SELECT * FROM my_table1 where (x notBetween 2 AND 4)",
     "SELECT * FROM my_table1 where x notin (10,20,30)",

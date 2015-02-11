@@ -287,7 +287,7 @@ struct ADQL_parser
 
     correlation_name %= identifier;
     correlation_specification %= -lexeme[ascii::no_case[ascii::string ("AS")]
-                                         >> &boost::spirit::qi::space]
+                                         > &boost::spirit::qi::space]
                                  >> correlation_name;
 
     /// The spec says to have correlation_name as an alternate, but
@@ -297,8 +297,9 @@ struct ADQL_parser
 
     tap_upload
         %= "TAP_UPLOAD."
-           >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]];
+           // >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]];
            // > identifier[_val = boost::phoenix::ref (table_mapping)[_1]];
+      > identifier[_val = boost::phoenix::ref (table_mapping)[_1]];
     tap_upload.name ("TAP_UPLOAD");
 
     // boost::spirit::qi::on_error<boost::spirit::qi::fail>
@@ -339,6 +340,7 @@ struct ADQL_parser
 
     sign %= char_ ('+') | char_ ('-');
     signed_integer %= -sign >> unsigned_integer;
+    signed_integer.name ("signed_integer");
     mantissa %= exact_numeric_literal;
     exponent %= signed_integer;
     approximate_numeric_literal %= mantissa >> char_ ("Ee") >> exponent;
@@ -379,12 +381,13 @@ struct ADQL_parser
                             | ascii::no_case[ascii::string ("ALL")])
                            >> &boost::spirit::qi::space];
 
-    general_set_function %= set_function_type >> char_ ('(') >> -set_quantifier
-                            >> value_expression >> char_ (')');
+    general_set_function %= set_function_type >> &nonidentifier_character
+      > char_ ('(') >> -set_quantifier
+      > value_expression > char_ (')');
 
     set_function_specification
-        %= hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
-                >> char_ ('*') >> char_ (')')] | general_set_function;
+        %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
+                 >> char_ ('*')] > char_ (')')) | general_set_function;
 
     value_expression_primary
         %= unsigned_value_specification | column_reference
@@ -398,11 +401,14 @@ struct ADQL_parser
                   | ascii::no_case[ascii::string ("COS")]
                   | ascii::no_case[ascii::string ("COT")]
                   | ascii::no_case[ascii::string ("SIN")]
-                  | ascii::no_case[ascii::string ("TAN")]) >> char_ ('(')]
-            >> numeric_value_expression >> char_ (')'))
-           | (hold[ascii::no_case[ascii::string ("ATAN2")] >> char_ ('(')]
-              >> numeric_value_expression >> char_ (',')
-              >> numeric_value_expression >> char_ (')'));
+                  | ascii::no_case[ascii::string ("TAN")])
+                 >> &nonidentifier_character] > char_ ('(')
+            > numeric_value_expression > char_ (')'))
+           | (lexeme[ascii::no_case[ascii::string ("ATAN2")]
+                    >> &nonidentifier_character]
+              > char_ ('(')
+              > numeric_value_expression > char_ (',')
+              > numeric_value_expression > char_ (')'));
 
     math_function
         %= (hold[(ascii::no_case[ascii::string ("ABS")]
@@ -413,20 +419,25 @@ struct ADQL_parser
                   | ascii::no_case[ascii::string ("LOG10")]
                   | ascii::no_case[ascii::string ("LOG")]
                   | ascii::no_case[ascii::string ("RADIANS")]
-                  | ascii::no_case[ascii::string ("SQRT")]) >> char_ ('(')]
-            >> numeric_value_expression >> char_ (')'))
+                  | ascii::no_case[ascii::string ("SQRT")])
+                 >> &nonidentifier_character] > char_ ('(')
+            > numeric_value_expression > char_ (')'))
            | (hold[(ascii::no_case[ascii::string ("MOD")]
-                    | ascii::no_case[ascii::string ("POWER")]) >> char_ ('(')]
-              >> numeric_value_expression >> char_ (',')
-              >> numeric_value_expression >> char_ (')'))
-           | (hold[ascii::no_case[ascii::string ("PI")] >> char_ ('(')]
-              >> char_ (')'))
-           | (hold[ascii::no_case[ascii::string ("RAND")] >> char_ ('(')]
-              >> -numeric_value_expression >> char_ (')'))
+                    | ascii::no_case[ascii::string ("POWER")])
+                   >> &nonidentifier_character] > char_ ('(')
+              > numeric_value_expression > char_ (',')
+              > numeric_value_expression > char_ (')'))
+           | (hold[ascii::no_case[ascii::string ("PI")]
+                   >> &nonidentifier_character] > char_ ('(')
+              > char_ (')'))
+           | (hold[ascii::no_case[ascii::string ("RAND")]
+                   >> &nonidentifier_character] > char_ ('(')
+              >> -numeric_value_expression > char_ (')'))
            | (hold[(ascii::no_case[ascii::string ("ROUND")]
                     | ascii::no_case[ascii::string ("TRUNCATE")])
-                   >> char_ ('(')] >> numeric_value_expression
-              >> -(char_ (',') >> signed_integer) >> char_ (')'));
+                   >> &nonidentifier_character]
+                   > char_ ('(') > numeric_value_expression
+              >> -(char_ (',') > signed_integer) > char_ (')'));
 
     /// default_function_prefix is a bit useless since it is optional.
     default_function_prefix %= ascii::string ("udf_");
@@ -457,6 +468,7 @@ struct ADQL_parser
     term %= factor >> -(char_ ("*/") >> term);
     numeric_value_expression %= term
                                 >> -(char_ ("+-") >> numeric_value_expression);
+    numeric_value_expression.name ("numeric_value_expression");
 
     // FIXME: string_value_function should have a string_geometry_function;
     string_value_function %= user_defined_function;
@@ -485,6 +497,7 @@ struct ADQL_parser
     value_expression %= (hold[character_factor >> concatenation_operator]
                          >> character_value_expression)
                         | numeric_value_expression | string_value_expression;
+    value_expression.name ("value_expression");
 
     coord %= numeric_value_expression >> ',' >> numeric_value_expression;
     point %= ascii::no_case["POINT"] >> '(' >> coord_sys >> ',' >> coord
@@ -514,7 +527,7 @@ struct ADQL_parser
     column_name %= identifier;
 
     as %= value_expression
-          >> lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
+          >> lexeme[ascii::no_case["AS"] > &boost::spirit::qi::space]
           >> column_name;
 
     select_non_as_item %= hold[qualifier >> ascii::string (".*")]
@@ -634,10 +647,11 @@ struct ADQL_parser
            >> sort_specification_list;
 
     query %= lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space]
-             >> -set_quantifier
-             >> -(lexeme[ascii::no_case["TOP"] > &boost::spirit::qi::space]
-                  > lexeme[ulong_long > &boost::spirit::qi::space]) >> columns >> from_clause >> (-where)
-             >> -group_by_clause >> -having_clause >> -order_by_clause;
+              >> -set_quantifier
+              >> -(lexeme[ascii::no_case["TOP"] > &boost::spirit::qi::space]
+                    > lexeme[ulong_long > &boost::spirit::qi::space]) >> columns
+              >> from_clause >> -where
+              >> -group_by_clause >> -having_clause >> -order_by_clause;
 
     query.name ("select");
     from_clause.name ("from");
