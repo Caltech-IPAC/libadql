@@ -120,6 +120,7 @@ int main (int argc, char *argv[])
     "SELECT max(alligator) from a",
     "SELECT maximus from a",
     "SELECT ast from a",
+    "Select fromage from fromming",
   };
 
 
@@ -131,7 +132,9 @@ int main (int argc, char *argv[])
     "SELECT TOP hundred * FROM my_table1",
     "SELECT * FROM my_table1 where x in(10,20,30)",
     "SELECT * FROM my_table1 where x not in(10,20,30)",
-    "SELECT FROM WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , "
+    "SELECT FROM my_table1 WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , "
+    "20,1))",
+    "SELECT * FROM WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , "
     "20,1))",
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
     "And x<1 And x>2 Or y < 3 Or y >5"
