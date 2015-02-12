@@ -130,6 +130,8 @@ int main (int argc, char *argv[])
     "SELECT TOP100 * FROM my_table1",
     "SELECT TOP 100* FROM my_table1",
     "SELECT TOP hundred * FROM my_table1",
+    "SELECT DISTINCT sin FROM my_table1",
+    "SELECT TOP 100 FROM my_table1",
     "SELECT * FROM my_table1 where x in(10,20,30)",
     "SELECT * FROM my_table1 where x not in(10,20,30)",
     "SELECT FROM my_table1 WHERE CONTAINS(POINT('J2000',10 , 20),CIRCLE('J2000',10 , "
