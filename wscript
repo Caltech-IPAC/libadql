@@ -75,7 +75,9 @@ def build(ctx):
                  'src/Query/ADQL_parser/ADQL_parser/init_identifier.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_literals.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_predicate.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_query.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_reserved_words.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_search_condition.cxx',
                  'src/Query/string.cxx',
                  'src/Query/simplified_columns.cxx',
                  'src/Query/Search_Condition/string.cxx'

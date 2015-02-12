@@ -72,4 +72,5 @@ void ADQL_parser::init_columns()
   select_item %= as | select_non_as_item;
   select_list %= select_item % ',';
   columns %= ascii::string ("*") | select_list;
+  columns.name ("columns");
 }

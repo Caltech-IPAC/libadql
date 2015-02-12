@@ -32,6 +32,7 @@ void ADQL_parser::init_predicate ()
 
   from_clause %= lexeme[ascii::no_case["FROM"] > &boost::spirit::qi::space]
     >> (table_reference % ",");
+  from_clause.name ("from");
 
   // from_clause %= lexeme[ascii::no_case["FROM"] >>
   // boost::spirit::qi::space]

@@ -71,6 +71,8 @@ struct ADQL_parser
   void init_factor ();
   void init_columns ();
   void init_predicate ();
+  void init_search_condition ();
+  void init_query ();
 
   std::stringstream error_stream;
 

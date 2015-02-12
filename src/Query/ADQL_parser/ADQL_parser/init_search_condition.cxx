@@ -1,8 +1,6 @@
 #include "../../ADQL_parser.hxx"
 
-ADQL_parser::ADQL_parser (const std::map<std::string, std::string> &Table_mapping)
-  : ADQL_parser::base_type (query, "ADQL query"),
-    table_mapping (Table_mapping)
+void ADQL_parser::init_search_condition()
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;
@@ -25,15 +23,17 @@ ADQL_parser::ADQL_parser (const std::map<std::string, std::string> &Table_mappin
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  init_reserved_words ();
-  init_identifier ();
-  init_geometry ();
-  init_column_reference ();
-  init_literals ();
-  init_factor ();
-  init_columns ();
-  init_factor ();
-  init_predicate ();
-  init_search_condition ();
-  init_query ();
+  boolean_primary %= predicate | (lit ('(') >> search_condition >> ')');
+
+  boolean_factor %= -lexeme[ascii::no_case[ascii::string ("NOT")]
+                            > &boost::spirit::qi::space]
+    >> boolean_primary;
+
+  boolean_term %= boolean_factor
+    >> lexeme[(ascii::no_case[ascii::string ("AND")]
+               | ascii::no_case[ascii::string ("OR")])
+              > &boost::spirit::qi::space] >> search_condition;
+
+  search_condition
+    = (boolean_term | boolean_factor)[push_back (at_c<0>(_val), _1)];
 }
