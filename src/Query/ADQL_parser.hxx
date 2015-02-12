@@ -98,13 +98,13 @@ struct ADQL_parser
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
-      concatenation_operator;
+      concatenation_operator, set_function_type;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
       qualifier, correlation_name, table_name, tap_upload,
       unqualified_schema_name, catalog_name, general_literal, unsigned_literal,
-      unsigned_value_specification, set_function_type, general_set_function,
+      unsigned_value_specification, general_set_function,
       set_function_specification, value_expression_primary, value_expression,
       numeric_value_expression, numeric_primary, factor, term,
       numeric_value_function, trig_function, math_function,

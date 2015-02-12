@@ -34,8 +34,8 @@ void ADQL_parser::init_factor()
                                  | ascii::no_case[ascii::string ("ALL")])
                                 >> &boost::spirit::qi::space]];
 
-  general_set_function %= set_function_type >> &nonidentifier_character
-    > char_ ('(') >> -set_quantifier
+  general_set_function %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
+                           > char_ ('(')) >> -set_quantifier
     > value_expression > char_ (')');
 
   set_function_specification
