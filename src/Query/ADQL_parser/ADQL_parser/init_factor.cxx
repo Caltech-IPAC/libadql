@@ -30,9 +30,9 @@ void ADQL_parser::init_factor()
     | ascii::no_case[ascii::string ("COUNT")];
   /// This is a little funky because we need to preserve the space
   /// between the set_quantifier and whatever follows it.
-  set_quantifier %= hold[(ascii::no_case[ascii::string ("DISTINCT")]
-                          | ascii::no_case[ascii::string ("ALL")])
-                         >> &boost::spirit::qi::space];
+  set_quantifier %= hold[lexeme[(ascii::no_case[ascii::string ("DISTINCT")]
+                                 | ascii::no_case[ascii::string ("ALL")])
+                                >> &boost::spirit::qi::space]];
 
   general_set_function %= set_function_type >> &nonidentifier_character
     > char_ ('(') >> -set_quantifier
@@ -48,47 +48,47 @@ void ADQL_parser::init_factor()
     | (char_ ('(') >> value_expression >> char_ (')'));
 
   trig_function
-    %= (hold[(ascii::no_case[ascii::string ("ACOS")]
+    %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
               | ascii::no_case[ascii::string ("ASIN")]
               | ascii::no_case[ascii::string ("ATAN")]
               | ascii::no_case[ascii::string ("COS")]
               | ascii::no_case[ascii::string ("COT")]
               | ascii::no_case[ascii::string ("SIN")]
               | ascii::no_case[ascii::string ("TAN")])
-             >> &nonidentifier_character] > char_ ('(')
+             >> &nonidentifier_character]] > char_ ('(')
         > numeric_value_expression > char_ (')'))
-    | (lexeme[ascii::no_case[ascii::string ("ATAN2")]
-              >> &nonidentifier_character]
+    | (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
+                   >> &nonidentifier_character]]
        > char_ ('(')
        > numeric_value_expression > char_ (',')
        > numeric_value_expression > char_ (')'));
 
   math_function
-    %= (hold[(ascii::no_case[ascii::string ("ABS")]
-              | ascii::no_case[ascii::string ("CEILING")]
-              | ascii::no_case[ascii::string ("DEGREES")]
-              | ascii::no_case[ascii::string ("EXP")]
-              | ascii::no_case[ascii::string ("FLOOR")]
-              | ascii::no_case[ascii::string ("LOG10")]
-              | ascii::no_case[ascii::string ("LOG")]
-              | ascii::no_case[ascii::string ("RADIANS")]
-              | ascii::no_case[ascii::string ("SQRT")])
-             >> &nonidentifier_character] > char_ ('(')
+    %= (hold[lexeme[(ascii::no_case[ascii::string ("ABS")]
+                     | ascii::no_case[ascii::string ("CEILING")]
+                     | ascii::no_case[ascii::string ("DEGREES")]
+                     | ascii::no_case[ascii::string ("EXP")]
+                     | ascii::no_case[ascii::string ("FLOOR")]
+                     | ascii::no_case[ascii::string ("LOG10")]
+                     | ascii::no_case[ascii::string ("LOG")]
+                     | ascii::no_case[ascii::string ("RADIANS")]
+                     | ascii::no_case[ascii::string ("SQRT")])
+                    >> &nonidentifier_character]] > char_ ('(')
         > numeric_value_expression > char_ (')'))
-    | (hold[(ascii::no_case[ascii::string ("MOD")]
-             | ascii::no_case[ascii::string ("POWER")])
-            >> &nonidentifier_character] > char_ ('(')
+    | (hold[lexeme[(ascii::no_case[ascii::string ("MOD")]
+                    | ascii::no_case[ascii::string ("POWER")])
+                   >> &nonidentifier_character]] > char_ ('(')
        > numeric_value_expression > char_ (',')
        > numeric_value_expression > char_ (')'))
-    | (hold[ascii::no_case[ascii::string ("PI")]
-            >> &nonidentifier_character] > char_ ('(')
+    | (hold[lexeme[ascii::no_case[ascii::string ("PI")]
+                   >> &nonidentifier_character]] > char_ ('(')
        > char_ (')'))
-    | (hold[ascii::no_case[ascii::string ("RAND")]
-            >> &nonidentifier_character] > char_ ('(')
+    | (hold[lexeme[ascii::no_case[ascii::string ("RAND")]
+                   >> &nonidentifier_character]] > char_ ('(')
        >> -numeric_value_expression > char_ (')'))
-    | (hold[(ascii::no_case[ascii::string ("ROUND")]
-             | ascii::no_case[ascii::string ("TRUNCATE")])
-            >> &nonidentifier_character]
+    | (hold[lexeme[(ascii::no_case[ascii::string ("ROUND")]
+                    | ascii::no_case[ascii::string ("TRUNCATE")])
+                   >> &nonidentifier_character]]
        > char_ ('(') > numeric_value_expression
        >> -(char_ (',') > signed_integer) > char_ (')'));
 
