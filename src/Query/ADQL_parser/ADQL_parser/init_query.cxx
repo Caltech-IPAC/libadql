@@ -63,8 +63,8 @@ void ADQL_parser::init_query ()
   order_by_clause.name ("order by");
 
   query %= lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space]
-           >> -set_quantifier >
-           > -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
+           >> -set_quantifier
+           >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
                > lexeme[ulong_long > &boost::spirit::qi::space]) >> columns
            >> from_clause >> -where >> -group_by_clause >> -having_clause
            >> -order_by_clause;
