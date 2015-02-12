@@ -116,6 +116,7 @@ int main (int argc, char *argv[])
     "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
     "CIRCLE('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,-1)) ",
     "SELECT alligator from a",
+    "SELECT tophat from a",
     "SELECT max(alligator) from a",
     "SELECT maximus from a",
     "SELECT ast from a",
