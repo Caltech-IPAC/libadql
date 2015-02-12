@@ -115,6 +115,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
     "CIRCLE('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,-1)) ",
+    "SELECT alligator from a",
     "SELECT max(alligator) from a",
     "SELECT maximus from a",
     "SELECT ast from a",
