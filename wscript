@@ -67,6 +67,15 @@ def configure(ctx):
 def build(ctx):
 
     cxx_sources=['src/Query/Query.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/ADQL_parser.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_column_reference.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_columns.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_factor.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_geometry.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_identifier.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_literals.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_predicate.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_reserved_words.cxx',
                  'src/Query/string.cxx',
                  'src/Query/simplified_columns.cxx',
                  'src/Query/Search_Condition/string.cxx'
