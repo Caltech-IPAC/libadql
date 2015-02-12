@@ -11,8 +11,43 @@
 #include <boost/spirit/include/phoenix_object.hpp>
 #include <boost/fusion/include/io.hpp>
 #include "boost/variant.hpp"
+#include <boost/bind.hpp>
 
 #include "../Query.hxx"
+
+class tap_upload_matcher
+{
+public:
+  const std::map<std::string,std::string> &mapping;
+  tap_upload_matcher(const std::map<std::string,std::string> &Mapping):
+    mapping(Mapping) {}
+  // void check(std::string  &storage, const std::string &table)
+  // void operator()(const std::string &table, std::string const &storage,
+  //                 boost::spirit::qi::unused_type) const
+  void operator()(const std::string &table, boost::spirit::qi::unused_type,
+                  boost::spirit::qi::unused_type) const
+  {
+    auto new_name=mapping.find (table);
+    if (new_name==mapping.end ())
+      {
+        throw std::runtime_error
+          ("INTERNAL ERROR: The table TAP_UPLOAD." + table +
+           " is not in the list of tables for renaming\n");
+      }
+  }
+};
+
+
+// inline std::string mapit(const std::map<std::string,std::string> &mapping, const std::string &s)
+// {
+//   return mapping[s];
+// }
+
+
+inline void write_tap_upload(const std::string &s)
+{
+  std::cout << "val: " << s << "\n";
+}
 
 /// This parser does not have a separate lexer.  That makes things a
 /// little more complicated because I have to be sure to check for
@@ -20,9 +55,8 @@
 /// my_identifier.  I think it all works, but I have a feeling that
 /// there are some corner cases errors because of that.
 
-template <typename Iterator>
 struct ADQL_parser
-    : boost::spirit::qi::grammar<Iterator, ADQL::Query (),
+    : boost::spirit::qi::grammar<std::string::const_iterator, ADQL::Query (),
                                  boost::spirit::qi::locals<std::string>,
                                  boost::spirit::ascii::space_type>
 {
@@ -297,9 +331,13 @@ struct ADQL_parser
 
     tap_upload
         %= "TAP_UPLOAD."
-           // >> identifier[_val = boost::phoenix::ref(table_mapping)[_1]];
-           // > identifier[_val = boost::phoenix::ref (table_mapping)[_1]];
+      // > identifier[_val=mapit];
+      // > identifier[write_tap_upload];
       > identifier[_val = boost::phoenix::ref (table_mapping)[_1]];
+      // > identifier[_val = boost::phoenix::at (table_mapping,_1)];
+      // > identifier[tap_upload_matcher(table_mapping)];
+      // > identifier[boost::bind(&tap_upload_matcher::check,tap_upload_matcher(table_mapping),_val,_1)];
+      // > identifier[boost::bind (&std::map<std::string,std::string>::at,&table_mapping,_1)];
     tap_upload.name ("TAP_UPLOAD");
 
     // boost::spirit::qi::on_error<boost::spirit::qi::fail>
@@ -674,12 +712,12 @@ struct ADQL_parser
 
   std::map<std::string, std::string> table_mapping;
 
-  boost::spirit::qi::rule<Iterator, char()> simple_Latin_letter,
+  boost::spirit::qi::rule<std::string::const_iterator, char()> simple_Latin_letter,
       identifier_character, nonidentifier_character, SQL_language_character,
       SQL_special_character, nondoublequote_character, quote, space, newline,
       tab, minus_sign, nonquote_character, sign, period;
 
-  boost::spirit::qi::rule<Iterator, std::string ()> unsigned_integer,
+  boost::spirit::qi::rule<std::string::const_iterator, std::string ()> unsigned_integer,
       exact_numeric_literal, signed_integer, mantissa, exponent,
       approximate_numeric_literal, unsigned_numeric_literal, comment,
       comment_introducer, comment_character, delimited_identifier,
@@ -696,7 +734,7 @@ struct ADQL_parser
       column_name, sort_key, ordering_specification, sort_specification,
       concatenation_operator;
 
-  boost::spirit::qi::rule<Iterator, std::string (),
+  boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
       qualifier, correlation_name, table_name, tap_upload,
       unqualified_schema_name, catalog_name, general_literal, unsigned_literal,
@@ -713,85 +751,85 @@ struct ADQL_parser
       string_value_expression, select_non_as_item, table_reference,
       correlation_specification;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Coord_Sys (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
-  boost::spirit::qi::rule<Iterator, ADQL::Coordinate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coordinate (),
                           boost::spirit::ascii::space_type> coord;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Query::Column_Variant (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query::Column_Variant (),
                           boost::spirit::ascii::space_type> select_item;
 
-  boost::spirit::qi::rule<Iterator, std::vector<ADQL::Query::Column_Variant>(),
+  boost::spirit::qi::rule<std::string::const_iterator, std::vector<ADQL::Query::Column_Variant>(),
                           boost::spirit::ascii::space_type> select_list;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Query::Columns (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query::Columns (),
                           boost::spirit::ascii::space_type> columns;
 
-  boost::spirit::qi::rule<Iterator, ADQL::As (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
 
-  boost::spirit::qi::rule<Iterator, std::vector<std::string>(),
+  boost::spirit::qi::rule<std::string::const_iterator, std::vector<std::string>(),
                           boost::spirit::ascii::space_type> from_clause;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Point (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Point (),
                           boost::spirit::ascii::space_type> point;
-  boost::spirit::qi::rule<Iterator, ADQL::Circle (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Circle (),
                           boost::spirit::ascii::space_type> circle;
-  boost::spirit::qi::rule<Iterator, ADQL::Ellipse (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Ellipse (),
                           boost::spirit::ascii::space_type> ellipse;
-  boost::spirit::qi::rule<Iterator, ADQL::Box (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Box (),
                           boost::spirit::ascii::space_type> box;
-  boost::spirit::qi::rule<Iterator, ADQL::Polygon (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Polygon (),
                           boost::spirit::ascii::space_type> polygon;
-  boost::spirit::qi::rule<Iterator, std::vector<ADQL::Coordinate>(),
+  boost::spirit::qi::rule<std::string::const_iterator, std::vector<ADQL::Coordinate>(),
                           boost::spirit::ascii::space_type> coord_list;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Contains (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains (),
                           boost::spirit::ascii::space_type> contains;
-  boost::spirit::qi::rule<Iterator, ADQL::Contains::Shape (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains::Shape (),
                           boost::spirit::ascii::space_type> shape;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Geometry (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Geometry (),
                           boost::spirit::ascii::space_type> geometry;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Comparison_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Comparison_Predicate (),
                           boost::spirit::ascii::space_type>
   comparison_predicate;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Between_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Between_Predicate (),
                           boost::spirit::ascii::space_type> between_predicate;
 
-  boost::spirit::qi::rule<Iterator, ADQL::In_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::In_Predicate (),
                           boost::spirit::ascii::space_type> in_predicate;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Null_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Null_Predicate (),
                           boost::spirit::ascii::space_type> null_predicate;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Like_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Like_Predicate (),
                           boost::spirit::ascii::space_type> like_predicate;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Predicate (),
                           boost::spirit::ascii::space_type> predicate;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Boolean_Primary (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Primary (),
                           boost::spirit::ascii::space_type> boolean_primary;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Boolean_Factor (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Factor (),
                           boost::spirit::ascii::space_type> boolean_factor;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Boolean_Term (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Term (),
                           boost::spirit::ascii::space_type> boolean_term;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Search_Condition (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Search_Condition (),
                           boost::spirit::ascii::space_type> search_condition;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Having (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Having (),
                           boost::spirit::ascii::space_type> having_clause;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Where (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where;
 
-  boost::spirit::qi::rule<Iterator, ADQL::Query (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query (),
                           boost::spirit::qi::locals<std::string>,
                           boost::spirit::ascii::space_type> query;
 };
