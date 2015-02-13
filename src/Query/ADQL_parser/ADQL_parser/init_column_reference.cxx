@@ -1,4 +1,24 @@
+#include <boost/spirit/include/phoenix_bind.hpp>
+
 #include "../../ADQL_parser.hxx"
+
+namespace
+{
+  std::string checked_mapping(const std::map<std::string,std::string> &mapping,
+                              const std::string &s)
+  {
+    auto i=mapping.find (s);
+    if (i==mapping.end ())
+      throw std::runtime_error ("Error: The table TAP_UPLOAD." + s
+                                + " was not found.  Is it misspelled?");
+    return i->second;
+  }
+}
+
+inline void write_tap_upload(const std::string &s)
+{
+  std::cout << "val: " << s << "\n";
+}
 
 void ADQL_parser::init_column_reference()
 {
@@ -38,28 +58,9 @@ void ADQL_parser::init_column_reference()
   /// so correlation_name will never match.
   qualifier %= table_name;
 
-  tap_upload
-    %= "TAP_UPLOAD."
-    // > identifier[_val=mapit];
-    // > identifier[write_tap_upload];
-    > identifier[_val = boost::phoenix::ref (table_mapping)[_1]];
-  // > identifier[_val = boost::phoenix::at (table_mapping,_1)];
-  // > identifier[tap_upload_matcher(table_mapping)];
-  // > identifier[boost::bind(&tap_upload_matcher::check,tap_upload_matcher(table_mapping),_val,_1)];
-  // > identifier[boost::bind (&std::map<std::string,std::string>::at,&table_mapping,_1)];
+  tap_upload %= "TAP_UPLOAD."
+    > identifier[_val = boost::phoenix::bind (&checked_mapping,table_mapping,_1)];
   tap_upload.name ("TAP_UPLOAD");
-
-  // boost::spirit::qi::on_error<boost::spirit::qi::fail>
-  //   (
-  //    tap_upload
-  //    , boost::phoenix::ref( (std::ostream&)error_stream)
-  //    << boost::phoenix::val("Error! Expecting ")
-  //    << boost::spirit::qi::labels::_4
-  //    << boost::phoenix::val(" here: \"")
-  //    << boost::phoenix::construct<std::string>(_3, _2)
-  //    << boost::phoenix::val("\"")
-  //    << std::endl
-  //    );
 
   /// I have to manually expand the possibilities in
   /// column_reference and table name, because a catalog.schema can

@@ -15,40 +15,6 @@
 
 #include "../Query.hxx"
 
-class tap_upload_matcher
-{
-public:
-  const std::map<std::string,std::string> &mapping;
-  tap_upload_matcher(const std::map<std::string,std::string> &Mapping):
-    mapping(Mapping) {}
-  // void check(std::string  &storage, const std::string &table)
-  // void operator()(const std::string &table, std::string const &storage,
-  //                 boost::spirit::qi::unused_type) const
-  void operator()(const std::string &table, boost::spirit::qi::unused_type,
-                  boost::spirit::qi::unused_type) const
-  {
-    auto new_name=mapping.find (table);
-    if (new_name==mapping.end ())
-      {
-        throw std::runtime_error
-          ("INTERNAL ERROR: The table TAP_UPLOAD." + table +
-           " is not in the list of tables for renaming\n");
-      }
-  }
-};
-
-
-// inline std::string mapit(const std::map<std::string,std::string> &mapping, const std::string &s)
-// {
-//   return mapping[s];
-// }
-
-
-inline void write_tap_upload(const std::string &s)
-{
-  std::cout << "val: " << s << "\n";
-}
-
 /// This parser does not have a separate lexer.  That makes things a
 /// little more complicated because I have to be sure to check for
 /// things like LOG10 before LOG or my_identifier() before
