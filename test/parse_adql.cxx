@@ -158,13 +158,16 @@ int main (int argc, char *argv[])
     "select round() from a",
     "select round(a,) from a",
     "select round(a,b from a",
+    "select round(a,10 from a",
     "select count(* from a",
     "select b from a where x<1 groupby a",
     "select a asb from a group by a",
     "SELECT * FROM my_table1 where (x notBetween 2 AND 4)",
     "SELECT * FROM my_table1 where x notin (10,20,30)",
-    "SELECT * FROM mytable WHERE"
-    "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
+    "SELECT * FROM mytable WHERECONTAINS(POINT('J2000',mytable.ra,dec),"
+    "CIRCLE('J2000',+10 , -20,-1)) = 1",
+    "SELECT * FROM mytable as my WHERECONTAINS(POINT('J2000',mytable.ra,dec),"
+    "CIRCLE('J2000',+10 , -20,-1)) = 1",
     "SELECT * from TAP_UPLOAD.wrong_table",
     "SELECT TAP_UPLOAD.* from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table from TAP_UPLOAD.mytable",
