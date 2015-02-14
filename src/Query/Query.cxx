@@ -10,11 +10,16 @@ ADQL::Query::Query (const std::string &input, const std::map<std::string,std::st
   bool valid (
       phrase_parse (begin, end, parser, boost::spirit::ascii::space, *this));
 
-  if (!(valid && begin == end))
+  if (!valid)
     {
       auto error=parser.error_stream.str ();
       if (error.empty ())
         error="Error: Expecting <SELECT> here: \"" + input + "\"";;
       throw std::runtime_error (error);
+    }
+  else if (begin != end)
+    {
+      throw std::runtime_error ("Error: Unexpected terms at the end: "
+                                + std::string (begin,end));
     }
 }
