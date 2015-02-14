@@ -26,13 +26,13 @@ void ADQL_parser::init_search_condition()
   boolean_primary %= predicate | (lit ('(') >> search_condition >> ')');
 
   boolean_factor %= -lexeme[ascii::no_case[ascii::string ("NOT")]
-                            > &boost::spirit::qi::space]
+                            >> &boost::spirit::qi::space]
     >> boolean_primary;
 
   boolean_term %= boolean_factor
     >> lexeme[(ascii::no_case[ascii::string ("AND")]
                | ascii::no_case[ascii::string ("OR")])
-              > &boost::spirit::qi::space] >> search_condition;
+              >> &boost::spirit::qi::space] >> search_condition;
 
   search_condition
     = (boolean_term | boolean_factor)[push_back (at_c<0>(_val), _1)];

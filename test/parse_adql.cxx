@@ -91,6 +91,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 order by x",
     "SELECT * FROM my_table1 order by x asc",
     "SELECT * FROM my_table1 order by x desc",
+    "select b from a where x<1 order by a",
     "SELECT * FROM my_table1 where x like y",
     "SELECT * FROM my_table1 where x like y || z",
     "SELECT * FROM my_table1 where x not like my_sin(x)",
@@ -121,6 +122,7 @@ int main (int argc, char *argv[])
     "SELECT maximus from a",
     "SELECT ast from a",
     "Select fromage from fromming",
+    "Select fromage from fromming ast",
   };
 
 
@@ -161,7 +163,12 @@ int main (int argc, char *argv[])
     "select round(a,10 from a",
     "select count(* from a",
     "select b from a where x<1 groupby a",
+    "select b from a where x<1 group bya",
+    "select b from a where x<1 orderby a",
+    "select b from a where x<1 order bya",
+    "select b from a where x<1 havinga",
     "select a asb from a group by a",
+    "Select fromage ast from fromming",
     "SELECT * FROM my_table1 where (x notBetween 2 AND 4)",
     "SELECT * FROM my_table1 where x notin (10,20,30)",
     "SELECT * FROM mytable WHERECONTAINS(POINT('J2000',mytable.ra,dec),"

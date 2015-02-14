@@ -50,7 +50,7 @@ void ADQL_parser::init_column_reference()
 
   correlation_name %= identifier;
   correlation_specification %= -lexeme[ascii::no_case[ascii::string ("AS")]
-                                       > &boost::spirit::qi::space]
+                                       >> &boost::spirit::qi::space]
     >> correlation_name;
 
   /// The spec says to have correlation_name as an alternate, but
