@@ -65,16 +65,17 @@ void ADQL_parser::init_query ()
   /// The expectation operator messes up the automatic calculation of
   /// semantic actions.  So instead of %=, we have to do it manually
   /// with [at_c<>(_val)=_1]
-  query = ((lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space]
-            >> -set_quantifier[at_c<0>(_val) = _1]
-             >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
-                  > lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val)=_1]
-            > columns[at_c<2>(_val)=_1])
-            > from_clause[at_c<3>(_val)=_1])
+  query = (lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space]
+           >> -set_quantifier[at_c<0>(_val) = _1]
+           >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
+                > lexeme[ulong_long
+                         > &boost::spirit::qi::space])[at_c<1>(_val)=_1]
+           > columns[at_c<2>(_val)=_1]
+           > from_clause[at_c<3>(_val)=_1])
     >> -where[at_c<4>(_val)=_1]
-    >> -group_by_clause[at_c<5>(_val)=_1] >> -having_clause[at_c<6>(_val)=_1]
-           >> -order_by_clause[at_c<7>(_val)=_1]
-    ;
+    >> -group_by_clause[at_c<5>(_val)=_1]
+    >> -having_clause[at_c<6>(_val)=_1]
+    >> -order_by_clause[at_c<7>(_val)=_1];
   query.name ("select");
 
   boost::spirit::qi::on_error<boost::spirit::qi::fail>(
