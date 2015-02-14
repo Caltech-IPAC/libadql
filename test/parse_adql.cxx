@@ -159,8 +159,8 @@ int main (int argc, char *argv[])
     "select round(a,) from a",
     "select round(a,b from a",
     "select count(* from a",
-    "select b from a groupby a",
-    "select a asb from a groupby a",
+    "select b from a where x<1 groupby a",
+    "select a asb from a group by a",
     "SELECT * FROM my_table1 where (x notBetween 2 AND 4)",
     "SELECT * FROM my_table1 where x notin (10,20,30)",
     "SELECT * FROM mytable WHERE"
