@@ -17,11 +17,12 @@ class Query
 public:
   typedef boost::variant<As, std::string> Column_Variant;
   typedef boost::variant<std::string, std::vector<Column_Variant> > Columns;
+  typedef boost::variant<As, std::string> Table;
 
   Columns columns;
   std::string all_or_distinct;
   size_t top;
-  std::vector<std::string> tables;
+  std::vector<Table> tables;
   Where where;
   std::string group_by, order_by;
   Having having;
@@ -56,15 +57,15 @@ public:
   std::ostream &operator()(const std::vector<ADQL::Query::Column_Variant> &s)
       const
   {
-    std::stringstream ss;
-    for (auto &o : s)
+    auto o=s.begin ();
+    if (o!=s.end ())
       {
-        ss << o << ", ";
+        os << *o;
+        ++o;
       }
-    std::string temp = ss.str ();
-    /// Trim off the trailing comma
-    temp = temp.substr (0, temp.size () - 2);
-    return os << temp;
+    for (; o!=s.end (); ++o)
+      os << ", " << *o;
+    return os;
   }
 };
 }
@@ -75,8 +76,7 @@ namespace ADQL
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Query::Columns &columns)
 {
-  Query_Columns_Visitor visitor (os);
-  return boost::apply_visitor (visitor, columns);
+  return boost::apply_visitor (Query_Columns_Visitor (os), columns);
 }
 
 inline std::ostream &operator<<(std::ostream &os,
@@ -107,7 +107,7 @@ BOOST_FUSION_ADAPT_STRUCT (
     ADQL::Query,
     (std::string, all_or_distinct)(size_t, top)(ADQL::Query::Columns,
                                                 columns)
-    (std::vector<std::string>, tables)(
+    (std::vector<ADQL::Query::Table>, tables)(
         ADQL::Where, where)(std::string, group_by)(ADQL::Having,
                                                    having)(std::string,
                                                            order_by))

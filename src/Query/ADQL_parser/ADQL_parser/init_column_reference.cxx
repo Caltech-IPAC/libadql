@@ -49,9 +49,10 @@ void ADQL_parser::init_column_reference()
   unqualified_schema_name %= identifier;
 
   correlation_name %= identifier;
-  correlation_specification %= -lexeme[ascii::no_case[ascii::string ("AS")]
+  correlation_specification %= -lexeme[ascii::no_case["AS"]
                                        >> &boost::spirit::qi::space]
     >> correlation_name;
+  correlation_specification.name ("correlation_specification");
 
   /// The spec says to have correlation_name as an alternate, but
   /// table_name matches everything that correlation name matches,
