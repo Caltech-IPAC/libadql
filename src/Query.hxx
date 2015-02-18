@@ -9,6 +9,7 @@
 #include "Query/As.hxx"
 #include "Query/Where.hxx"
 #include "Query/Having.hxx"
+#include "Query/Table.hxx"
 
 namespace ADQL
 {
@@ -17,7 +18,6 @@ class Query
 public:
   typedef boost::variant<As, std::string> Column_Variant;
   typedef boost::variant<std::string, std::vector<Column_Variant> > Columns;
-  typedef boost::variant<As, std::string> Table;
 
   Columns columns;
   std::string all_or_distinct;
@@ -90,7 +90,7 @@ inline std::ostream &operator<<(std::ostream &os,
      << query.columns
      << " FROM " << query.tables.at(0);
   for(size_t i=1; i<query.tables.size(); ++i)
-    os << ", " << query.tables.at(i);
+    os << ", " << query.tables[i];
   if(!query.where.empty())
     os << " WHERE " << query.where;
   if(!query.group_by.empty())
@@ -107,7 +107,7 @@ BOOST_FUSION_ADAPT_STRUCT (
     ADQL::Query,
     (std::string, all_or_distinct)(size_t, top)(ADQL::Query::Columns,
                                                 columns)
-    (std::vector<ADQL::Query::Table>, tables)(
+    (std::vector<ADQL::Table>, tables)(
         ADQL::Where, where)(std::string, group_by)(ADQL::Having,
                                                    having)(std::string,
                                                            order_by))
