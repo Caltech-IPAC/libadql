@@ -22,18 +22,6 @@ public:
   bool empty () const { return variant.empty (); }
   std::string string() const;
 };
-
-// FIXME: Should this be in the ADQL namespace?
-std::ostream &operator<<(std::ostream &os, const ADQL::Search_Condition &s);
-
-/// We have to define this operator here, because Search_Condition is
-/// not defined in Boolean_Term.
-
-inline std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Term &s)
-{
-  return os << s.boolean_factor << " " << boost::to_upper_copy (s.logical_op)
-            << " " << s.search_condition_wrap.get ();
-}
 }
 
 namespace
@@ -70,34 +58,10 @@ inline std::ostream &operator<<(std::ostream &os,
     }
   return os;
 }
-}
 
-namespace
+inline std::ostream &operator<<(std::ostream &os, const Search_Condition_Wrap &s)
 {
-class Boolean_Primary_Variant_Visitor
-    : public boost::static_visitor<std::ostream &>
-{
-public:
-  std::ostream &os;
-  Boolean_Primary_Variant_Visitor (std::ostream &OS) : os (OS) {}
-  Boolean_Primary_Variant_Visitor () = delete;
-
-  std::ostream &operator()(const ADQL::Predicate &s) const { return os << s; }
-
-  std::ostream &operator()(const ADQL::Search_Condition_Wrap &s) const
-  {
-    return os << "(" << s.get () << ")";
-  }
-};
-}
-
-namespace ADQL
-{
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Boolean_Primary &b)
-{
-  Boolean_Primary_Variant_Visitor visitor (os);
-  return boost::apply_visitor (visitor, b.variant);
+  return os << s.get ();
 }
 }
 

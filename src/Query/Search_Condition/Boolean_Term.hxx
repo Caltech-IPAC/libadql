@@ -12,6 +12,12 @@ public:
   std::string logical_op;
   Boolean_Factor boolean_factor;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Term &s)
+{
+  return os << s.boolean_factor << " " << boost::to_upper_copy (s.logical_op)
+            << " " << s.search_condition_wrap;
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (

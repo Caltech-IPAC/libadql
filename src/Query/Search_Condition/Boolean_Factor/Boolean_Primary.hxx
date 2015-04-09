@@ -12,8 +12,35 @@ class Boolean_Primary
 public:
   Boolean_Primary_Variant variant;
 };
+}
 
-std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b);
+namespace
+{
+class Boolean_Primary_Variant_Visitor
+    : public boost::static_visitor<std::ostream &>
+{
+public:
+  std::ostream &os;
+  Boolean_Primary_Variant_Visitor (std::ostream &OS) : os (OS) {}
+  Boolean_Primary_Variant_Visitor () = delete;
+
+  std::ostream &operator()(const ADQL::Predicate &s) const { return os << s; }
+
+  std::ostream &operator()(const ADQL::Search_Condition_Wrap &s) const
+  {
+    return os << "(" << s << ")";
+  }
+};
+}
+
+namespace ADQL
+{
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Boolean_Primary &b)
+{
+  Boolean_Primary_Variant_Visitor visitor (os);
+  return boost::apply_visitor (visitor, b.variant);
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Boolean_Primary,
