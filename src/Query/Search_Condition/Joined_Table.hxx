@@ -1,12 +1,10 @@
 #pragma once
 
 #include "Joined_Table/Qualified_Join.hxx"
+#include "../Joined_Table_Wrap.hxx"
 
 namespace ADQL
 {
-class Joined_Table;
-typedef boost::recursive_wrapper<Joined_Table> Joined_Table_Wrap;
-
 class Joined_Table
 {
 public:
