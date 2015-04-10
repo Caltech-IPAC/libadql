@@ -17,44 +17,11 @@ public:
 };
 }
 
-namespace
-{
-class Predicate_Variant_Visitor : public boost::static_visitor<std::ostream &>
-{
-public:
-  std::ostream &os;
-  Predicate_Variant_Visitor (std::ostream &OS) : os (OS) {}
-  Predicate_Variant_Visitor () = delete;
-
-  std::ostream &operator()(const ADQL::Comparison_Predicate &s) const
-  {
-    return os << s;
-  }
-  std::ostream &operator()(const ADQL::Between_Predicate &s) const
-  {
-    return os << s;
-  }
-  std::ostream &operator()(const ADQL::In_Predicate &s) const
-  {
-    return os << s;
-  }
-  std::ostream &operator()(const ADQL::Null_Predicate &s) const
-  {
-    return os << s;
-  }
-  std::ostream &operator()(const ADQL::Like_Predicate &s) const
-  {
-    return os << s;
-  }
-};
-}
-
 namespace ADQL
 {
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Predicate &p)
 {
-  Predicate_Variant_Visitor visitor (os);
-  return boost::apply_visitor (visitor, p.variant);
+  return os << p.variant;
 }
 }
 
