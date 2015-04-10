@@ -24,12 +24,10 @@ void ADQL_parser::init_predicate ()
   namespace ascii = boost::spirit::ascii;
 
   table_correlation %= table_name >> -correlation_specification;
-  table_reference %= table_correlation;
+  table_reference %= table_correlation | joined_table;
 
-  // FIXME: table_reference is supposed to include derived_table and
-  // joined_table
+  // FIXME: table_reference is supposed to include derived_table
   // | (derived_table >> correlation_specification)
-  // | joined_table;
   table_reference.name ("table reference");
 
   from_clause %= lexeme[ascii::no_case["FROM"] > &boost::spirit::qi::space]
