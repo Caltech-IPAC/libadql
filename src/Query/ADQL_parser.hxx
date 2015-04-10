@@ -31,6 +31,7 @@ struct ADQL_parser
 
   void init_reserved_words ();
   void init_identifier ();
+  void init_join ();
   void init_geometry ();
   void init_column_reference ();
   void init_literals ();
@@ -64,7 +65,8 @@ struct ADQL_parser
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
-      concatenation_operator, set_function_type;
+      concatenation_operator, set_function_type,
+      outer_join_type, join_type;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
@@ -81,7 +83,8 @@ struct ADQL_parser
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
       string_value_expression, select_non_as_item,
-      correlation_specification;
+      correlation_specification, column_name_list, join_column_list,
+      named_columns_join;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -163,6 +166,19 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Join_Condition (),
+                          boost::spirit::ascii::space_type> join_condition;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Join_Specification (),
+                          boost::spirit::ascii::space_type> join_specification;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Qualified_Join (),
+                          boost::spirit::ascii::space_type> qualified_join;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Joined_Table (),
+                          boost::spirit::ascii::space_type> joined_table;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query (),
                           boost::spirit::qi::locals<std::string>,

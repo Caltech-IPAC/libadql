@@ -63,6 +63,10 @@ inline std::ostream &operator<<(std::ostream &os, const Search_Condition_Wrap &s
 {
   return os << s.get ();
 }
+inline bool empty (const Search_Condition_Wrap &s)
+{
+  return s.get ().empty ();
+}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Search_Condition,

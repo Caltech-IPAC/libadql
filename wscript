@@ -73,6 +73,7 @@ def build(ctx):
                  'src/Query/ADQL_parser/ADQL_parser/init_factor.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_geometry.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_identifier.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_join.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_literals.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_predicate.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_query.cxx',
@@ -91,15 +92,15 @@ def build(ctx):
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
         use=['boost','cxx11']
     )
-    # shared library
-    ctx.shlib(
-        source=cxx_sources,
-        includes='',
-        target='adql_query',
-        name='adql_query_sh',
-        install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['boost','cxx11']
-    )
+    # # shared library
+    # ctx.shlib(
+    #     source=cxx_sources,
+    #     includes='',
+    #     target='adql_query',
+    #     name='adql_query_sh',
+    #     install_path=os.path.join(ctx.env.PREFIX, 'lib'),
+    #     use=['boost','cxx11']
+    # )
 
     # Install headers
 

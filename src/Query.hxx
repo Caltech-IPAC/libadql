@@ -10,6 +10,7 @@
 #include "Query/Where.hxx"
 #include "Query/Having.hxx"
 #include "Query/Table.hxx"
+#include "Query/Search_Condition/Joined_Table.hxx"
 
 namespace ADQL
 {
