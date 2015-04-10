@@ -103,10 +103,10 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Reference (),
                           boost::spirit::ascii::space_type> table_reference;
 
-  boost::spirit::qi::rule<std::string::const_iterator, std::vector<ADQL::Table>(),
+  boost::spirit::qi::rule<std::string::const_iterator, std::vector<ADQL::Table_Reference>(),
                           boost::spirit::ascii::space_type> from_clause;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Point (),

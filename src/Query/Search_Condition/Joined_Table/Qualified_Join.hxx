@@ -7,7 +7,7 @@ namespace ADQL
 class Qualified_Join
 {
 public:
-  Table table_reference1, table_reference2;
+  Table_Reference table_reference1, table_reference2;
   std::string join_type;
   bool natural=false;
   Join_Specification join_specification;
@@ -29,8 +29,8 @@ inline std::ostream &operator<<(std::ostream &os, const Qualified_Join &j)
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Qualified_Join,
-                           (ADQL::Table, table_reference1)
+                           (ADQL::Table_Reference, table_reference1)
                            (bool, natural)
                            (std::string, join_type)
-                           (ADQL::Table, table_reference2)
+                           (ADQL::Table_Reference, table_reference2)
                            (ADQL::Join_Specification, join_specification))

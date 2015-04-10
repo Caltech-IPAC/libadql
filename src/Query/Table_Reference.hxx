@@ -7,13 +7,13 @@
 
 namespace ADQL
 {
-class Table
+class Table_Reference
 {
 public:
   std::string name, as;
 };
 
-inline std::ostream &operator<<(std::ostream &os, const ADQL::Table &table)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Table_Reference &table)
 {
   os << table.name;
   if (!table.as.empty ())
@@ -22,5 +22,5 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Table &table)
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Table,
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Table_Reference,
                            (std::string, name)(std::string, as))

@@ -9,7 +9,7 @@
 #include "Query/As.hxx"
 #include "Query/Where.hxx"
 #include "Query/Having.hxx"
-#include "Query/Table.hxx"
+#include "Query/Table_Reference.hxx"
 #include "Query/Search_Condition/Joined_Table.hxx"
 
 namespace ADQL
@@ -23,7 +23,7 @@ public:
   Columns columns;
   std::string all_or_distinct;
   size_t top;
-  std::vector<Table> tables;
+  std::vector<Table_Reference> tables;
   Where where;
   std::string group_by, order_by;
   Having having;
@@ -75,7 +75,7 @@ public:
 namespace ADQL
 {
 inline std::ostream &operator<<(std::ostream &os,
-                                const std::vector<Table> &tables)
+                                const std::vector<Table_Reference> &tables)
 {
   auto table=tables.begin ();
   if (table!=tables.end ())
@@ -120,7 +120,7 @@ BOOST_FUSION_ADAPT_STRUCT (
     ADQL::Query,
     (std::string, all_or_distinct)(size_t, top)(ADQL::Query::Columns,
                                                 columns)
-    (std::vector<ADQL::Table>, tables)(
+    (std::vector<ADQL::Table_Reference>, tables)(
         ADQL::Where, where)(std::string, group_by)(ADQL::Having,
                                                    having)(std::string,
                                                            order_by))
