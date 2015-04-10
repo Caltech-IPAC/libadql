@@ -3,7 +3,6 @@
 #include <boost/algorithm/string.hpp>
 #include "Search_Condition/Boolean_Term.hxx"
 
-
 namespace ADQL
 {
 class Search_Condition
@@ -22,28 +21,9 @@ public:
   bool empty () const { return variant.empty (); }
   std::string string() const;
 };
-}
 
-namespace
-{
-class Search_Condition_Variant_Visitor
-    : public boost::static_visitor<std::ostream &>
-{
-public:
-  std::ostream &os;
-  Search_Condition_Variant_Visitor (std::ostream &OS) : os (OS) {}
-  Search_Condition_Variant_Visitor () = delete;
-
-  std::ostream &operator()(const ADQL::Boolean_Term &s) const
-  {
-    return os << s;
-  }
-
-  std::ostream &operator()(const ADQL::Boolean_Factor &s) const
-  {
-    return os << s;
-  }
-};
+std::ostream &operator<<(std::ostream &os,
+                         const ADQL::Search_Condition &s);
 }
 
 namespace ADQL
@@ -53,11 +33,11 @@ inline std::ostream &operator<<(std::ostream &os,
 {
   if (!s.empty ())
     {
-      Search_Condition_Variant_Visitor visitor (os);
-      return boost::apply_visitor (visitor, s.variant[0]);
+      os << s.variant[0];
     }
   return os;
 }
+
 
 inline std::ostream &operator<<(std::ostream &os, const Search_Condition_Wrap &s)
 {
