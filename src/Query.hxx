@@ -80,11 +80,13 @@ inline std::ostream &operator<<(std::ostream &os,
   auto table=tables.begin ();
   if (table!=tables.end ())
     {
-      os << table->name;
+      os << *table;
+      // os << table->name;
       ++table;
     }
   for (; table!=tables.end (); ++table)
-    os << ", " << table->name;
+    os << ", " << *table;
+    // os << ", " << table->name;
   return os;
 }
 
