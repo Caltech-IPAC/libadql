@@ -123,6 +123,7 @@ int main (int argc, char *argv[])
     "SELECT ast from a",
     "Select fromage from fromming",
     "Select fromage from fromming ast",
+    "select alligator from table1 join table2"
   };
 
 
