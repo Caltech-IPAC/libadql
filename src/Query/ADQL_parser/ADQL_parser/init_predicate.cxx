@@ -24,8 +24,20 @@ void ADQL_parser::init_predicate ()
   namespace ascii = boost::spirit::ascii;
 
   table_correlation %= table_name >> -correlation_specification;
-  table_reference %= table_correlation | joined_table;
 
+  qualified_join = table_correlation[at_c<0>(_val)=_1]
+    >> -(lexeme[ascii::no_case["NATURAL"] >> &boost::spirit::qi::space][at_c<1>(_val)=true])
+    >> -join_type[at_c<2>(_val)=_1]
+    >> lexeme[ascii::no_case["JOIN"] > &boost::spirit::qi::space]
+    > (table_reference[at_c<3>(_val)=_1]
+       >> -join_specification[at_c<4>(_val)=_1]);
+
+  qualified_join.name ("qualified join");
+
+  joined_table %= qualified_join | (lit('(') >> joined_table >> lit(')'));
+  joined_table.name ("joined table");
+
+  table_reference %= joined_table | table_correlation;
   // FIXME: table_reference is supposed to include derived_table
   // | (derived_table >> correlation_specification)
   table_reference.name ("table reference");

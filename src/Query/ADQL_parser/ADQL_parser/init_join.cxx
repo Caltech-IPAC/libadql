@@ -23,17 +23,6 @@ void ADQL_parser::init_join ()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  joined_table %= qualified_join | (lit('(') >> joined_table >> lit(')'));
-  joined_table.name ("joined table");
-
-  qualified_join = table_reference[at_c<0>(_val)=_1]
-    >> -(lexeme[ascii::no_case["NATURAL"] >> &boost::spirit::qi::space][at_c<1>(_val)=true])
-    >> -join_type[at_c<2>(_val)=_1]
-    >> lexeme[ascii::no_case["JOIN"] >> &boost::spirit::qi::space]
-    > table_reference[at_c<3>(_val)=_1]
-    >> -join_specification[at_c<4>(_val)=_1];
-  qualified_join.name ("qualified join");
-
   join_type %= lexeme[ascii::no_case[ascii::string ("INNER")] >> &boost::spirit::qi::space]
     | (outer_join_type >> -lexeme[ascii::no_case[ascii::string ("OUTER")] >> &boost::spirit::qi::space]);
   join_type.name ("join type");
