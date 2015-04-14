@@ -25,8 +25,21 @@ void ADQL_parser::init_predicate ()
 
   table_correlation %= table_name >> -correlation_specification;
 
+  outer_join = lexeme[(ascii::no_case[ascii::string ("LEFT")]
+                       | ascii::no_case[ascii::string ("RIGHT")]
+                       | ascii::no_case[ascii::string ("FULL")])
+                      >> &boost::spirit::qi::space][at_c<0>(_val)=_1]
+    >> -lexeme[ascii::no_case[ascii::string ("OUTER")]
+               >> &boost::spirit::qi::space][at_c<1>(_val)=true];
+  outer_join.name ("outer join type");
+
+  join_type %= lexeme[ascii::no_case[ascii::string ("INNER")]
+                      >> &boost::spirit::qi::space] | outer_join;
+  join_type.name ("join type");
+  
   qualified_join = table_correlation[at_c<0>(_val)=_1]
-    >> -(lexeme[ascii::no_case["NATURAL"] >> &boost::spirit::qi::space][at_c<1>(_val)=true])
+    >> -(lexeme[ascii::no_case["NATURAL"] >> &boost::spirit::qi::space]
+         [at_c<1>(_val)=true])
     >> -join_type[at_c<2>(_val)=_1]
     >> lexeme[ascii::no_case["JOIN"] > &boost::spirit::qi::space]
     > (table_reference[at_c<3>(_val)=_1]

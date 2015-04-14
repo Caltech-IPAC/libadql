@@ -23,16 +23,6 @@ void ADQL_parser::init_join ()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  join_type %= lexeme[ascii::no_case[ascii::string ("INNER")] >> &boost::spirit::qi::space]
-    | (outer_join_type >> -lexeme[ascii::no_case[ascii::string ("OUTER")] >> &boost::spirit::qi::space]);
-  join_type.name ("join type");
-  
-  outer_join_type %= lexeme[(ascii::no_case[ascii::string ("LEFT")]
-                            | ascii::no_case[ascii::string ("RIGHT")]
-                            | ascii::no_case[ascii::string ("FULL")])
-                           >> &boost::spirit::qi::space];
-  outer_join_type.name ("outer join type");
-
   join_specification %= join_condition | named_columns_join;
   join_specification.name ("join specification");
 

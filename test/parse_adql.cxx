@@ -123,7 +123,14 @@ int main (int argc, char *argv[])
     "SELECT ast from a",
     "Select fromage from fromming",
     "Select fromage from fromming ast",
-    "select alligator from table1 join table2"
+    "select alligator from table1 join table2",
+    "select alligator from table1 natural join table2",
+    "select alligator from table1 natural left outer join table2",
+    "select alligator from table1 right outer join table2",
+    "select alligator from table1 right join table2",
+    "select alligator from table1 full outer join table2",
+    "select alligator from table1 natural inner join table2",
+    "select alligator from table1 inner join table2",
   };
 
 

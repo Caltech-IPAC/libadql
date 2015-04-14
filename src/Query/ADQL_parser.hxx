@@ -50,7 +50,8 @@ struct ADQL_parser
       SQL_special_character, nondoublequote_character, quote, space, newline,
       tab, minus_sign, nonquote_character, sign, period;
 
-  boost::spirit::qi::rule<std::string::const_iterator, std::string ()> unsigned_integer,
+  boost::spirit::qi::rule<std::string::const_iterator, std::string ()>
+  unsigned_integer,
       exact_numeric_literal, signed_integer, mantissa, exponent,
       approximate_numeric_literal, unsigned_numeric_literal, comment,
       comment_introducer, comment_character, delimited_identifier,
@@ -65,8 +66,7 @@ struct ADQL_parser
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
-      concatenation_operator, set_function_type,
-      outer_join_type, join_type;
+      concatenation_operator, set_function_type;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> column_reference,
@@ -169,6 +169,13 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Qualified_Join::Join_Type (),
+                          boost::spirit::ascii::space_type> join_type;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Outer_Join (),
+                          boost::spirit::ascii::space_type> outer_join;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Join_Condition (),
                           boost::spirit::ascii::space_type> join_condition;
