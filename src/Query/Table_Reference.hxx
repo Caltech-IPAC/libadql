@@ -14,7 +14,6 @@ class Table_Reference
 {
 public:
   typedef boost::variant<Table_Correlation, Joined_Table_Wrap> Variant;
-
   Variant variant;
 };
 
