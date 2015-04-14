@@ -15,7 +15,6 @@ public:
   /// creates a Search_Condition::Variant, and so on until we run out
   /// of stack space :(
   typedef boost::variant<Boolean_Factor, Boolean_Term> Variant;
-
   std::vector<Variant> variant;
 
   bool empty () const { return variant.empty (); }
