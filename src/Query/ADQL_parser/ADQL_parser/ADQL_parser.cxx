@@ -33,6 +33,7 @@ ADQL_parser::ADQL_parser (const std::map<std::string, std::string> &Table_mappin
   init_factor ();
   init_columns ();
   init_factor ();
+  init_join ();
   init_predicate ();
   init_search_condition ();
   init_query ();
