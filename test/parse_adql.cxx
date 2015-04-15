@@ -131,6 +131,10 @@ int main (int argc, char *argv[])
     "select alligator from table1 full outer join table2",
     "select alligator from table1 natural inner join table2",
     "select alligator from table1 inner join table2",
+    "select alligator from (table1 join table2)",
+    "select alligator from table1 join (table2 join (table3 join table4))",
+    "select alligator from (table1 join table2) join table3",
+    "select alligator from table1 join table2 on a==b",
   };
 
 

@@ -30,7 +30,8 @@ void ADQL_parser::init_join ()
     >> search_condition;
   join_condition.name ("join condition");
 
-  named_columns_join %= lexeme[ascii::no_case["USING"] >> &boost::spirit::qi::space]
+  named_columns_join %= lexeme[ascii::no_case["USING"]
+                               >> &boost::spirit::qi::space]
     >> lit ('(') >> join_column_list >> lit (')');
   named_columns_join.name ("named columns join");
 

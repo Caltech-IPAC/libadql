@@ -171,7 +171,7 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> where;
 
   boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Qualified_Join::Join_Type (),
+                          ADQL::Join_Suffix::Join_Type (),
                           boost::spirit::ascii::space_type> join_type;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Outer_Join (),
@@ -184,8 +184,15 @@ struct ADQL_parser
                           ADQL::Join_Specification (),
                           boost::spirit::ascii::space_type> join_specification;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Join_Suffix (),
+                          boost::spirit::ascii::space_type> join_suffix;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Correlation_Join (),
+                          boost::spirit::ascii::space_type> correlation_join;
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Qualified_Join (),
-                          boost::spirit::ascii::space_type> qualified_join;
+                          boost::spirit::ascii::space_type> qualified_join,
+    join_parentheses;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Joined_Table (),
                           boost::spirit::ascii::space_type> joined_table;
