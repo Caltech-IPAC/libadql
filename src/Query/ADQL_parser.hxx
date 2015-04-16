@@ -83,8 +83,7 @@ struct ADQL_parser
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
       string_value_expression, select_non_as_item,
-      correlation_specification, column_name_list, join_column_list,
-      named_columns_join;
+      correlation_specification;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -169,6 +168,13 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where;
+
+  boost::spirit::qi::rule<std::string::const_iterator, std::vector<std::string>(),
+                          boost::spirit::ascii::space_type> join_column_list,
+    column_name_list;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Named_Columns_Join(),
+                          boost::spirit::ascii::space_type> named_columns_join;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Join_Suffix::Join_Type (),

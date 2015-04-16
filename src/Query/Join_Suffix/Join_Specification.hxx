@@ -1,21 +1,22 @@
 #pragma once
 
 #include "Join_Specification/Join_Condition.hxx"
+#include "Join_Specification/Named_Columns_Join.hxx"
 
 namespace
 {
-class Join_Specification_Variant_Visitor
+class Join_Specification_empty_Visitor
     : public boost::static_visitor<bool>
 {
 public:
   bool operator()(const ADQL::Join_Condition &s) const
   {
-    return s.empty();
+    return s.empty ();
   }
 
-  bool operator()(const std::string &s) const
+  bool operator()(const ADQL::Named_Columns_Join &s) const
   {
-    return s.empty();
+    return s.empty ();
   }
 };
 }
@@ -25,16 +26,20 @@ namespace ADQL
 class Join_Specification
 {
 public:
-  typedef boost::variant<std::string, Join_Condition> Variant;
+  typedef boost::variant<Named_Columns_Join, Join_Condition> Variant;
   Variant variant;
   bool empty() const
   {
-    Join_Specification_Variant_Visitor visitor;
+    Join_Specification_empty_Visitor visitor;
     return boost::apply_visitor (visitor, variant);
   }
 };
+}
 
-inline std::ostream &operator<<(std::ostream &os, const Join_Specification &j)
+namespace ADQL
+{
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Join_Specification &j)
 {
   return os << j.variant;
 }

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include "boost/variant.hpp"
+#include "../../../../ostream_vector_string.hxx"
 
 namespace ADQL
 {
@@ -29,16 +30,8 @@ public:
 
   std::ostream &operator()(const std::vector<std::string> &v) const
   {
-    os << "(";
-    for (auto n = v.begin (); n != v.end ();)
-      {
-        os << *n;
-        ++n;
-        if (n != v.end ())
-          os << ", ";
-      }
-    os << ")";
-    return os;
+    using namespace ADQL;
+    return os << v;
   }
 
   std::ostream &operator()(const std::string &v) const { return os << v; }
