@@ -23,41 +23,6 @@ void ADQL_parser::init_predicate ()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  table_correlation %= table_name >> -correlation_specification;
-
-  outer_join = lexeme[(ascii::no_case[ascii::string ("LEFT")]
-                       | ascii::no_case[ascii::string ("RIGHT")]
-                       | ascii::no_case[ascii::string ("FULL")])
-                      >> &boost::spirit::qi::space][at_c<0>(_val)=_1]
-    >> -lexeme[ascii::no_case[ascii::string ("OUTER")]
-               >> &boost::spirit::qi::space][at_c<1>(_val)=true];
-  outer_join.name ("outer join type");
-
-  join_type %= lexeme[ascii::no_case[ascii::string ("INNER")]
-                      >> &boost::spirit::qi::space] | outer_join;
-  join_type.name ("join type");
-  
-  join_suffix = -(lexeme[ascii::no_case["NATURAL"] >> &boost::spirit::qi::space]
-                  [at_c<0>(_val)=true])
-    >> -join_type[at_c<1>(_val)=_1]
-    >> lexeme[ascii::no_case["JOIN"] >> &boost::spirit::qi::space]
-    > (table_reference[at_c<2>(_val)=_1]
-       >> -join_specification[at_c<3>(_val)=_1]);
-
-  qualified_join %= table_correlation >> join_suffix;
-  qualified_join.name ("qualified join");
-
-  joined_table %= (qualified_join | (lit('(') >> joined_table >> lit(')')))
-    >> -join_suffix;
-  joined_table.name ("joined table");
-
-  /// We can not just use the option operator '-' on correlation_join
-  /// because it has a table_reference embedded within it.  We need a
-  /// separate rule, table_correlation, in Table_Reference::Variant
-  /// that does not have table_reference embedded.
-  correlation_join %= table_correlation >> join_suffix;
-  correlation_join.name ("correlation_join");
-
   table_reference %= correlation_join | table_correlation | joined_table;
   // table_reference %= joined_table | table_correlation;
   // FIXME: table_reference is supposed to include derived_table
