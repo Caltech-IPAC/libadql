@@ -28,17 +28,6 @@ public:
   Where where;
   std::string group_by, order_by;
   Having having;
-  std::vector<std::pair<std::string,std::string> > simplified_columns() const;
-
-  bool simple_query() const
-  {
-    return (all_or_distinct.empty() || all_or_distinct=="ALL")
-      && where.search_condition.empty()
-      && group_by.empty() && order_by.empty()
-      && having.empty();
-  }
-
-  std::string string() const;
 
   bool empty () const
   {
