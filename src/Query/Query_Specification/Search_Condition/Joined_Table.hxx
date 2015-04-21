@@ -13,7 +13,7 @@ public:
   Join_Suffix join_suffix;
   bool empty () const;
 };
-  std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table_Wrap &j);
+  std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table &j);
 }
 
 
@@ -34,7 +34,7 @@ public:
 
   std::ostream &operator()(const ADQL::Joined_Table_Wrap &s) const
   {
-    return os << "(" << s << ")";
+    return os << "(" << s.get () << ")";
   }
 };
 }
@@ -49,11 +49,6 @@ inline std::ostream &operator<<(std::ostream &os,
   if (!j.join_suffix.empty ())
     os << j.join_suffix;
   return os;
-}
-
-inline std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table_Wrap &j)
-{
-  return os << j.get ();
 }
 }
 

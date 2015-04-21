@@ -74,7 +74,10 @@ void ADQL_parser::init_predicate ()
                    >> lexeme[ascii::no_case["LIKE"] > &boost::spirit::qi::space]
                    >> pattern;
 
-  // FIXME: add exists
-  predicate %= (comparison_predicate | between_predicate | in_predicate
-                | null_predicate | like_predicate);
+  exists_predicate %= lexeme[ascii::no_case["EXISTS"]
+                             > &boost::spirit::qi::space]
+    >> subquery;
+
+  predicate %= comparison_predicate | between_predicate | in_predicate
+    | null_predicate | like_predicate | exists_predicate;
 }

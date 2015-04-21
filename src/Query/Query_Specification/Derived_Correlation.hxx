@@ -7,7 +7,7 @@ namespace ADQL
 class Derived_Correlation
 {
 public:
-  ADQL::Subquery subquery;
+  Subquery subquery;
   std::string as;
 };
 

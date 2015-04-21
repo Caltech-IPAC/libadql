@@ -114,12 +114,6 @@ inline std::ostream &operator<<(std::ostream &os,
     os << " ORDER BY " << query.order_by;
   return os;
 }
-
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Query_Specification_Wrap &query)
-{
-  return os << query.get ();
-}
 }
 
 BOOST_FUSION_ADAPT_STRUCT (

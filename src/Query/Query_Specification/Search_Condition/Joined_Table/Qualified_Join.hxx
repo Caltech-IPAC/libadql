@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Join_Suffix.hxx"
+#include "../../Table_Reference.hxx"
 
 namespace ADQL
 {

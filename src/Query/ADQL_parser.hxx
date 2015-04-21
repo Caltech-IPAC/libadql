@@ -151,6 +151,9 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Like_Predicate (),
                           boost::spirit::ascii::space_type> like_predicate;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Exists_Predicate (),
+                          boost::spirit::ascii::space_type> exists_predicate;
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Predicate (),
                           boost::spirit::ascii::space_type> predicate;
 

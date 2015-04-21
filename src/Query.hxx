@@ -5,7 +5,8 @@
 #include <string>
 #include <sstream>
 #include <boost/fusion/include/io.hpp>
-#include "boost/variant.hpp"
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/variant.hpp>
 #include "Query/Query_Specification.hxx"
 
 namespace ADQL
