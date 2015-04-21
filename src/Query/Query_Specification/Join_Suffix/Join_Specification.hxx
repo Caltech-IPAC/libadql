@@ -2,24 +2,7 @@
 
 #include "Join_Specification/Join_Condition.hxx"
 #include "Join_Specification/Named_Columns_Join.hxx"
-
-namespace
-{
-class Join_Specification_empty_Visitor
-    : public boost::static_visitor<bool>
-{
-public:
-  bool operator()(const ADQL::Join_Condition &s) const
-  {
-    return s.empty ();
-  }
-
-  bool operator()(const ADQL::Named_Columns_Join &s) const
-  {
-    return s.empty ();
-  }
-};
-}
+#include "../../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -30,8 +13,7 @@ public:
   Variant variant;
   bool empty() const
   {
-    Join_Specification_empty_Visitor visitor;
-    return boost::apply_visitor (visitor, variant);
+    return empty_variant (variant);
   }
 };
 }

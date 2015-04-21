@@ -8,6 +8,7 @@
 #include "Table_Reference/Correlation_Join.hxx"
 #include "Joined_Table_Wrap.hxx"
 #include "Derived_Correlation.hxx"
+#include "../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -17,40 +18,11 @@ public:
   typedef boost::variant<Table_Correlation, Correlation_Join,
                          Joined_Table_Wrap, Derived_Correlation> Variant;
   Variant variant;
-  bool empty () const;
-};
-}
-
-namespace
-{
-class Table_Reference_Variant_Visitor
-    : public boost::static_visitor<bool>
-{
-public:
-  bool operator()(const ADQL::Table_Correlation &s) const
+  bool empty () const
   {
-    return s.empty();
-  }
-  bool operator()(const ADQL::Correlation_Join &s) const
-  {
-    return s.empty();
-  }
-  bool operator()(const ADQL::Joined_Table_Wrap &s) const
-  {
-    return ADQL::empty (s);
-  }
-  bool operator()(const ADQL::Derived_Correlation &) const
-  {
-    /// Derived_Correlations always exist
-    return false;
+    return empty_variant (variant);
   }
 };
-}
-
-inline bool ADQL::Table_Reference::empty () const
-{
-  Table_Reference_Variant_Visitor visitor;
-  return boost::apply_visitor (visitor, variant);
 }
 
 inline bool ADQL::empty (const Table_Reference_Wrap &t)

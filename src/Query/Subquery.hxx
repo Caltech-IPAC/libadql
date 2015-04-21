@@ -14,6 +14,7 @@ class Subquery
 public:
   typedef boost::variant<Joined_Table_Wrap,Query_Specification_Wrap> Variant;
   Variant variant;
+  bool empty () const;
 };
 std::ostream &operator<<(std::ostream &os, const Subquery &subquery);
 }

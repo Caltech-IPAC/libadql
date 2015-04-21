@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Subquery.hxx"
-#include "Query_Specification.hxx"
+#include "../Subquery.hxx"
+#include "../Query_Specification.hxx"
 
 namespace ADQL
 {

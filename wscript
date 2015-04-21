@@ -83,7 +83,8 @@ def build(ctx):
                  'src/Query/simplified_columns.cxx',
                  'src/Query/Query_Specification/Search_Condition/string.cxx',
                  'src/Query/Query_Specification/Search_Condition/Boolean_Factor/Boolean_Primary/ostream.cxx',
-                 'src/Query/Subquery_ostream.cxx'
+                 'src/Query/Subquery/ostream.cxx',
+                 'src/Query/Subquery/empty.cxx'
                  ]
     
     ctx.stlib(

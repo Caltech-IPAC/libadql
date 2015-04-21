@@ -2,6 +2,7 @@
 
 #include "Joined_Table/Qualified_Join.hxx"
 #include "../Joined_Table_Wrap.hxx"
+#include "../../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -11,7 +12,10 @@ public:
   typedef boost::variant<Qualified_Join, Joined_Table_Wrap> Variant;
   Variant variant;
   Join_Suffix join_suffix;
-  bool empty () const;
+  bool empty () const
+  {
+    return empty_variant (variant);
+  }
 };
   std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table &j);
 }
@@ -50,31 +54,6 @@ inline std::ostream &operator<<(std::ostream &os,
     os << j.join_suffix;
   return os;
 }
-}
-
-
-namespace
-{
-class Joined_Table_empty_Visitor
-    : public boost::static_visitor<bool>
-{
-public:
-  bool operator()(const ADQL::Qualified_Join &s) const
-  {
-    return s.empty ();
-  }
-
-  bool operator()(const ADQL::Joined_Table_Wrap &s) const
-  {
-    return ADQL::empty (s);
-  }
-};
-}
-
-inline bool ADQL::Joined_Table::empty() const
-{
-  Joined_Table_empty_Visitor visitor;
-  return boost::apply_visitor (visitor, variant);
 }
 
 inline bool ADQL::empty(const ADQL::Joined_Table_Wrap &j)

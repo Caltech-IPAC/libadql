@@ -39,6 +39,12 @@ public:
   }
 
   std::string string() const;
+
+  bool empty () const
+  {
+    /// I think that it is an error for a query to be empty.
+    return tables.empty ();
+  }
 };
 }
 

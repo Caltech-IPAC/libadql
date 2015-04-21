@@ -9,6 +9,10 @@ class Derived_Correlation
 public:
   Subquery subquery;
   std::string as;
+  bool empty () const
+  {
+    return subquery.empty ();
+  }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Derived_Correlation &d)
