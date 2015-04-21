@@ -22,6 +22,7 @@ public:
   {
     return empty_variant (variant);
   }
+  std::string string () const;
 };
 }
 
@@ -43,6 +44,12 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Table_Reference_Wr
 }
 }
 
+inline std::string ADQL::Table_Reference::string () const
+{
+  std::stringstream ss;
+  ss << *this;
+  return ss.str ();
+}
 
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Table_Reference,
