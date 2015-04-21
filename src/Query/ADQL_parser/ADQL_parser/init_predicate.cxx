@@ -55,9 +55,7 @@ void ADQL_parser::init_predicate ()
                > boost::spirit::qi::space]
     >> lexeme[ascii::no_case["IN"]
               > &boost::spirit::qi::space]
-    // FIXME: This should be table_subquery, not value_expression
-    >> (value_expression
-        | (lit ('(') >> (value_expression % ',') >> ')'));
+    >> (subquery | (lit ('(') >> (value_expression % ',') >> ')'));
 
   null_predicate
     %= value_expression

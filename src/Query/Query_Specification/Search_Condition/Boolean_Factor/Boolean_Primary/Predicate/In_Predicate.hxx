@@ -5,6 +5,7 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 #include "boost/variant.hpp"
 #include "../../../../ostream_vector_string.hxx"
+#include "../../../../../Subquery.hxx"
 
 namespace ADQL
 {
@@ -14,7 +15,7 @@ public:
   std::string value;
   std::string Not;
 
-  typedef boost::variant<std::vector<std::string>, std::string> Variant;
+  typedef boost::variant<std::vector<std::string>, Subquery> Variant;
   Variant variant;
 };
 }
@@ -34,7 +35,10 @@ public:
     return os << v;
   }
 
-  std::ostream &operator()(const std::string &v) const { return os << v; }
+  std::ostream &operator()(const ADQL::Subquery &subquery) const
+  {
+    return os << subquery;
+  }
 };
 }
 

@@ -49,7 +49,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x is not null",
     "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',fp_psc.ra,fp_psc.dec),"
     "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
-    // "SELECT * FROM my_table1 where x in (select y from my_table2)",
+    "SELECT * FROM my_table1 where x in (select y from my_table2)",
     "SELECT * FROM my_table1 where x in (10,20,30)",
     "SELECT * FROM my_table1 where x not in (10,20,30)",
     "SELECT All * FROM my_table1",
