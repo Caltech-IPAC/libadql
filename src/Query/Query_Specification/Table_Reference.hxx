@@ -7,6 +7,7 @@
 
 #include "Table_Reference/Correlation_Join.hxx"
 #include "Joined_Table_Wrap.hxx"
+#include "Derived_Correlation.hxx"
 
 namespace ADQL
 {
@@ -14,7 +15,7 @@ class Table_Reference
 {
 public:
   typedef boost::variant<Table_Correlation, Correlation_Join,
-                         Joined_Table_Wrap> Variant;
+                         Joined_Table_Wrap, Derived_Correlation> Variant;
   Variant variant;
   bool empty () const;
 };
@@ -37,6 +38,11 @@ public:
   bool operator()(const ADQL::Joined_Table_Wrap &s) const
   {
     return ADQL::empty (s);
+  }
+  bool operator()(const ADQL::Derived_Correlation &) const
+  {
+    /// Derived_Correlations always exist
+    return false;
   }
 };
 }

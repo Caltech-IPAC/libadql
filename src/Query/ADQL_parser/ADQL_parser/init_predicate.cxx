@@ -23,7 +23,10 @@ void ADQL_parser::init_predicate ()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  table_reference %= correlation_join | table_correlation | joined_table;
+  derived_correlation %= subquery >> correlation_specification;
+
+  table_reference %= correlation_join | table_correlation | joined_table
+    | derived_correlation;
   // FIXME: table_reference is supposed to include derived_table
   // | (derived_table >> correlation_specification)
   table_reference.name ("table reference");

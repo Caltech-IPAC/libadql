@@ -31,13 +31,11 @@ public:
     v.emplace_back(s,"");
   }
 
-  void operator()(const std::vector<ADQL::Query::Column_Variant> &columns)
+  void operator()(const std::vector<ADQL::Query_Specification::Column_Variant> &columns)
   {
+    Column_Visitor visitor;
     for (auto &c : columns)
-      {
-        Column_Visitor visitor;
-        v.push_back(boost::apply_visitor(visitor,c));
-      }
+      v.push_back(boost::apply_visitor(visitor,c));
   }
 };
 }
@@ -47,6 +45,6 @@ std::vector<std::pair<std::string,std::string> > ADQL::Query::simplified_columns
 {
   std::vector<std::pair<std::string,std::string> > result;
   Columns_Visitor visitor(result);
-  boost::apply_visitor(visitor,columns);
+  boost::apply_visitor(visitor,query_specification.columns);
   return result;
 }

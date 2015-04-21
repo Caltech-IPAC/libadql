@@ -210,10 +210,10 @@ int main (int argc, char *argv[])
                                      + "  Formatted:   " + formatted_query + "\n"
                                      + "  Reformatted: " + parsed_query.string());
 
-          if(query.top!=std::numeric_limits<unsigned long long>::max()
-             && query.top!=14223)
+          if(query.query_specification.top!=std::numeric_limits<unsigned long long>::max()
+             && query.query_specification.top!=14223)
             throw std::runtime_error("Wrong value for TOP: "
-                                     + std::to_string(query.top));
+                                     + std::to_string(query.query_specification.top));
           if(!quiet)
             {
               std::cout << "PASS: " << i << "\n";
