@@ -136,6 +136,7 @@ int main (int argc, char *argv[])
     "select alligator from (table1 join table2) join table3",
     "select alligator from table1 join table2 on a=b",
     "select alligator from table1 join table2 using (a,b, c )",
+    "select alligator from (select a from b) as c"
   };
 
 
