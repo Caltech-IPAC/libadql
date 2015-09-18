@@ -16,7 +16,8 @@ geometric and non-geometric parts of the WHERE clause to be separate.
 
 ==========================================================
 
-Copyright (C) 2013-2015 California Institute of Technology
+Copyright © 2013-2015 California Institute of Technology
+Based on Government Sponsored Research NAS7-03001 and NNN12AA01C.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
