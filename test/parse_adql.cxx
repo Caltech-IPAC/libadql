@@ -137,7 +137,11 @@ int main (int argc, char *argv[])
     "select alligator from (table1 join table2) join table3",
     "select alligator from table1 join table2 on a=b",
     "select alligator from table1 join table2 using (a,b, c )",
-    "select alligator from (select a from b) as c"
+    "select alligator from (select a from b) as c",
+    "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
+    "1=contains(fp_psc.ra_dec, "
+    "circle('j2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,"
+    "0.001))"
   };
 
 

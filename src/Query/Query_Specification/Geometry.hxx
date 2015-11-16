@@ -8,7 +8,7 @@ class Geometry
 {
 public:
   Contains contains;
-  bool empty () const { return contains.point.coordinate.ra.empty (); }
+  bool empty () const { return contains.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

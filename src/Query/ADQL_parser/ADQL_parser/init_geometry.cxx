@@ -38,29 +38,41 @@ void ADQL_parser::init_geometry()
     [at_c<1>(_val)
      = ADQL::Coord_Sys::Reference_Position::GEOCENTER]
     >> '\'';
-
-  coord %= numeric_value_expression >> ',' >> numeric_value_expression;
-  point %= ascii::no_case["POINT"] >> '(' >> coord_sys >> ',' >> coord
-                                   >> ')';
+  coord_sys.name ("coordinate system");
+  
+  coord %= numeric_value_expression >> ',' > numeric_value_expression;
+  coord.name ("coordinate");
+  point %= ascii::no_case["POINT"] >> '(' > coord_sys > ',' > coord
+                                   > ')';
+  point.name ("point");
+  point_or_column %= point | column_reference;
 
   // FIXME: In theory, the radius should be an expression, not a
   // number.  In practice, we can only handle numbers.
-  circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys >> ',' >> coord
-                                     >> ',' >> boost::spirit::qi::double_ >> ')';
-  ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> coord_sys >> ',' >> coord
-                                       >> ',' >> boost::spirit::qi::double_ >> ','
-                                       >> boost::spirit::qi::double_ >> ','
-                                       >> boost::spirit::qi::double_ >> ')';
-  box %= ascii::no_case["BOX"] >> '(' >> coord_sys >> ',' >> coord >> ','
-                               >> boost::spirit::qi::double_ >> ',' >> boost::spirit::qi::double_
-                               >> ')';
+  circle %= ascii::no_case["CIRCLE"] >> '(' > coord_sys > ',' > coord
+                                     > ',' > boost::spirit::qi::double_ > ')';
+  circle.name ("circle");
+  ellipse %= ascii::no_case["ELLIPSE"] >> '(' > coord_sys > ',' > coord
+                                       > ',' > boost::spirit::qi::double_ > ','
+                                       > boost::spirit::qi::double_ > ','
+                                       > boost::spirit::qi::double_ > ')';
+  ellipse.name ("ellipse");
+  box %= ascii::no_case["BOX"] >> '(' > coord_sys > ',' > coord > ','
+                               > boost::spirit::qi::double_ > ',' > boost::spirit::qi::double_
+                               > ')';
+  box.name ("box");
   coord_list %= coord % ',';
-  polygon %= ascii::no_case["POLYGON"] >> '(' >> coord_sys >> ','
-                                       >> coord_list >> ')';
-
+  coord_list.name ("coordinate list");
+  polygon %= ascii::no_case["POLYGON"] >> '(' > coord_sys > ','
+                                       > coord_list > ')';
+  polygon.name ("polygon");
+  
   shape %= circle | box | ellipse | polygon;
-  contains %= ascii::no_case["CONTAINS"] >> '(' >> point >> ',' >> shape
-                                         >> ')';
-
+  shape.name ("shape");
+  contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' > shape
+                                         > ')';
+  contains.name ("contains");
+  
   geometry %= (contains >> '=' >> '1') | (lit ('1') >> '=' >> contains);
+  geometry.name ("geometry");
 }

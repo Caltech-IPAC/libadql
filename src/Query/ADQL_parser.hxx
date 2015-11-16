@@ -116,6 +116,8 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Point (),
                           boost::spirit::ascii::space_type> point;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains::Point_or_Column (),
+                          boost::spirit::ascii::space_type> point_or_column;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Circle (),
                           boost::spirit::ascii::space_type> circle;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Ellipse (),

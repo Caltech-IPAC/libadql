@@ -10,6 +10,11 @@ struct Point
 public:
   Coord_Sys coord_sys;
   Coordinate coordinate;
+
+  bool empty () const
+  {
+    return coordinate.empty ();
+  }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

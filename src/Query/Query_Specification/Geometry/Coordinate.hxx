@@ -9,6 +9,11 @@ struct Coordinate
 {
 public:
   std::string ra, dec;
+
+  bool empty () const
+  {
+    return ra.empty ();
+  }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
