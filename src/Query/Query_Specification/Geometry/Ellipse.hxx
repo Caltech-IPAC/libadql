@@ -10,7 +10,7 @@ class Ellipse
 public:
   Coord_Sys coord_sys;
   Coordinate center;
-  double semi_major_axis, ratio, rotation;
+  Column_or_Number semi_major_axis, ratio, rotation;
 };
 
 inline std::ostream &operator<<(std::ostream &os,
@@ -24,7 +24,8 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Ellipse,
-                           (ADQL::Coord_Sys,
-                            coord_sys)(ADQL::Coordinate,
-                                       center)(double, semi_major_axis)
-                           (double, ratio)(double, rotation))
+                           (ADQL::Coord_Sys, coord_sys)
+                           (ADQL::Coordinate, center)
+                           (ADQL::Column_or_Number, semi_major_axis)
+                           (ADQL::Column_or_Number, ratio)
+                           (ADQL::Column_or_Number, rotation))

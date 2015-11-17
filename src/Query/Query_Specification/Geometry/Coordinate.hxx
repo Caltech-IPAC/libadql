@@ -3,16 +3,19 @@
 #include <string>
 #include <boost/fusion/include/adapt_struct.hpp>
 
+#include "Column_or_Number.hxx"
+
 namespace ADQL
 {
 struct Coordinate
 {
 public:
-  std::string ra, dec;
+  Column_or_Number ra, dec;
 
   bool empty () const
   {
-    return ra.empty ();
+    Column_or_Number_empty_Visitor visitor;
+    return boost::apply_visitor (visitor, ra);
   }
 };
 
@@ -25,4 +28,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Coordinate,
-                           (std::string, ra)(std::string, dec))
+                           (ADQL::Column_or_Number, ra)
+                           (ADQL::Column_or_Number, dec))

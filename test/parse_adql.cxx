@@ -141,7 +141,19 @@ int main (int argc, char *argv[])
     "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
     "1=contains(fp_psc.ra_dec, "
     "circle('j2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,"
-    "0.001))"
+    "0.001))",
+    "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
+    "1=contains(fp_psc.ra_dec, "
+    "circle('j2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,"
+    "TAP_UPLOAD.mytable.r))",
+    "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
+    "1=contains(fp_psc.ra_dec, "
+    "circle('j2000',10,TAP_UPLOAD.mytable.dec,"
+    "TAP_UPLOAD.mytable.r))",
+    "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
+    "1=contains(fp_psc.ra_dec, "
+    "circle('j2000',TAP_UPLOAD.mytable.ra,10,"
+    "TAP_UPLOAD.mytable.r))"
   };
 
 

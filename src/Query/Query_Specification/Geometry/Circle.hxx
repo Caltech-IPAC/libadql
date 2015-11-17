@@ -10,7 +10,7 @@ class Circle
 public:
   Coord_Sys coord_sys;
   Coordinate center;
-  double radius;
+  Column_or_Number radius;
 
   std::string string () const;
 };
@@ -31,6 +31,6 @@ inline std::string ADQL::Circle::string () const
   return ss.str ();
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle, (ADQL::Coord_Sys,
-                                          coord_sys)(ADQL::Coordinate,
-                                                     center)(double, radius))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle, (ADQL::Coord_Sys, coord_sys)
+                           (ADQL::Coordinate, center)
+                           (ADQL::Column_or_Number, radius))

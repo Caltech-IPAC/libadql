@@ -10,7 +10,7 @@ class Box
 public:
   Coord_Sys coord_sys;
   Coordinate center;
-  double width, height;
+  Column_or_Number width, height;
 };
 
 inline std::ostream &operator<<(std::ostream &os,
@@ -23,6 +23,7 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Box,
-                           (ADQL::Coord_Sys,
-                            coord_sys)(ADQL::Coordinate,
-                                       center)(double, width)(double, height))
+                           (ADQL::Coord_Sys, coord_sys)
+                           (ADQL::Coordinate, center)
+                           (ADQL::Column_or_Number, width)
+                           (ADQL::Column_or_Number, height))

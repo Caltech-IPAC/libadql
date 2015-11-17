@@ -40,30 +40,32 @@ void ADQL_parser::init_geometry()
     >> '\'';
   coord_sys.name ("coordinate system");
   
-  coord %= numeric_value_expression >> ',' > numeric_value_expression;
+  column_or_number %= column_reference | boost::spirit::qi::double_;
+  column_or_number.name ("column or number");
+  coord %= column_or_number >> ',' > column_or_number;
   coord.name ("coordinate");
-  point %= ascii::no_case["POINT"] >> '(' > coord_sys > ',' > coord
+  point %= ascii::no_case["POINT"] >> '(' >> coord_sys > ',' > coord
                                    > ')';
   point.name ("point");
   point_or_column %= point | column_reference;
 
   // FIXME: In theory, the radius should be an expression, not a
   // number.  In practice, we can only handle numbers.
-  circle %= ascii::no_case["CIRCLE"] >> '(' > coord_sys > ',' > coord
-                                     > ',' > boost::spirit::qi::double_ > ')';
+  circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys > ',' > coord
+                                     > ',' > column_or_number > ')';
   circle.name ("circle");
-  ellipse %= ascii::no_case["ELLIPSE"] >> '(' > coord_sys > ',' > coord
-                                       > ',' > boost::spirit::qi::double_ > ','
-                                       > boost::spirit::qi::double_ > ','
-                                       > boost::spirit::qi::double_ > ')';
+  ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> coord_sys > ',' > coord
+                                       > ',' > column_or_number > ','
+                                       > column_or_number > ','
+                                       > column_or_number > ')';
   ellipse.name ("ellipse");
-  box %= ascii::no_case["BOX"] >> '(' > coord_sys > ',' > coord > ','
-                               > boost::spirit::qi::double_ > ',' > boost::spirit::qi::double_
+  box %= ascii::no_case["BOX"] >> '(' >> coord_sys > ',' > coord > ','
+                               > column_or_number > ',' > column_or_number
                                > ')';
   box.name ("box");
   coord_list %= coord % ',';
   coord_list.name ("coordinate list");
-  polygon %= ascii::no_case["POLYGON"] >> '(' > coord_sys > ','
+  polygon %= ascii::no_case["POLYGON"] >> '(' >> coord_sys > ','
                                        > coord_list > ')';
   polygon.name ("polygon");
   
