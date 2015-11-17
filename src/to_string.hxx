@@ -9,7 +9,7 @@ template <class T>
 inline std::string to_string (const T& t)
 {
   std::stringstream ss;
-  ss.precision (15);
+  ss.precision (17);
   ss << t;
   return ss.str();
 }
