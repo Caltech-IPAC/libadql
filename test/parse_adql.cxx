@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include "../src/Query.hxx"
+#include "../src/to_string.hxx"
 
 int main (int argc, char *argv[])
 {
@@ -220,13 +221,13 @@ int main (int argc, char *argv[])
       try
         {
           ADQL::Query query (i, table_mapping);
-          std::string formatted_query=query.string();
+          std::string formatted_query=ADQL::to_string (query);
           ADQL::Query parsed_query(formatted_query);
-          if(formatted_query!=parsed_query.string())
+          if(formatted_query!=ADQL::to_string (parsed_query))
             throw std::runtime_error("Reformatting formatted query gave different result:\n"
                                      "  Original:    " + i + "\n"
                                      + "  Formatted:   " + formatted_query + "\n"
-                                     + "  Reformatted: " + parsed_query.string());
+                                     + "  Reformatted: " + ADQL::to_string (parsed_query));
 
           if(query.query_specification.top!=std::numeric_limits<unsigned long long>::max()
              && query.query_specification.top!=14223)
@@ -252,10 +253,10 @@ int main (int argc, char *argv[])
       try
         {
           ADQL::Query query (i,table_mapping);
-          std::string formatted_query=query.string();
+          std::string formatted_query=ADQL::to_string (query);
           ADQL::Query parsed_query(formatted_query);
 
-          if(formatted_query!=parsed_query.string())
+          if(formatted_query!=ADQL::to_string (parsed_query))
             throw std::runtime_error("");
           std::cout << "FAIL: Unexpected parse: " << i << "\n";
           result=1;

@@ -11,8 +11,6 @@ public:
   Coord_Sys coord_sys;
   Coordinate center;
   Column_or_Number radius;
-
-  std::string string () const;
 };
 
 inline std::ostream &operator<<(std::ostream &os,
@@ -22,13 +20,6 @@ inline std::ostream &operator<<(std::ostream &os,
      << "," << circle.radius << ")";
   return os;
 }
-}
-
-inline std::string ADQL::Circle::string () const
-{
-  std::stringstream ss;
-  ss << *this;
-  return ss.str ();
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle, (ADQL::Coord_Sys, coord_sys)

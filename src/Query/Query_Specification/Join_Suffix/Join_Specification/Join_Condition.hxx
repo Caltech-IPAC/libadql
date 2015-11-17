@@ -9,7 +9,6 @@ class Join_Condition
 public:
   Search_Condition_Wrap search_condition_wrap;
   bool empty () const { return ADQL::empty (search_condition_wrap); }
-  std::string string() const;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Join_Condition &j)

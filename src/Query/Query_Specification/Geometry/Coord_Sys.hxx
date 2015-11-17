@@ -13,8 +13,6 @@ public:
       
   enum class Reference_Position
   { GEOCENTER } position;
-
-  std::string string () const;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
@@ -34,13 +32,6 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
   os << " GEOCENTER";
   return os;
 }
-}
-
-inline std::string ADQL::Coord_Sys::string () const
-{
-  std::stringstream ss;
-  ss << *this;
-  return ss.str ();
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Coord_Sys,

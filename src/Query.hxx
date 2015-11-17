@@ -31,8 +31,6 @@ public:
       && query_specification.order_by.empty()
       && query_specification.having.empty();
   }
-
-  std::string string() const;
 };
 
 inline std::ostream &operator<<(std::ostream &os,

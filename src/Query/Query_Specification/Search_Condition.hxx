@@ -18,7 +18,6 @@ public:
   std::vector<Variant> variant;
 
   bool empty () const { return variant.empty (); }
-  std::string string() const;
 };
 
 std::ostream &operator<<(std::ostream &os,

@@ -8,7 +8,6 @@ class Named_Columns_Join
 public:
   std::vector<std::string> column_list;
   bool empty () const { return column_list.empty (); }
-  std::string string() const;
 };
 
 inline std::ostream &operator<<(std::ostream &os,
