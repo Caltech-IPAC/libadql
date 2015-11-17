@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <iostream>
 #include "../src/Query.hxx"
-#include "../src/to_string.hxx"
 
 int main (int argc, char *argv[])
 {

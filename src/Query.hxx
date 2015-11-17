@@ -8,6 +8,7 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/variant.hpp>
 #include "Query/Query_Specification.hxx"
+#include "to_string.hxx"
 
 namespace ADQL
 {
