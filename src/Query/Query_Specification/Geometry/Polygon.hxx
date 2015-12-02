@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "Coord_Sys.hxx"
 #include "Coordinate.hxx"
 
