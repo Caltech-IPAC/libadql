@@ -67,7 +67,7 @@ struct ADQL_parser
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
       concatenation_operator, set_function_type, column_reference,
-      table_name, tap_upload, unqualified_schema_name,
+      table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
       catalog_name, correlation_name, qualifier;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),

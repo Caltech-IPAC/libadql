@@ -59,8 +59,20 @@ void ADQL_parser::init_column_reference()
   /// so correlation_name will never match.
   qualifier %= table_name;
 
-  tap_upload %= "TAP_UPLOAD."
-    > identifier[_val = boost::phoenix::bind (&checked_mapping,table_mapping,_1)];
+  /// We have to put the tap_upload_identifier into its own rule
+  /// instead of folding it in with tap_upload, because otherwise it
+  /// starts matching the whole string column expression instead of
+  /// just this column reference.
+  ///
+  /// We use += because _val already has the results of the entire
+  /// parsed column expression, not just the identifier.  This is a
+  /// very confusing part of boost::spirit.
+  tap_upload_identifier =
+    identifier[_val += boost::phoenix::bind (&checked_mapping,table_mapping,
+                                             boost::spirit::qi::labels::_1)];
+  tap_upload_identifier.name ("TAP_UPLOAD identifier");
+  
+  tap_upload %= "TAP_UPLOAD." > tap_upload_identifier;
   tap_upload.name ("TAP_UPLOAD");
 
   /// I have to manually expand the possibilities in
