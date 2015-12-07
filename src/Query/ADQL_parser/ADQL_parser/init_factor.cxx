@@ -34,7 +34,8 @@ void ADQL_parser::init_factor()
                                  | ascii::no_case[ascii::string ("ALL")])
                                 >> &boost::spirit::qi::space]];
 
-  general_set_function %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
+  general_set_function %= (hold[lexeme[set_function_type
+                                       >> &nonidentifier_character]]
                            > char_ ('(')) >> -set_quantifier
     > value_expression > char_ (')');
 
@@ -45,7 +46,7 @@ void ADQL_parser::init_factor()
   value_expression_primary
     %= unsigned_value_specification | column_reference
     | set_function_specification
-    | (char_ ('(') >> value_expression >> char_ (')'));
+    | hold[char_ ('(') >> value_expression >> char_ (')')];
 
   trig_function
     %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
