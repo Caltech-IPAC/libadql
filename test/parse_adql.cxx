@@ -153,7 +153,16 @@ int main (int argc, char *argv[])
     "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
     "1=contains(fp_psc.ra_dec, "
     "circle('j2000',TAP_UPLOAD.mytable.ra,10,"
-    "TAP_UPLOAD.mytable.r))"
+    "TAP_UPLOAD.mytable.r))",
+    "select (fp_psc.x * TAP_UPLOAD.mytable.x) as dx from fp_psc, "
+    "TAP_UPLOAD.mytable",
+    "select (TAP_UPLOAD.mytable.x - fp_psc.x) as dx from TAP_UPLOAD.mytable, "
+    "fp_psc",
+    "select TAP_UPLOAD.mytable.x - TAP_UPLOAD.mytable.y as dx from TAP_UPLOAD.mytable, "
+    "fp_psc",
+    "select (fp_psc.x - fp_psc.y) + (TAP_UPLOAD.mytable.x - fp_psc.x) as dxy from fp_psc",
+    "select fp_psc.x - TAP_UPLOAD.mytable.x from fp_psc, TAP_UPLOAD.mytable",
+    "select TAP_UPLOAD.mytable.x - fp_psc.x from fp_psc, TAP_UPLOAD.mytable"
   };
 
 
@@ -235,13 +244,13 @@ int main (int argc, char *argv[])
           if(!quiet)
             {
               std::cout << "PASS: " << i << "\n";
-              std::cout << formatted_query << "\n";
+              std::cout << "      " << formatted_query << "\n";
             }
         }
       catch (std::runtime_error &e)
         {
           std::cout << "FAIL: " << i << "\n";
-          std::cout << e.what() << "\n";
+          std::cout << "      " << e.what() << "\n";
           result=1;
         }
     }
