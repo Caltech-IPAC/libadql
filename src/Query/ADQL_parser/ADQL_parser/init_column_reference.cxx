@@ -4,15 +4,15 @@
 
 namespace
 {
-  std::string checked_mapping(const std::map<std::string,std::string> &mapping,
-                              const std::string &s)
-  {
-    auto i=mapping.find (s);
-    if (i==mapping.end ())
-      throw std::runtime_error ("Error: The table TAP_UPLOAD." + s
-                                + " was not found.  Is it misspelled?");
-    return i->second;
-  }
+std::string checked_mapping(const std::map<std::string,std::string> &mapping,
+                            const std::string &s)
+{
+  auto i=mapping.find (s);
+  if (i==mapping.end ())
+    throw std::runtime_error ("Error: The table TAP_UPLOAD." + s
+                              + " was not found.  Is it misspelled?");
+  return i->second;
+}
 }
 
 inline void write_tap_upload(const std::string &s)
