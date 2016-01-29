@@ -78,6 +78,7 @@ void ADQL_parser::init_geometry()
                                              > shape > ')';
   intersects.name ("intersects");
   
-  geometry %= (contains >> -(lit('=') >> '1')) | (lit ('1') >> '=' >> contains);
+  geometry %= ((contains | intersects) >> -(lit('=') >> '1'))
+    | (lit ('1') >> '=' >> (contains | intersects));
   geometry.name ("geometry");
 }

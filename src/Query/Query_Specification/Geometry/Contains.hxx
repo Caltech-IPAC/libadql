@@ -5,24 +5,7 @@
 #include "Ellipse.hxx"
 #include "Box.hxx"
 #include "Polygon.hxx"
-
-namespace ADQL
-{
-class Point_or_Column_empty_Visitor : public boost::static_visitor<bool>
-{
-public:
-  bool operator () (const ADQL::Point &p) const
-  {
-    return p.empty ();
-  }
-  bool operator () (const std::string &s) const
-  {
-    return s.empty ();
-  }
-};
-
-}
-
+#include "../../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -35,11 +18,7 @@ public:
   Point_or_Column point_or_column;
   Shape shape;
 
-  bool empty () const
-  {
-    Point_or_Column_empty_Visitor visitor;
-    return boost::apply_visitor (visitor, point_or_column);
-  }
+  bool empty () const { return empty_variant (point_or_column); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
