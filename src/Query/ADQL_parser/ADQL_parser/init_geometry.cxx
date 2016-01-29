@@ -75,6 +75,6 @@ void ADQL_parser::init_geometry()
                                          > ')';
   contains.name ("contains");
   
-  geometry %= (contains >> '=' >> '1') | (lit ('1') >> '=' >> contains);
+  geometry %= (contains >> -(lit('=') >> '1')) | (lit ('1') >> '=' >> contains);
   geometry.name ("geometry");
 }

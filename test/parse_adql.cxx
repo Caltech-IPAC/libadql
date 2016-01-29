@@ -11,6 +11,8 @@ int main (int argc, char *argv[])
     "Select ra1,dec2,flux From mytable Where "
     "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))= 1",
     "Select ra1,dec2,flux From mytable Where "
+    "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))",
+    "Select ra1,dec2,flux From mytable Where "
     "Contains(Point('galactic',ra,dec),Circle('galactic',+10 , -20,-1))= 1",
     "Select ra1,dec2,flux From mytable Where "
     "Contains(Point('ICRS',ra,dec),Circle('icrs',+10 , -20,-1))= 1",
