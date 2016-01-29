@@ -12,6 +12,8 @@ struct Coordinate
 public:
   Column_or_Number ra, dec;
 
+  /// We can not use ADQL::empty_variant because double does not have
+  /// an empty() method.
   bool empty () const
   {
     Column_or_Number_empty_Visitor visitor;
