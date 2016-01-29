@@ -134,6 +134,8 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains (),
                           boost::spirit::ascii::space_type> contains;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Intersects (),
+                          boost::spirit::ascii::space_type> intersects;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains::Shape (),
                           boost::spirit::ascii::space_type> shape;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Geometry/Contains.hxx"
+#include "Geometry/Intersects.hxx"
 
 namespace ADQL
 {

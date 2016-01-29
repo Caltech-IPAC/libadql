@@ -74,6 +74,9 @@ void ADQL_parser::init_geometry()
   contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' > shape
                                          > ')';
   contains.name ("contains");
+  intersects %= ascii::no_case["INTERSECTS"] >> '(' > column_reference > ','
+                                             > shape > ')';
+  intersects.name ("intersects");
   
   geometry %= (contains >> -(lit('=') >> '1')) | (lit ('1') >> '=' >> contains);
   geometry.name ("geometry");
