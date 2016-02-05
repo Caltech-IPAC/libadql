@@ -1,35 +1,28 @@
 #pragma once
 
-#include "Circle.hxx"
-#include "Ellipse.hxx"
-#include "Box.hxx"
-#include "Polygon.hxx"
+#include "../Column_Reference.hxx"
+#include "Shape.hxx"
 
 namespace ADQL
 {
 class Intersects
 {
 public:
-  typedef boost::variant<Point, Circle, Box, Ellipse, Polygon> Shape;
-  
-  std::string column;
+  Column_Reference column;
   Shape shape;
 
-  bool empty () const
-  {
-    return column.empty ();
-  }
+  bool empty () const { return empty_variant (column); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Intersects& contains)
+                                const ADQL::Intersects& intersects)
 {
-  os << "INTERSECTS(" << contains.column << "," << contains.shape << ")";
+  os << "INTERSECTS(" << intersects.column << "," << intersects.shape << ")";
   return os;
 }
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Intersects,
-                           (std::string, column)
-                           (ADQL::Intersects::Shape, shape))
+                           (ADQL::Column_Reference, column)
+                           (ADQL::Shape, shape))
 

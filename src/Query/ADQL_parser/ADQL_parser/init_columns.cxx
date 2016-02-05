@@ -68,7 +68,7 @@ void ADQL_parser::init_columns()
     >> lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
     > column_name;
 
-  select_non_as_item %= hold[qualifier >> ascii::string (".*")]
+  select_non_as_item %= hold[qualifier_string >> ascii::string (".*")]
     | value_expression;
   select_item %= as | select_non_as_item;
   select_list %= select_item % ',';

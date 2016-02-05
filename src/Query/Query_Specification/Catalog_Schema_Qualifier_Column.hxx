@@ -1,0 +1,31 @@
+#pragma once
+
+#include <string>
+#include <ostream>
+
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/fusion/include/io.hpp>
+#include <boost/variant.hpp>
+
+namespace ADQL
+{
+class Catalog_Schema_Qualifier_Column
+{
+public:
+  std::string catalog, schema, qualifier, column;
+  bool empty () const { return column.empty (); }
+};
+
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Catalog_Schema_Qualifier_Column& s)
+{
+  os << s.catalog << "." << s.schema << "." << s.qualifier << "." << s.column;
+  return os;
+}
+}
+
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Catalog_Schema_Qualifier_Column,
+                           (std::string, catalog)
+                           (std::string, schema)
+                           (std::string, qualifier)
+                           (std::string, column))

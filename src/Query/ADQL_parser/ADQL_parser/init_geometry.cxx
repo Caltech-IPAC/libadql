@@ -44,11 +44,11 @@ void ADQL_parser::init_geometry()
   column_or_number.name ("column or number");
   coord %= column_or_number >> ',' > column_or_number;
   coord.name ("coordinate");
-  point %= ascii::no_case["POINT"] >> '(' >> coord_sys > ',' > coord
-                                   > ')';
+  point %= ascii::no_case["POINT"] >> '(' >> coord_sys > ',' > coord > ')';
   point.name ("point");
   point_or_column %= point | column_reference;
-
+  point_or_column.name ("point or column");
+  
   // FIXME: In theory, the radius should be an expression, not a
   // number.  In practice, we can only handle numbers.
   circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys > ',' > coord
@@ -69,10 +69,10 @@ void ADQL_parser::init_geometry()
                                        > coord_list > ')';
   polygon.name ("polygon");
   
-  shape %= circle | box | ellipse | polygon;
+  shape %= point | circle | box | ellipse | polygon;
   shape.name ("shape");
-  contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' > shape
-                                         > ')';
+  contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ','
+                                         > shape > ')';
   contains.name ("contains");
   intersects %= ascii::no_case["INTERSECTS"] >> '(' > column_reference > ','
                                              > shape > ')';

@@ -5,9 +5,12 @@
 
 #include <boost/variant.hpp>
 
+#include "../../../to_string.hxx"
+#include "../Column_Reference.hxx"
+
 namespace ADQL
 {
-typedef boost::variant<std::string, double> Column_or_Number;
+typedef boost::variant<Column_Reference, double> Column_or_Number;
 
 class Column_or_Number_empty_Visitor : public boost::static_visitor<bool>
 {
@@ -16,7 +19,7 @@ public:
   {
     return false;
   }
-  bool operator () (const std::string &s) const
+  bool operator () (const Column_Reference &s) const
   {
     return s.empty ();
   }
@@ -30,9 +33,10 @@ public:
   {
     return p;
   }
-  double operator () (const std::string &s) const
+  double operator () (const Column_Reference &c) const
   {
-    throw std::runtime_error ("Expected a number, but got: " + s);
+    throw std::runtime_error ("Expected a number, but got: "
+                              + ADQL::to_string (c));
     return 0;
   }
 };

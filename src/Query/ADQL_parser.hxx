@@ -66,9 +66,9 @@ struct ADQL_parser
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
-      concatenation_operator, set_function_type, column_reference,
+      concatenation_operator, set_function_type, column_reference_string,
       table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
-      catalog_name, correlation_name, qualifier;
+      catalog_name_string, correlation_name, qualifier_string;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> 
@@ -91,12 +91,25 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coordinate (),
                           boost::spirit::ascii::space_type> coord;
   boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Column_or_Number ()> column_or_number;
+                          ADQL::Column_or_Number (),
+                          boost::spirit::ascii::space_type> column_or_number;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Catalog_Schema_Qualifier_Column (),
+                          boost::spirit::ascii::space_type> catalog_schema_qualifier_column;
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Schema_Qualifier_Column (),
+                          boost::spirit::ascii::space_type> schema_qualifier_column;
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Qualifier_Column (),
+                          boost::spirit::ascii::space_type> qualifier_column;
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Column_Reference (),
+                          boost::spirit::ascii::space_type> column_reference;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification::Column_Variant (),
                           boost::spirit::ascii::space_type> select_item;
-
   boost::spirit::qi::rule<std::string::const_iterator,
                           std::vector<ADQL::Query_Specification::Column_Variant>(),
                           boost::spirit::ascii::space_type> select_list;
@@ -119,7 +132,8 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Point (),
                           boost::spirit::ascii::space_type> point;
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains::Point_or_Column (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Contains::Point_or_Column (),
                           boost::spirit::ascii::space_type> point_or_column;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Circle (),
                           boost::spirit::ascii::space_type> circle;
@@ -129,14 +143,15 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> box;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Polygon (),
                           boost::spirit::ascii::space_type> polygon;
-  boost::spirit::qi::rule<std::string::const_iterator, std::vector<ADQL::Coordinate>(),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          std::vector<ADQL::Coordinate>(),
                           boost::spirit::ascii::space_type> coord_list;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains (),
                           boost::spirit::ascii::space_type> contains;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Intersects (),
                           boost::spirit::ascii::space_type> intersects;
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Contains::Shape (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Shape (),
                           boost::spirit::ascii::space_type> shape;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Geometry (),

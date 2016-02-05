@@ -45,7 +45,6 @@ void ADQL_parser::init_column_reference()
 
   period %= char_ ('.');
 
-  catalog_name %= identifier;
   unqualified_schema_name %= identifier;
 
   correlation_name %= identifier;
@@ -57,7 +56,7 @@ void ADQL_parser::init_column_reference()
   /// The spec says to have correlation_name as an alternate, but
   /// table_name matches everything that correlation name matches,
   /// so correlation_name will never match.
-  qualifier %= table_name;
+  qualifier_string %= table_name;
 
   /// We have to put the tap_upload_identifier into its own rule
   /// instead of folding it in with tap_upload, because otherwise it
@@ -80,17 +79,30 @@ void ADQL_parser::init_column_reference()
   /// match against schema.table or table.column, gobbling up the
   /// table or column name and making the parse fail.
   table_name %= tap_upload
-    | hold[catalog_name >> period >> unqualified_schema_name
+    | hold[catalog_name_string >> period >> unqualified_schema_name
            >> period >> identifier]
     | hold[unqualified_schema_name >> period >> identifier]
     | identifier;
   table_name.name ("table name");
 
-  column_reference
+  column_reference_string
     %= hold[tap_upload >> period >> identifier]
-    | hold[catalog_name >> period >> unqualified_schema_name >> period
+    | hold[catalog_name_string >> period >> unqualified_schema_name >> period
            >> identifier >> period >> identifier]
     | hold[unqualified_schema_name >> period >> identifier >> period
            >> identifier] | hold[identifier >> period >> identifier]
     | identifier;
+  column_reference_string.name ("column reference string");
+  catalog_name_string %= identifier;
+  catalog_name_string.name ("catalog name string");
+
+  catalog_schema_qualifier_column %= identifier >> '.' >> identifier >> '.' >> identifier >> '.' >> identifier;
+  catalog_schema_qualifier_column.name ("catalog schema qualifier column");
+  schema_qualifier_column %= identifier >> '.' >> identifier >> '.' >> identifier;
+  schema_qualifier_column.name ("schema qualifier column");
+  qualifier_column %= (tap_upload | identifier) >> '.' >> identifier;
+  qualifier_column.name ("qualifier column");
+  column_reference %= catalog_schema_qualifier_column | schema_qualifier_column
+    | qualifier_column | identifier;
+  column_reference.name ("column reference");
 }

@@ -37,9 +37,9 @@ void ADQL_parser::init_query ()
     >> search_condition[at_c<1>(_val) = _1];
   where_no_geometry.name ("where_no_geometry");
 
-  grouping_column_reference %= column_reference;
+  grouping_column_reference %= column_reference_string;
   grouping_column_reference_list %= grouping_column_reference
-                                    >> *(char_ (',') >> column_reference);
+                                    >> *(char_ (',') >> column_reference_string);
   group_by_clause
       %= lexeme[ascii::no_case["GROUP"] > &boost::spirit::qi::space]
          > lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]

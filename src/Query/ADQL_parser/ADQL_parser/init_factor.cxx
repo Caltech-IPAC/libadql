@@ -44,7 +44,7 @@ void ADQL_parser::init_factor()
              >> char_ ('*')] > char_ (')')) | general_set_function;
 
   value_expression_primary
-    %= unsigned_value_specification | column_reference
+    %= unsigned_value_specification | column_reference_string
     | set_function_specification
     | hold[char_ ('(') >> value_expression >> char_ (')')];
 
