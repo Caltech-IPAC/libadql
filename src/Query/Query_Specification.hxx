@@ -1,13 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <map>
-#include <string>
-#include <sstream>
-
-#include <boost/fusion/include/io.hpp>
-#include <boost/variant.hpp>
-
 #include "Query_Specification_Wrap.hxx"
 #include "Query_Specification/As.hxx"
 #include "Query_Specification/Where.hxx"
