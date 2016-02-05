@@ -55,7 +55,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where (x Between 2 AND 4) Or (x>6 and x<10)",
     "SELECT * FROM my_table1 where x is null",
     "SELECT * FROM my_table1 where x is not null",
-    "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',fp_psc.ra,fp_psc.dec),"
+    "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',ccc.fp_psc.ra, aaa.ccc.fp_pscdec),"
     "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
     "SELECT * FROM my_table1 where x in (select y from my_table2)",
     "SELECT * FROM my_table1 where x in (10,20,30)",
