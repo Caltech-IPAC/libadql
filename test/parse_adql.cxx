@@ -171,7 +171,12 @@ int main (int argc, char *argv[])
     "select (fp_psc.x - fp_psc.y) + (TAP_UPLOAD.mytable.x - fp_psc.x) as dxy from fp_psc",
     "select fp_psc.x - TAP_UPLOAD.mytable.x from fp_psc, TAP_UPLOAD.mytable",
     "select TAP_UPLOAD.mytable.x - fp_psc.x from fp_psc, TAP_UPLOAD.mytable",
-    "select * from herschel.observations where ST_Covers(poly,ST_Point(10,10))='t' or ST_Distance(poly,ST_Point(10,10)) <= 0.0"
+    "select * from herschel.observations where ST_Covers(poly,ST_Point(10,10))='t' "
+    "or ST_Distance(poly,ST_Point(10,10)) <= 0.0",
+    "select herschel.observations.*, ST_Distance(ST_Centroid(poly),ST_Point(84.912154,-69.652608)) "
+    "as dist_to_centroid"
+    " from herschel.observations where ST_Covers(poly,ST_Point(10,10))='t' "
+    "or ST_Distance(poly,ST_Point(10,10)) <= 0.0"
   };
 
 
