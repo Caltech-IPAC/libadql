@@ -17,7 +17,7 @@ public:
 
   Columns columns;
   std::string all_or_distinct;
-  size_t top=std::numeric_limits<unsigned long long>::max ();
+  size_t top=std::numeric_limits<size_t>::max ();
   std::vector<Table_Reference> tables;
   Where where;
   std::string group_by, order_by;
