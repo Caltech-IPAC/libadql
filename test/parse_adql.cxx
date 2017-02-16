@@ -176,7 +176,8 @@ int main (int argc, char *argv[])
     "select herschel.observations.*, ST_Distance(ST_Centroid(poly),ST_Point(84.912154,-69.652608)) "
     "as dist_to_centroid"
     " from herschel.observations where ST_Covers(poly,ST_Point(10,10))='t' "
-    "or ST_Distance(poly,ST_Point(10,10)) <= 0.0"
+    "or ST_Distance(poly,ST_Point(10,10)) <= 0.0",
+    "select * from a where (1=0) AND (2=1) ORDER BY cntr ASC"
   };
 
 
