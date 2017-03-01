@@ -43,11 +43,11 @@ void ADQL_parser::init_literals()
   tab %= char_ ('\t');
   minus_sign %= char_ ('-');
 
-  nonquote_character %= SQL_language_character - quote;
+  nonquote_character %= char_ - quote;
   character_representation %= nonquote_character | ascii::string ("''");
 
   comment_introducer %= minus_sign >> +minus_sign;
-  comment_character %= nonquote_character | quote;
+  comment_character %= char_ - newline;
   comment %= comment_introducer >> *comment_character >> newline;
 
   separator %= comment | space | newline;

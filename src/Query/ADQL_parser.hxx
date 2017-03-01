@@ -45,10 +45,11 @@ struct ADQL_parser
 
   std::map<std::string, std::string> table_mapping;
 
-  boost::spirit::qi::rule<std::string::const_iterator, char()> simple_Latin_letter,
-      identifier_character, nonidentifier_character, SQL_language_character,
-      SQL_special_character, nondoublequote_character, quote, space, newline,
-      tab, minus_sign, nonquote_character, sign, period;
+  boost::spirit::qi::rule<std::string::const_iterator, char()>
+  simple_Latin_letter,
+    identifier_character, nonidentifier_character, 
+    nondoublequote_character, quote, space, newline,
+    tab, minus_sign, nonquote_character, sign, period;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string ()>
   unsigned_integer,

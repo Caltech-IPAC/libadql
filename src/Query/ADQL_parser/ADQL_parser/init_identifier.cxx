@@ -36,14 +36,7 @@ void ADQL_parser::init_identifier()
   all_identifiers %= simple_Latin_letter >> *(identifier_character);
   regular_identifier %= all_identifiers - keyword;
 
-  SQL_special_character
-    %= char_ (' ') | char_ ('"') | char_ ('%') | char_ ('&') | char_ ('\'')
-    | char_ ('(') | char_ (')') | char_ ('*') | char_ ('+')
-    | char_ (',') | char_ ('-') | char_ ('.') | char_ ('/')
-    | char_ (':') | char_ (';') | char_ ('<') | char_ ('>')
-    | char_ ('=') | char_ ('?') | char_ ('_') | char_ ('|');
-  SQL_language_character %= alnum | SQL_special_character;
-  nondoublequote_character %= SQL_language_character - char_ ('"');
+  nondoublequote_character %= char_ - char_ ('"');
   /// Note that all of these delimited_identifier* rules do not skip spaces
   delimited_identifier_part %= nondoublequote_character
     | ascii::string ("\"\"");

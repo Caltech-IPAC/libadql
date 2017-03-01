@@ -177,7 +177,9 @@ int main (int argc, char *argv[])
     "as dist_to_centroid"
     " from herschel.observations where ST_Covers(poly,ST_Point(10,10))='t' "
     "or ST_Distance(poly,ST_Point(10,10)) <= 0.0",
-    "select * from a where (1=0) AND (2=1) ORDER BY cntr ASC"
+    "select * from a where (1=0) AND (2=1) ORDER BY cntr ASC",
+    "select '{a,b}' from c",
+    // "select ARRAY[10,20][1], (ARRAY[10,20])[1]"
   };
 
 
