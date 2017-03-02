@@ -47,6 +47,18 @@ void ADQL_parser::init_columns()
     >> -(concatenation_operator >> character_value_expression);
 
   string_value_expression %= character_value_expression;
+
+  /// Custom array_expression so that SQL 99 array literals can pass
+  /// through
+  array_value_constructor_by_enumeration
+    %= hold[ascii::no_case[ascii::string ("ARRAY")]
+            >> char_('[')
+            >> -(value_expression
+                 >> *(char_ (',') >> value_expression))
+            > char_(']')];
+  array_value_constructor_by_enumeration.name
+    ("array_value_constructor_by_enumeration");
+
   // FIXME: value_expression should also have a
   // geometry_value_expression, but the database can not handle it.
 

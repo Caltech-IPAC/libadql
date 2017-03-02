@@ -43,10 +43,17 @@ void ADQL_parser::init_factor()
     %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
              >> char_ ('*')] > char_ (')')) | general_set_function;
 
+  /// The BNF for SQL 99 uses an array_element_reference intermediate
+  /// rule.  However, that rule first checks for value_expression, so
+  /// you get an infinite recursion because it keeps matching the
+  /// value_expression part of the array element.  So instead we
+  /// implement array elements as optional decorators after an expression.
   value_expression_primary
-    %= unsigned_value_specification | column_reference_string
-    | set_function_specification
-    | hold[char_ ('(') >> value_expression >> char_ (')')];
+    %= (array_value_constructor_by_enumeration
+        | unsigned_value_specification | column_reference_string
+        | set_function_specification
+        | hold[char_ ('(') >> value_expression >> char_ (')')])
+    >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
 
   trig_function
     %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]

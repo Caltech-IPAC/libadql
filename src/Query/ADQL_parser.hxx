@@ -84,7 +84,8 @@ struct ADQL_parser
       group_by_clause, sort_specification_list, order_by_clause,
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
-      string_value_expression, select_non_as_item,
+      string_value_expression, array_value_constructor_by_enumeration,
+      select_non_as_item,
       correlation_specification;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),

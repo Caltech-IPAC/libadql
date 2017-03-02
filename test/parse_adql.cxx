@@ -179,7 +179,11 @@ int main (int argc, char *argv[])
     "or ST_Distance(poly,ST_Point(10,10)) <= 0.0",
     "select * from a where (1=0) AND (2=1) ORDER BY cntr ASC",
     "select '{a,b}' from c",
-    // "select ARRAY[10,20][1], (ARRAY[10,20])[1]"
+    "select ARRAY[10,20] from c",
+    "select ARRAYNOT from c",
+    "select a[b] from c",
+    "select ((ARRAY[10,20])[1]) from c",
+    "select ARRAY[10,20][1], (ARRAY[10,20])[1],(ARRAY[10,20])[band][pass][info][5] from c"
   };
 
 
