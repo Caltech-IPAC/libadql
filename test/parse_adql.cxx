@@ -183,7 +183,9 @@ int main (int argc, char *argv[])
     "select ARRAYNOT from c",
     "select a[b] from c",
     "select ((ARRAY[10,20])[1]) from c",
-    "select ARRAY[10,20][1], (ARRAY[10,20])[1],(ARRAY[10,20])[band][pass][info][5] from c"
+    "select ARRAY[10,20][1], (ARRAY[10,20])[1],(ARRAY[10,20])[band][pass][info][5] from c",
+    "select right(band), left(band,2) from c",
+    "select ARRAY[10,20][band] * 1.0e-6 from c",
   };
 
 
