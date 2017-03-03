@@ -33,9 +33,9 @@ void ADQL_parser::init_literals()
   signed_integer.name ("signed_integer");
   mantissa %= exact_numeric_literal;
   exponent %= signed_integer;
-  approximate_numeric_literal %= mantissa >> char_ ("Ee") >> exponent;
-  unsigned_numeric_literal %= exact_numeric_literal
-    | approximate_numeric_literal;
+  approximate_numeric_literal %= hold[mantissa >> char_ ("Ee") >> exponent];
+  unsigned_numeric_literal %= approximate_numeric_literal
+    | exact_numeric_literal;
 
   quote %= char_ ('\'');
   space %= char_ (' ');
