@@ -186,6 +186,7 @@ int main (int argc, char *argv[])
     "select ARRAY[10,20][1], (ARRAY[10,20])[1],(ARRAY[10,20])[band][pass][info][5] from c",
     "select right(band), left(band,2) from c",
     "select ARRAY[10,20][band] * 1.0e-6 from c",
+    "select upper(band), lower(band,2) from c",
   };
 
 

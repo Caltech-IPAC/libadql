@@ -102,12 +102,14 @@ void ADQL_parser::init_factor()
 
   /// default_function_prefix is a bit useless since it is optional.
   default_function_prefix %= ascii::string ("udf_");
-  /// Add RIGHT and LEFT as possible function names since they are
-  /// normally reserved words, but also really useful Postgres string
-  /// functions.
+  /// Add RIGHT, LEFT, UPPER, and LOWER as possible function names
+  /// since they are normally reserved words, but also really useful
+  /// Postgres string functions.
   user_defined_function_name %= -default_function_prefix
     >> (regular_identifier | ascii::no_case[ascii::string ("RIGHT")]
-        | ascii::no_case[ascii::string ("LEFT")]);
+        | ascii::no_case[ascii::string ("LEFT")]
+        | ascii::no_case[ascii::string ("UPPER")]
+        | ascii::no_case[ascii::string ("LOWER")]);
   user_defined_function_param %= value_expression;
   user_defined_function
     %= hold[user_defined_function_name >> char_ ('(')]
