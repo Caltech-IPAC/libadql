@@ -109,7 +109,8 @@ void ADQL_parser::init_factor()
     >> (regular_identifier | ascii::no_case[ascii::string ("RIGHT")]
         | ascii::no_case[ascii::string ("LEFT")]
         | ascii::no_case[ascii::string ("UPPER")]
-        | ascii::no_case[ascii::string ("LOWER")]);
+        | ascii::no_case[ascii::string ("LOWER")]
+        | ascii::no_case[ascii::string ("TRIM")]);
   user_defined_function_param %= value_expression;
   user_defined_function
     %= hold[user_defined_function_name >> char_ ('(')]
