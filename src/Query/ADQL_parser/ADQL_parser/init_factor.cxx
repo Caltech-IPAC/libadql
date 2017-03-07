@@ -102,9 +102,8 @@ void ADQL_parser::init_factor()
 
   /// default_function_prefix is a bit useless since it is optional.
   default_function_prefix %= ascii::string ("udf_");
-  /// Add RIGHT, LEFT, UPPER, and LOWER as possible function names
-  /// since they are normally reserved words, but also really useful
-  /// Postgres string functions.
+  /// Add a bunch of functions that are normally reserved words, but
+  /// also really useful string functions (at least in Postgres)
   user_defined_function_name %= -default_function_prefix
     >> (regular_identifier | ascii::no_case[ascii::string ("RIGHT")]
         | ascii::no_case[ascii::string ("LEFT")]
@@ -120,9 +119,21 @@ void ADQL_parser::init_factor()
          >> *(char_ (',') >> user_defined_function_param))
     >> char_ (')');
 
+  /// Special case casting to numeric, since some functions
+  /// (e.g. mod()) only take numeric arguments, not double precision.
+  cast_function %=
+    hold[ascii::no_case[ascii::string ("CAST")]
+         >> char_ ('(')
+         >> value_expression
+         >> no_skip[boost::spirit::qi::space]
+         >> ascii::no_case[ascii::string ("AS")]
+         >> no_skip[boost::spirit::qi::space]
+         >> ascii::no_case[ascii::string ("NUMERIC")]
+         >> char_ (')')];
+  
   // FIXME: numeric_value_function should have
   // numeric_geometry_function
-  numeric_value_function %= trig_function | math_function
+  numeric_value_function %= trig_function | math_function | cast_function
     | user_defined_function;
   /// Flipped the order here, because a value_expression can match a
   /// function name.

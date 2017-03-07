@@ -187,6 +187,7 @@ int main (int argc, char *argv[])
     "select right(band), left(band,2) from c",
     "select ARRAY[10,20][band] * 1.0e-6 from c",
     "select upper(band), lower(band), trim(band) from c",
+    "select mod(cast(foo as numeric),360.0) from c",
   };
 
 

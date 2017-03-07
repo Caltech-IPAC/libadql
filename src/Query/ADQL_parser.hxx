@@ -77,7 +77,7 @@ struct ADQL_parser
       unsigned_value_specification, general_set_function,
       set_function_specification, value_expression_primary, value_expression,
       numeric_value_expression, numeric_primary, factor, term,
-      numeric_value_function, trig_function, math_function,
+      numeric_value_function, trig_function, math_function, cast_function,
       user_defined_function, user_defined_function_name,
       user_defined_function_param, default_function_prefix,
       grouping_column_reference, grouping_column_reference_list,
