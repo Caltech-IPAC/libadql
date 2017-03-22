@@ -76,6 +76,9 @@ void ADQL_parser::init_predicate ()
                              > &boost::spirit::qi::space]
     >> subquery;
 
+  /// Add boolean_predicate to allow boolean functions and variables.
+  boolean_predicate %= value_expression;
+
   predicate %= comparison_predicate | between_predicate | in_predicate
-    | null_predicate | like_predicate | exists_predicate;
+    | null_predicate | like_predicate | exists_predicate | boolean_predicate;
 }

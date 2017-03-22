@@ -188,6 +188,7 @@ int main (int argc, char *argv[])
     "select ARRAY[10,20][band] * 1.0e-6 from c",
     "select upper(band), lower(band), trim(band) from c",
     "select mod(cast(foo as numeric),360.0) from c",
+    "select * from twomass.full_images where (ST_DWithin(twomass.full_images.poly,ST_Point(1, 1),0*111194.68229846345,'f'))",
   };
 
 
