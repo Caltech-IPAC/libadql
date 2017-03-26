@@ -189,6 +189,8 @@ int main (int argc, char *argv[])
     "select upper(band), lower(band), trim(band) from c",
     "select mod(cast(foo as numeric),360.0) from c",
     "select * from twomass.full_images where (ST_DWithin(twomass.full_images.poly,ST_Point(1, 1),0*111194.68229846345,'f'))",
+    "SELECT schema_name as schemas FROM (select schema_name, min(table_index) as schema_index from TAP_SCHEMA.tables group by schema_name order by schema_index) as temp_schemas group by schemas order by schema_index",
+    "select schema_name from (select schema_name, min(table_index) as schema_index from TAP_SCHEMA.tables group by schema_name order by schema_index) temp_schemas",
   };
 
 
