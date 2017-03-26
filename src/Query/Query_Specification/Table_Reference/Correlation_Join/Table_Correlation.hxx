@@ -21,7 +21,7 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Table_Correlation 
 {
   os << table.name;
   if (!table.as.empty ())
-    os << " AS " << table.as;
+    os << " " << table.as;
   return os;
 }
 }

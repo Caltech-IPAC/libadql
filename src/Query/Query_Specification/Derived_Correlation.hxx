@@ -19,7 +19,7 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Derived_Correlatio
 {
   os << d.subquery;
   if (!d.as.empty ())
-    os << " AS " << d.as;
+    os << " " << d.as;
   return os;
 }
 }
