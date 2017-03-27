@@ -8,7 +8,7 @@ namespace ADQL
 class Boolean_Primary
 {
 public:
-  typedef boost::variant<Predicate, Search_Condition_Wrap> Variant;
+  typedef boost::variant<Predicate, Search_Condition_Wrap, std::string> Variant;
   Variant variant;
 };
 std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b);

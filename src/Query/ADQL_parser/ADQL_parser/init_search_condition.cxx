@@ -23,7 +23,14 @@ void ADQL_parser::init_search_condition()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  boolean_primary %= predicate | (hold[lit ('(') >> search_condition] > ')');
+  boolean_literal %= ascii::no_case[ascii::string ("True")]
+    | ascii::no_case[ascii::string ("False")];
+
+  boolean_value_expression %= boolean_literal | user_defined_function;
+
+  boolean_primary %= predicate
+    | hold[lit ('(') >> search_condition >> lit (')')]
+    | boolean_value_expression;
 
   boolean_factor %= -lexeme[ascii::no_case[ascii::string ("NOT")]
                             >> &boost::spirit::qi::space]

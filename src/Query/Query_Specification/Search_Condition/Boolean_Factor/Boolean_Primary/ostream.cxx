@@ -19,6 +19,8 @@ public:
   {
     return os << "(" << s << ")";
   }
+
+  std::ostream &operator()(const std::string &s) const { return os << s; }
 };
 }
 

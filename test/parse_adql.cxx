@@ -191,6 +191,7 @@ int main (int argc, char *argv[])
     "select * from twomass.full_images where (ST_DWithin(twomass.full_images.poly,ST_Point(1, 1),0*111194.68229846345,'f'))",
     "SELECT schema_name as schemas FROM (select schema_name, min(table_index) as schema_index from TAP_SCHEMA.tables group by schema_name order by schema_index) as temp_schemas group by schemas order by schema_index",
     "select schema_name from (select schema_name, min(table_index) as schema_index from TAP_SCHEMA.tables group by schema_name order by schema_index) temp_schemas",
+    "SELECT TAP_UPLOAD.pos.cntr as in_row_id FROM wise.wise_allwise_p3am_cdd, TAP_UPLOAD.pos WHERE (ST_Intersects(TAP_UPLOAD.pos.poly,wise.wise_allwise_p3am_cdd.poly)) ORDER BY in_row_id ASC, dist_to_bounds ASC",
   };
 
 
@@ -251,7 +252,8 @@ int main (int argc, char *argv[])
   };
 
   int result(0);
-  std::map<std::string,std::string> table_mapping={{"mytable","xyzzy"}};
+  std::map<std::string,std::string>
+    table_mapping={{"mytable","xyzzy"}, {"pos","T18cbfcb3b9100bef4036ed"}};
   for (auto &i : pass)
     {
       try

@@ -86,7 +86,7 @@ struct ADQL_parser
       character_value_expression, match_value, pattern,
       string_value_expression, array_value_constructor_by_enumeration,
       select_non_as_item,
-      correlation_specification, boolean_predicate;
+      correlation_specification, boolean_value_expression, boolean_literal;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
