@@ -28,21 +28,61 @@ void ADQL_parser::init_factor()
     | ascii::no_case[ascii::string ("MIN")]
     | ascii::no_case[ascii::string ("SUM")]
     | ascii::no_case[ascii::string ("COUNT")];
+  set_function_type.name ("set_function_type");
   /// This is a little funky because we need to preserve the space
   /// between the set_quantifier and whatever follows it.
   set_quantifier %= hold[lexeme[(ascii::no_case[ascii::string ("DISTINCT")]
                                  | ascii::no_case[ascii::string ("ALL")])
                                 >> &boost::spirit::qi::space]];
-
+  set_quantifier.name ("set_quantifier");
   general_set_function %= (hold[lexeme[set_function_type
                                        >> &nonidentifier_character]]
                            > char_ ('(')) >> -set_quantifier
     > value_expression > char_ (')');
+  general_set_function.name ("general_set_function");
 
   set_function_specification
     %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
              >> char_ ('*')] > char_ (')')) | general_set_function;
-
+  set_function_specification.name ("set_function_specification");
+  
+  case_operand %= value_expression;
+  case_operand.name ("case_operand");
+  when_operand %= value_expression;
+  when_operand.name ("when_operand");
+  result_expression %= value_expression;
+  result_expression.name ("result_expression");
+  result %= result_expression | ascii::no_case[ascii::string ("NULL")];
+  result.name ("result");
+  simple_when_clause %= ascii::no_case[ascii::string ("WHEN")]
+    > no_skip[boost::spirit::qi::space]
+    > when_operand
+    > no_skip[boost::spirit::qi::space]
+    > ascii::no_case[ascii::string ("THEN")]
+    > no_skip[boost::spirit::qi::space]
+    > result;
+  simple_when_clause.name ("simple_when_clause");
+  else_clause %= ascii::no_case[ascii::string ("ELSE")]
+    >> no_skip[boost::spirit::qi::space]
+    >> result;
+  else_clause.name ("else_clause");
+  
+  simple_case %= ascii::no_case[ascii::string ("CASE")]
+    >> no_skip[boost::spirit::qi::space]
+    > case_operand
+    > +hold[no_skip[boost::spirit::qi::space]
+            >> simple_when_clause]
+    >> -hold[no_skip[boost::spirit::qi::space] >> else_clause]
+    > no_skip[boost::spirit::qi::space]
+    > ascii::no_case[ascii::string ("END")];
+  simple_case.name ("simple_case");
+  
+  /// Do not support case_abbreviation or searched case
+  case_specification %= simple_case;
+  case_specification.name ("case_specification");
+  case_expression %= case_specification;
+  case_expression.name ("case_expression");
+  
   /// The BNF for SQL 99 uses an array_element_reference intermediate
   /// rule.  However, that rule first checks for value_expression, so
   /// you get an infinite recursion because it keeps matching the
@@ -52,9 +92,11 @@ void ADQL_parser::init_factor()
     %= (array_value_constructor_by_enumeration
         | unsigned_value_specification | column_reference_string
         | set_function_specification
+        | case_expression
         | hold[char_ ('(') >> value_expression >> char_ (')')])
     >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
-
+  value_expression_primary.name ("value_expression_primary");
+  
   trig_function
     %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
               | ascii::no_case[ascii::string ("ASIN")]
@@ -70,7 +112,8 @@ void ADQL_parser::init_factor()
        > char_ ('(')
        > numeric_value_expression > char_ (',')
        > numeric_value_expression > char_ (')'));
-
+  trig_function.name ("trig_function");
+  
   math_function
     %= (hold[lexeme[(ascii::no_case[ascii::string ("ABS")]
                      | ascii::no_case[ascii::string ("CEILING")]
@@ -99,9 +142,11 @@ void ADQL_parser::init_factor()
                    >> &nonidentifier_character]]
        > char_ ('(') > numeric_value_expression
        >> -(char_ (',') > signed_integer) > char_ (')'));
-
+  math_function.name ("math_function");
+  
   /// default_function_prefix is a bit useless since it is optional.
   default_function_prefix %= ascii::string ("udf_");
+  default_function_prefix.name ("default_function_prefix");
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
   user_defined_function_name %= -default_function_prefix
@@ -110,7 +155,9 @@ void ADQL_parser::init_factor()
         | ascii::no_case[ascii::string ("UPPER")]
         | ascii::no_case[ascii::string ("LOWER")]
         | ascii::no_case[ascii::string ("TRIM")]);
+  user_defined_function_name.name ("user_defined_function_name");
   user_defined_function_param %= value_expression;
+  user_defined_function_param.name ("user_defined_function_param");
   user_defined_function
     %= hold[user_defined_function_name >> char_ ('(')]
     /// Use this awkward syntax instead of the usual list parser so
@@ -118,7 +165,8 @@ void ADQL_parser::init_factor()
     >> -(user_defined_function_param
          >> *(char_ (',') >> user_defined_function_param))
     >> char_ (')');
-
+  user_defined_function.name ("user_defined_function");
+  
   /// Special case casting to numeric, since some functions
   /// (e.g. mod()) only take numeric arguments, not double precision.
   cast_function %=
@@ -130,13 +178,16 @@ void ADQL_parser::init_factor()
          >> no_skip[boost::spirit::qi::space]
          >> ascii::no_case[ascii::string ("NUMERIC")]
          >> char_ (')')];
-  
+  cast_function.name ("cast_function");  
   // FIXME: numeric_value_function should have
   // numeric_geometry_function
   numeric_value_function %= trig_function | math_function | cast_function
     | user_defined_function;
+  numeric_value_function.name ("numeric_value_function");
   /// Flipped the order here, because a value_expression can match a
   /// function name.
   numeric_primary %= numeric_value_function | value_expression_primary;
+  numeric_primary.name ("numeric_primary");
   factor %= -sign >> numeric_primary;
+  factor.name ("factor");
 }

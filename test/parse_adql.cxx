@@ -192,6 +192,11 @@ int main (int argc, char *argv[])
     "SELECT schema_name as schemas FROM (select schema_name, min(table_index) as schema_index from TAP_SCHEMA.tables group by schema_name order by schema_index) as temp_schemas group by schemas order by schema_index",
     "select schema_name from (select schema_name, min(table_index) as schema_index from TAP_SCHEMA.tables group by schema_name order by schema_index) temp_schemas",
     "SELECT TAP_UPLOAD.pos.cntr as in_row_id FROM wise.wise_allwise_p3am_cdd, TAP_UPLOAD.pos WHERE (ST_Intersects(TAP_UPLOAD.pos.poly,wise.wise_allwise_p3am_cdd.poly)) ORDER BY in_row_id ASC, dist_to_bounds ASC",
+    "select CASEFULL from b",
+    "select CASE foo WHEN a THEN 'c' END from b",
+    "select CASE a WHEN 'b' THEN 'c' ELSE 'd' END from b",
+    "select CASE a WHEN 'b' THEN 'c' ELSE NULL END from b",
+    "select CASE a WHEN 'b' THEN 'c' when 'd' then 'e' ELSE 'f' END from b",
   };
 
 
@@ -249,6 +254,7 @@ int main (int argc, char *argv[])
     "SELECT TAP_UPLOAD.wrong_table from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table.* from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table.ra from TAP_UPLOAD.mytable",
+    "select CASE foo WHENever THEN 'c' END from b",
   };
 
   int result(0);
