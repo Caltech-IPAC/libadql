@@ -142,11 +142,12 @@ int main (int argc, char *argv[])
     "select alligator from table1 inner join table2",
     "select alligator from (table1 join table2)",
     "select alligator from table1 join (table2 join (table3 join table4))",
-    // "select alligator from (table1 join table2) join table3",
     "select alligator from table1 join table2 on a=b",
     "select alligator from table1 t1 join table2 t2 on a=b join table3 t3 on c=d join table4 t4 on e=f join table5 t5 on g=h",
     "select alligator from (table1 t1 join table2 t2 on a=b) join table3 t3 on c=d",
     "select alligator from table1 join table2 using (a,b, c )",
+    "select TOP 14223 caom.observation.*,caom.plane.*,caom.artifact.*,caom.part.*,caom.chunk.* FROM caom.observation join caom.plane on caom.observation.obsid = caom.plane.obsid join caom.artifact on caom.plane.planeid = caom.artifact.planeid join caom.part on caom.artifact.artifactid = caom.part.artifactid join caom.chunk on caom.part.partid = caom.chunk.partid",
+    "select TOP 14223 caom.observation.*,caom.plane.*,caom.artifact.*,caom.part.*,caom.chunk.* FROM (((caom.observation join caom.plane on caom.observation.obsid = caom.plane.obsid) join caom.artifact on caom.plane.planeid = caom.artifact.planeid) join caom.part on caom.artifact.artifactid = caom.part.artifactid) join caom.chunk on caom.part.partid = caom.chunk.partid",
     "select alligator from (select a from b) as c",
     "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
     "1=contains(fp_psc.ra_dec, "
