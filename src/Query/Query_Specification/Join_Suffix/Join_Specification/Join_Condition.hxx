@@ -2,6 +2,8 @@
 
 #include "../../Search_Condition/Search_Condition_Wrap.hxx"
 
+#include <boost/fusion/include/adapt_struct.hpp>
+
 namespace ADQL
 {
 class Join_Condition

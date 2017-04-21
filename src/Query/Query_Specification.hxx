@@ -5,7 +5,7 @@
 #include "Query_Specification/Where.hxx"
 #include "Query_Specification/Having.hxx"
 #include "Query_Specification/Table_Reference.hxx"
-#include "Query_Specification/Search_Condition/Joined_Table.hxx"
+#include "Query_Specification/Joined_Table.hxx"
 
 namespace ADQL
 {

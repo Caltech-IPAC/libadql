@@ -15,8 +15,8 @@ namespace ADQL
 class Table_Reference
 {
 public:
-  typedef boost::variant<Table_Correlation, Correlation_Join,
-                         Joined_Table_Wrap, Derived_Correlation> Variant;
+  typedef boost::variant<Table_Correlation, Joined_Table_Wrap,
+                         Derived_Correlation> Variant;
   Variant variant;
   bool empty () const
   {

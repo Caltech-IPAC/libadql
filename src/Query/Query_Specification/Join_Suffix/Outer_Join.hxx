@@ -11,9 +11,9 @@ public:
 
 inline std::ostream &operator<<(std::ostream &os, const Outer_Join &j)
 {
-  os << j.type << " ";
+  os << j.type;
   if (j.outer)
-    os << "OUTER ";
+    os << " OUTER";
   return os;
 }
 }

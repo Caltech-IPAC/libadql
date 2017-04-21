@@ -142,8 +142,10 @@ int main (int argc, char *argv[])
     "select alligator from table1 inner join table2",
     "select alligator from (table1 join table2)",
     "select alligator from table1 join (table2 join (table3 join table4))",
-    "select alligator from (table1 join table2) join table3",
+    // "select alligator from (table1 join table2) join table3",
     "select alligator from table1 join table2 on a=b",
+    "select alligator from table1 t1 join table2 t2 on a=b join table3 t3 on c=d join table4 t4 on e=f join table5 t5 on g=h",
+    "select alligator from (table1 t1 join table2 t2 on a=b) join table3 t3 on c=d",
     "select alligator from table1 join table2 using (a,b, c )",
     "select alligator from (select a from b) as c",
     "select fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
@@ -255,6 +257,7 @@ int main (int argc, char *argv[])
     "SELECT TAP_UPLOAD.wrong_table.* from TAP_UPLOAD.mytable",
     "SELECT TAP_UPLOAD.wrong_table.ra from TAP_UPLOAD.mytable",
     "select CASE foo WHENever THEN 'c' END from b",
+    "select alligator from (table1)",
   };
 
   int result(0);
@@ -266,6 +269,7 @@ int main (int argc, char *argv[])
         {
           ADQL::Query query (i, table_mapping);
           std::string formatted_query=ADQL::to_string (query);
+          std::cout << "formatted\n" << std::flush;
           ADQL::Query parsed_query(formatted_query);
           if(formatted_query!=ADQL::to_string (parsed_query))
             throw std::runtime_error("Reformatting formatted query gave different result:\n"

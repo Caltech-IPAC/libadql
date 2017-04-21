@@ -81,6 +81,9 @@ def build(ctx):
                  'src/Query/ADQL_parser/ADQL_parser/init_search_condition.cxx',
                  'src/Query/simplified_columns.cxx',
                  'src/Query/Query_Specification/Search_Condition/Boolean_Factor/Boolean_Primary/ostream.cxx',
+                 'src/Query/Query_Specification/Joined_Table_Wrap/ostream.cxx',
+                 'src/Query/Query_Specification/Joined_Table/ostream.cxx',
+                 'src/Query/Query_Specification/Joined_Table/Qualified_Join/ostream.cxx',
                  'src/Query/Subquery/ostream.cxx',
                  'src/Query/Subquery/empty.cxx'
                  ]

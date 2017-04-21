@@ -1,7 +1,7 @@
 #include "../../../../Query_Specification.hxx"
 #include "../Boolean_Primary.hxx"
 #include "../../../Search_Condition.hxx"
-#include "../../Joined_Table.hxx"
+#include "../../../Joined_Table.hxx"
 
 namespace
 {

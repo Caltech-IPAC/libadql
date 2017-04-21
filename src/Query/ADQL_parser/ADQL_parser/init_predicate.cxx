@@ -25,7 +25,7 @@ void ADQL_parser::init_predicate ()
 
   derived_correlation %= subquery >> correlation_specification;
 
-  table_reference %= correlation_join | table_correlation | joined_table
+  table_reference %= joined_table | table_correlation
     | derived_correlation;
   table_reference.name ("table reference");
 

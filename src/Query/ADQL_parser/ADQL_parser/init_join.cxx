@@ -62,17 +62,9 @@ void ADQL_parser::init_join ()
     > (table_reference[at_c<2>(_val)=_1]
        >> -join_specification[at_c<3>(_val)=_1]);
 
-  qualified_join %= table_correlation >> join_suffix;
+  qualified_join %= ((lit('(') >> joined_table >> lit(')')) | table_correlation) >> +join_suffix;
   qualified_join.name ("qualified join");
 
-  joined_table %= (qualified_join | (lit('(') >> joined_table >> lit(')')))
-    >> -join_suffix;
+  joined_table %= (qualified_join | (lit('(') >> joined_table >> lit(')')));
   joined_table.name ("joined table");
-
-  /// We can not just use the option operator '-' on correlation_join
-  /// because it has a table_reference embedded within it.  We need a
-  /// separate rule, table_correlation, in Table_Reference::Variant
-  /// that does not have table_reference embedded.
-  correlation_join %= table_correlation >> join_suffix;
-  correlation_join.name ("correlation_join");
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/variant/recursive_wrapper.hpp>
+
 namespace ADQL
 {
 class Joined_Table;
