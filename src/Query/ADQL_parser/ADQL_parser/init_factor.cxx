@@ -176,7 +176,9 @@ void ADQL_parser::init_factor()
          >> no_skip[boost::spirit::qi::space]
          >> ascii::no_case[ascii::string ("AS")]
          >> no_skip[boost::spirit::qi::space]
-         >> ascii::no_case[ascii::string ("NUMERIC")]
+         > (ascii::no_case[ascii::string ("NUMERIC")]
+             | ascii::no_case[ascii::string ("FLOAT4")]
+             | ascii::no_case[ascii::string ("FLOAT8")])
          >> char_ (')')];
   cast_function.name ("cast_function");  
   // FIXME: numeric_value_function should have

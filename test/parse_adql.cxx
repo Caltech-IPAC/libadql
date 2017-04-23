@@ -200,6 +200,7 @@ int main (int argc, char *argv[])
     "select CASE a WHEN 'b' THEN 'c' ELSE 'd' END from b",
     "select CASE a WHEN 'b' THEN 'c' ELSE NULL END from b",
     "select CASE a WHEN 'b' THEN 'c' when 'd' then 'e' ELSE 'f' END from b",
+    "select cast('Inf' as FLOAT8), cast('-Inf' as Float4) from foo",
   };
 
 
@@ -270,7 +271,6 @@ int main (int argc, char *argv[])
         {
           ADQL::Query query (i, table_mapping);
           std::string formatted_query=ADQL::to_string (query);
-          std::cout << "formatted\n" << std::flush;
           ADQL::Query parsed_query(formatted_query);
           if(formatted_query!=ADQL::to_string (parsed_query))
             throw std::runtime_error("Reformatting formatted query gave different result:\n"
