@@ -15,14 +15,12 @@ public:
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Intersects& intersects)
+                                const ADQL::Intersects &intersects)
 {
   os << "INTERSECTS(" << intersects.column << "," << intersects.shape << ")";
   return os;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Intersects,
-                           (ADQL::Column_Reference, column)
-                           (ADQL::Shape, shape))
-
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Intersects, (ADQL::Column_Reference,
+                                              column)(ADQL::Shape, shape))

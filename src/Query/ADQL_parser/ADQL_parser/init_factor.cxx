@@ -1,6 +1,6 @@
 #include "../../ADQL_parser.hxx"
 
-void ADQL_parser::init_factor()
+void ADQL_parser::init_factor ()
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;
@@ -24,10 +24,10 @@ void ADQL_parser::init_factor()
   namespace ascii = boost::spirit::ascii;
 
   set_function_type %= ascii::no_case[ascii::string ("AVG")]
-    | ascii::no_case[ascii::string ("MAX")]
-    | ascii::no_case[ascii::string ("MIN")]
-    | ascii::no_case[ascii::string ("SUM")]
-    | ascii::no_case[ascii::string ("COUNT")];
+                       | ascii::no_case[ascii::string ("MAX")]
+                       | ascii::no_case[ascii::string ("MIN")]
+                       | ascii::no_case[ascii::string ("SUM")]
+                       | ascii::no_case[ascii::string ("COUNT")];
   set_function_type.name ("set_function_type");
   /// This is a little funky because we need to preserve the space
   /// between the set_quantifier and whatever follows it.
@@ -35,17 +35,16 @@ void ADQL_parser::init_factor()
                                  | ascii::no_case[ascii::string ("ALL")])
                                 >> &boost::spirit::qi::space]];
   set_quantifier.name ("set_quantifier");
-  general_set_function %= (hold[lexeme[set_function_type
-                                       >> &nonidentifier_character]]
-                           > char_ ('(')) >> -set_quantifier
-    > value_expression > char_ (')');
+  general_set_function
+      %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
+          > char_ ('(')) >> -set_quantifier > value_expression > char_ (')');
   general_set_function.name ("general_set_function");
 
   set_function_specification
-    %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
-             >> char_ ('*')] > char_ (')')) | general_set_function;
+      %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
+               >> char_ ('*')] > char_ (')')) | general_set_function;
   set_function_specification.name ("set_function_specification");
-  
+
   case_operand %= value_expression;
   case_operand.name ("case_operand");
   when_operand %= value_expression;
@@ -55,136 +54,125 @@ void ADQL_parser::init_factor()
   result %= result_expression | ascii::no_case[ascii::string ("NULL")];
   result.name ("result");
   simple_when_clause %= ascii::no_case[ascii::string ("WHEN")]
-    > no_skip[boost::spirit::qi::space]
-    > when_operand
-    > no_skip[boost::spirit::qi::space]
-    > ascii::no_case[ascii::string ("THEN")]
-    > no_skip[boost::spirit::qi::space]
-    > result;
+                        > no_skip[boost::spirit::qi::space] > when_operand
+                        > no_skip[boost::spirit::qi::space]
+                        > ascii::no_case[ascii::string ("THEN")]
+                        > no_skip[boost::spirit::qi::space] > result;
   simple_when_clause.name ("simple_when_clause");
   else_clause %= ascii::no_case[ascii::string ("ELSE")]
-    >> no_skip[boost::spirit::qi::space]
-    >> result;
+                 >> no_skip[boost::spirit::qi::space] >> result;
   else_clause.name ("else_clause");
-  
-  simple_case %= ascii::no_case[ascii::string ("CASE")]
-    >> no_skip[boost::spirit::qi::space]
-    > case_operand
-    > +hold[no_skip[boost::spirit::qi::space]
-            >> simple_when_clause]
-    >> -hold[no_skip[boost::spirit::qi::space] >> else_clause]
-    > no_skip[boost::spirit::qi::space]
-    > ascii::no_case[ascii::string ("END")];
+
+  simple_case
+      %= ascii::no_case[ascii::string ("CASE")]
+         >> no_skip[boost::spirit::qi::space] > case_operand
+         > +hold[no_skip[boost::spirit::qi::space] >> simple_when_clause]
+         >> -hold[no_skip[boost::spirit::qi::space] >> else_clause]
+         > no_skip[boost::spirit::qi::space]
+         > ascii::no_case[ascii::string ("END")];
   simple_case.name ("simple_case");
-  
+
   /// Do not support case_abbreviation or searched case
   case_specification %= simple_case;
   case_specification.name ("case_specification");
   case_expression %= case_specification;
   case_expression.name ("case_expression");
-  
+
   /// The BNF for SQL 99 uses an array_element_reference intermediate
   /// rule.  However, that rule first checks for value_expression, so
   /// you get an infinite recursion because it keeps matching the
   /// value_expression part of the array element.  So instead we
   /// implement array elements as optional decorators after an expression.
   value_expression_primary
-    %= (array_value_constructor_by_enumeration
-        | unsigned_value_specification | column_reference_string
-        | set_function_specification
-        | case_expression
-        | hold[char_ ('(') >> value_expression >> char_ (')')])
-    >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
+      %= (array_value_constructor_by_enumeration | unsigned_value_specification
+          | column_reference_string | set_function_specification
+          | case_expression
+          | hold[char_ ('(') >> value_expression >> char_ (')')])
+         >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
-  
-  trig_function
-    %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
-              | ascii::no_case[ascii::string ("ASIN")]
-              | ascii::no_case[ascii::string ("ATAN")]
-              | ascii::no_case[ascii::string ("COS")]
-              | ascii::no_case[ascii::string ("COT")]
-              | ascii::no_case[ascii::string ("SIN")]
-              | ascii::no_case[ascii::string ("TAN")])
-             >> &nonidentifier_character]] > char_ ('(')
-        > numeric_value_expression > char_ (')'))
-    | (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
-                   >> &nonidentifier_character]]
-       > char_ ('(')
-       > numeric_value_expression > char_ (',')
-       > numeric_value_expression > char_ (')'));
+
+  trig_function %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
+                                 | ascii::no_case[ascii::string ("ASIN")]
+                                 | ascii::no_case[ascii::string ("ATAN")]
+                                 | ascii::no_case[ascii::string ("COS")]
+                                 | ascii::no_case[ascii::string ("COT")]
+                                 | ascii::no_case[ascii::string ("SIN")]
+                                 | ascii::no_case[ascii::string ("TAN")])
+                                >> &nonidentifier_character]] > char_ ('(')
+                    > numeric_value_expression > char_ (')'))
+                   | (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
+                                  >> &nonidentifier_character]] > char_ ('(')
+                      > numeric_value_expression > char_ (',')
+                      > numeric_value_expression > char_ (')'));
   trig_function.name ("trig_function");
-  
+
   math_function
-    %= (hold[lexeme[(ascii::no_case[ascii::string ("ABS")]
-                     | ascii::no_case[ascii::string ("CEILING")]
-                     | ascii::no_case[ascii::string ("DEGREES")]
-                     | ascii::no_case[ascii::string ("EXP")]
-                     | ascii::no_case[ascii::string ("FLOOR")]
-                     | ascii::no_case[ascii::string ("LOG10")]
-                     | ascii::no_case[ascii::string ("LOG")]
-                     | ascii::no_case[ascii::string ("RADIANS")]
-                     | ascii::no_case[ascii::string ("SQRT")])
-                    >> &nonidentifier_character]] > char_ ('(')
-        > numeric_value_expression > char_ (')'))
-    | (hold[lexeme[(ascii::no_case[ascii::string ("MOD")]
-                    | ascii::no_case[ascii::string ("POWER")])
-                   >> &nonidentifier_character]] > char_ ('(')
-       > numeric_value_expression > char_ (',')
-       > numeric_value_expression > char_ (')'))
-    | (hold[lexeme[ascii::no_case[ascii::string ("PI")]
-                   >> &nonidentifier_character]] > char_ ('(')
-       > char_ (')'))
-    | (hold[lexeme[ascii::no_case[ascii::string ("RAND")]
-                   >> &nonidentifier_character]] > char_ ('(')
-       >> -numeric_value_expression > char_ (')'))
-    | (hold[lexeme[(ascii::no_case[ascii::string ("ROUND")]
-                    | ascii::no_case[ascii::string ("TRUNCATE")])
-                   >> &nonidentifier_character]]
-       > char_ ('(') > numeric_value_expression
-       >> -(char_ (',') > signed_integer) > char_ (')'));
+      %= (hold[lexeme[(ascii::no_case[ascii::string ("ABS")]
+                       | ascii::no_case[ascii::string ("CEILING")]
+                       | ascii::no_case[ascii::string ("DEGREES")]
+                       | ascii::no_case[ascii::string ("EXP")]
+                       | ascii::no_case[ascii::string ("FLOOR")]
+                       | ascii::no_case[ascii::string ("LOG10")]
+                       | ascii::no_case[ascii::string ("LOG")]
+                       | ascii::no_case[ascii::string ("RADIANS")]
+                       | ascii::no_case[ascii::string ("SQRT")])
+                      >> &nonidentifier_character]] > char_ ('(')
+          > numeric_value_expression > char_ (')'))
+         | (hold[lexeme[(ascii::no_case[ascii::string ("MOD")]
+                         | ascii::no_case[ascii::string ("POWER")])
+                        >> &nonidentifier_character]] > char_ ('(')
+            > numeric_value_expression > char_ (',') > numeric_value_expression
+            > char_ (')')) | (hold[lexeme[ascii::no_case[ascii::string ("PI")]
+                                          >> &nonidentifier_character]]
+                              > char_ ('(') > char_ (')'))
+         | (hold[lexeme[ascii::no_case[ascii::string ("RAND")]
+                        >> &nonidentifier_character]] > char_ ('(')
+            >> -numeric_value_expression > char_ (')'))
+         | (hold[lexeme[(ascii::no_case[ascii::string ("ROUND")]
+                         | ascii::no_case[ascii::string ("TRUNCATE")])
+                        >> &nonidentifier_character]] > char_ ('(')
+            > numeric_value_expression >> -(char_ (',') > signed_integer)
+            > char_ (')'));
   math_function.name ("math_function");
-  
+
   /// default_function_prefix is a bit useless since it is optional.
   default_function_prefix %= ascii::string ("udf_");
   default_function_prefix.name ("default_function_prefix");
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
-  user_defined_function_name %= -default_function_prefix
-    >> (regular_identifier | ascii::no_case[ascii::string ("RIGHT")]
-        | ascii::no_case[ascii::string ("LEFT")]
-        | ascii::no_case[ascii::string ("UPPER")]
-        | ascii::no_case[ascii::string ("LOWER")]
-        | ascii::no_case[ascii::string ("TRIM")]);
+  user_defined_function_name
+      %= -default_function_prefix
+         >> (regular_identifier | ascii::no_case[ascii::string ("RIGHT")]
+             | ascii::no_case[ascii::string ("LEFT")]
+             | ascii::no_case[ascii::string ("UPPER")]
+             | ascii::no_case[ascii::string ("LOWER")]
+             | ascii::no_case[ascii::string ("TRIM")]);
   user_defined_function_name.name ("user_defined_function_name");
   user_defined_function_param %= value_expression;
   user_defined_function_param.name ("user_defined_function_param");
   user_defined_function
-    %= hold[user_defined_function_name >> char_ ('(')]
-    /// Use this awkward syntax instead of the usual list parser so
-    /// that the attribute is still a string overall.
-    >> -(user_defined_function_param
-         >> *(char_ (',') >> user_defined_function_param))
-    >> char_ (')');
+      %= hold[user_defined_function_name >> char_ ('(')]
+         /// Use this awkward syntax instead of the usual list parser so
+         /// that the attribute is still a string overall.
+         >> -(user_defined_function_param
+              >> *(char_ (',') >> user_defined_function_param)) >> char_ (')');
   user_defined_function.name ("user_defined_function");
-  
+
   /// Special case casting to numeric, since some functions
   /// (e.g. mod()) only take numeric arguments, not double precision.
-  cast_function %=
-    hold[ascii::no_case[ascii::string ("CAST")]
-         >> char_ ('(')
-         >> value_expression
-         >> no_skip[boost::spirit::qi::space]
-         >> ascii::no_case[ascii::string ("AS")]
-         >> no_skip[boost::spirit::qi::space]
-         > (ascii::no_case[ascii::string ("NUMERIC")]
-             | ascii::no_case[ascii::string ("FLOAT4")]
-             | ascii::no_case[ascii::string ("FLOAT8")])
-         >> char_ (')')];
-  cast_function.name ("cast_function");  
+  cast_function
+      %= hold[ascii::no_case[ascii::string ("CAST")] >> char_ ('(')
+              >> value_expression >> no_skip[boost::spirit::qi::space]
+              >> ascii::no_case[ascii::string ("AS")]
+              >> no_skip[boost::spirit::qi::space]
+              > (ascii::no_case[ascii::string ("NUMERIC")]
+                 | ascii::no_case[ascii::string ("FLOAT4")]
+                 | ascii::no_case[ascii::string ("FLOAT8")]) >> char_ (')')];
+  cast_function.name ("cast_function");
   // FIXME: numeric_value_function should have
   // numeric_geometry_function
   numeric_value_function %= trig_function | math_function | cast_function
-    | user_defined_function;
+                            | user_defined_function;
   numeric_value_function.name ("numeric_value_function");
   /// Flipped the order here, because a value_expression can match a
   /// function name.

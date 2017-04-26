@@ -4,8 +4,8 @@
 
 namespace ADQL
 {
-  std::ostream &operator<<(std::ostream &os, const ADQL::Subquery &subquery)
-  {
-    return os << '(' << subquery.variant << ')';
-  }
+std::ostream &operator<<(std::ostream &os, const ADQL::Subquery &subquery)
+{
+  return os << '(' << subquery.variant << ')';
+}
 }

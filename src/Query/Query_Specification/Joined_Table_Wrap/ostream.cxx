@@ -3,8 +3,5 @@
 
 namespace ADQL
 {
-bool empty(const Joined_Table_Wrap &j)
-{
-  return j.get ().empty ();
-}
+bool empty (const Joined_Table_Wrap &j) { return j.get ().empty (); }
 }

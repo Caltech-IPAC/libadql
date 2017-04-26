@@ -9,10 +9,16 @@ class Coord_Sys
 {
 public:
   enum class Reference_Frame
-  { J2000, ICRS, Galactic } frame;
-      
+  {
+    J2000,
+    ICRS,
+    Galactic
+  } frame;
+
   enum class Reference_Position
-  { GEOCENTER } position;
+  {
+    GEOCENTER
+  } position;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Coord_Sys &c)
@@ -38,5 +44,3 @@ BOOST_FUSION_ADAPT_STRUCT (ADQL::Coord_Sys,
                            (ADQL::Coord_Sys::Reference_Frame,
                             frame)(ADQL::Coord_Sys::Reference_Position,
                                    position))
-
-

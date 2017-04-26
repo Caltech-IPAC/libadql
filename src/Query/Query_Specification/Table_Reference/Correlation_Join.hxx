@@ -16,10 +16,7 @@ public:
   Table_Correlation table_correlation;
   Join_Suffix join_suffix;
 
-  bool empty () const
-  {
-    return table_correlation.empty ();
-  }
+  bool empty () const { return table_correlation.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
@@ -33,5 +30,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Correlation_Join,
-                           (ADQL::Table_Correlation, table_correlation)
-                           (ADQL::Join_Suffix, join_suffix))
+                           (ADQL::Table_Correlation,
+                            table_correlation)(ADQL::Join_Suffix, join_suffix))

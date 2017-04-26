@@ -6,7 +6,7 @@ class Outer_Join
 {
 public:
   std::string type;
-  bool outer=false;
+  bool outer = false;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Outer_Join &j)
@@ -18,6 +18,4 @@ inline std::ostream &operator<<(std::ostream &os, const Outer_Join &j)
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Outer_Join,
-                           (std::string, type)
-                           (bool, outer))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Outer_Join, (std::string, type)(bool, outer))

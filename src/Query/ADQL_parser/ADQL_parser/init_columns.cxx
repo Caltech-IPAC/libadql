@@ -1,6 +1,6 @@
 #include "../../ADQL_parser.hxx"
 
-void ADQL_parser::init_columns()
+void ADQL_parser::init_columns ()
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;
@@ -29,7 +29,7 @@ void ADQL_parser::init_columns()
   /// is always the same and the second part becomes optional.
   term %= factor >> -(char_ ("*/") >> term);
   numeric_value_expression %= term
-    >> -(char_ ("+-") >> numeric_value_expression);
+                              >> -(char_ ("+-") >> numeric_value_expression);
   numeric_value_expression.name ("numeric_value_expression");
 
   // FIXME: string_value_function should have a string_geometry_function;
@@ -43,21 +43,19 @@ void ADQL_parser::init_columns()
   /// Flip the order of character_factor and
   /// character_value_expression to prevent recursion.
   character_value_expression
-    %= character_factor
-    >> -(concatenation_operator >> character_value_expression);
+      %= character_factor
+         >> -(concatenation_operator >> character_value_expression);
 
   string_value_expression %= character_value_expression;
 
   /// Custom array_expression so that SQL 99 array literals can pass
   /// through
   array_value_constructor_by_enumeration
-    %= hold[ascii::no_case[ascii::string ("ARRAY")]
-            >> char_('[')
-            >> -(value_expression
-                 >> *(char_ (',') >> value_expression))
-            > char_(']')];
-  array_value_constructor_by_enumeration.name
-    ("array_value_constructor_by_enumeration");
+      %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
+              >> -(value_expression >> *(char_ (',') >> value_expression))
+              > char_ (']')];
+  array_value_constructor_by_enumeration.name (
+      "array_value_constructor_by_enumeration");
 
   // FIXME: value_expression should also have a
   // geometry_value_expression, but the database can not handle it.
@@ -70,18 +68,18 @@ void ADQL_parser::init_columns()
   /// match arithmetic.  For 'a+b', it matches 'a' but not the '+'.
   value_expression %= (hold[character_factor >> concatenation_operator]
                        >> character_value_expression)
-    | numeric_value_expression | string_value_expression;
+                      | numeric_value_expression | string_value_expression;
   value_expression.name ("value_expression");
 
   column_name %= identifier;
   column_name.name ("column_name");
 
   as %= value_expression
-    >> lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
-    > column_name;
+        >> lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
+        > column_name;
 
   select_non_as_item %= hold[qualifier_string >> ascii::string (".*")]
-    | value_expression;
+                        | value_expression;
   select_item %= as | select_non_as_item;
   select_list %= select_item % ',';
   columns %= ascii::string ("*") | select_list;

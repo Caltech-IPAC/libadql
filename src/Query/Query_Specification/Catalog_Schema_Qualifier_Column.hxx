@@ -17,7 +17,7 @@ public:
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Catalog_Schema_Qualifier_Column& s)
+                                const ADQL::Catalog_Schema_Qualifier_Column &s)
 {
   os << s.catalog << "." << s.schema << "." << s.qualifier << "." << s.column;
   return os;
@@ -25,7 +25,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Catalog_Schema_Qualifier_Column,
-                           (std::string, catalog)
-                           (std::string, schema)
-                           (std::string, qualifier)
-                           (std::string, column))
+                           (std::string, catalog)(std::string, schema)(
+                               std::string, qualifier)(std::string, column))

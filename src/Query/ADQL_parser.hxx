@@ -22,7 +22,8 @@
 /// there are some corner cases errors because of that.
 
 struct ADQL_parser
-    : boost::spirit::qi::grammar<std::string::const_iterator, ADQL::Query_Specification (),
+    : boost::spirit::qi::grammar<std::string::const_iterator,
+                                 ADQL::Query_Specification (),
                                  boost::spirit::qi::locals<std::string>,
                                  boost::spirit::ascii::space_type>
 {
@@ -46,15 +47,13 @@ struct ADQL_parser
   std::map<std::string, std::string> table_mapping;
 
   boost::spirit::qi::rule<std::string::const_iterator, char()>
-  simple_Latin_letter,
-    identifier_character, nonidentifier_character, 
-    nondoublequote_character, quote, space, newline,
-    tab, minus_sign, nonquote_character, sign, period;
+      simple_Latin_letter, identifier_character, nonidentifier_character,
+      nondoublequote_character, quote, space, newline, tab, minus_sign,
+      nonquote_character, sign, period;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string ()>
-  unsigned_integer,
-      exact_numeric_literal, signed_integer, mantissa, exponent,
-      approximate_numeric_literal, unsigned_numeric_literal, comment,
+      unsigned_integer, exact_numeric_literal, signed_integer, mantissa,
+      exponent, approximate_numeric_literal, unsigned_numeric_literal, comment,
       comment_introducer, comment_character, delimited_identifier,
       delimited_identifier_part, delimited_identifier_body,
       character_representation, ADQL_reserved_word, SQL_reserved_word,
@@ -72,9 +71,8 @@ struct ADQL_parser
       catalog_name_string, correlation_name, qualifier_string;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
-                          boost::spirit::ascii::space_type> 
-      general_literal, unsigned_literal,
-      unsigned_value_specification, general_set_function,
+                          boost::spirit::ascii::space_type> general_literal,
+      unsigned_literal, unsigned_value_specification, general_set_function,
       set_function_specification, value_expression_primary, value_expression,
       numeric_value_expression, numeric_primary, factor, term,
       numeric_value_function, trig_function, math_function, cast_function,
@@ -85,10 +83,10 @@ struct ADQL_parser
       string_value_function, character_primary, character_factor,
       character_value_expression, match_value, pattern,
       string_value_expression, array_value_constructor_by_enumeration,
-      select_non_as_item,
-      correlation_specification, boolean_value_expression, boolean_literal,
-      case_operand, when_operand, result_expression, result, simple_when_clause,
-      else_clause, simple_case, case_specification, case_expression;
+      select_non_as_item, correlation_specification, boolean_value_expression,
+      boolean_literal, case_operand, when_operand, result_expression, result,
+      simple_when_clause, else_clause, simple_case, case_specification,
+      case_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -100,10 +98,12 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Catalog_Schema_Qualifier_Column (),
-                          boost::spirit::ascii::space_type> catalog_schema_qualifier_column;
+                          boost::spirit::ascii::space_type>
+      catalog_schema_qualifier_column;
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Schema_Qualifier_Column (),
-                          boost::spirit::ascii::space_type> schema_qualifier_column;
+                          boost::spirit::ascii::space_type>
+      schema_qualifier_column;
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Qualifier_Column (),
                           boost::spirit::ascii::space_type> qualifier_column;
@@ -114,9 +114,10 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification::Column_Variant (),
                           boost::spirit::ascii::space_type> select_item;
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          std::vector<ADQL::Query_Specification::Column_Variant>(),
-                          boost::spirit::ascii::space_type> select_list;
+  boost::spirit::qi::
+      rule<std::string::const_iterator,
+           std::vector<ADQL::Query_Specification::Column_Variant>(),
+           boost::spirit::ascii::space_type> select_list;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification::Columns (),
@@ -125,13 +126,16 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Correlation (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Table_Correlation (),
                           boost::spirit::ascii::space_type> table_correlation;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Reference (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Table_Reference (),
                           boost::spirit::ascii::space_type> table_reference;
 
-  boost::spirit::qi::rule<std::string::const_iterator, std::vector<ADQL::Table_Reference>(),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          std::vector<ADQL::Table_Reference>(),
                           boost::spirit::ascii::space_type> from_clause;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Point (),
@@ -161,11 +165,13 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Geometry (),
                           boost::spirit::ascii::space_type> geometry;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Comparison_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Comparison_Predicate (),
                           boost::spirit::ascii::space_type>
-  comparison_predicate;
+      comparison_predicate;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Between_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Between_Predicate (),
                           boost::spirit::ascii::space_type> between_predicate;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::In_Predicate (),
@@ -177,13 +183,15 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Like_Predicate (),
                           boost::spirit::ascii::space_type> like_predicate;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Exists_Predicate (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Exists_Predicate (),
                           boost::spirit::ascii::space_type> exists_predicate;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Predicate (),
                           boost::spirit::ascii::space_type> predicate;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Primary (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Boolean_Primary (),
                           boost::spirit::ascii::space_type> boolean_primary;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Factor (),
@@ -192,7 +200,8 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Term (),
                           boost::spirit::ascii::space_type> boolean_term;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Search_Condition (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Search_Condition (),
                           boost::spirit::ascii::space_type> search_condition;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Having (),
@@ -200,13 +209,15 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where,
-    where_no_geometry;
+      where_no_geometry;
 
-  boost::spirit::qi::rule<std::string::const_iterator, std::vector<std::string>(),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          std::vector<std::string>(),
                           boost::spirit::ascii::space_type> join_column_list,
-    column_name_list;
+      column_name_list;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Named_Columns_Join(),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Named_Columns_Join (),
                           boost::spirit::ascii::space_type> named_columns_join;
 
   boost::spirit::qi::rule<std::string::const_iterator,
@@ -226,26 +237,31 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Join_Suffix (),
                           boost::spirit::ascii::space_type> join_suffix;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Correlation_Join (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Correlation_Join (),
                           boost::spirit::ascii::space_type> correlation_join;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Qualified_Join (),
                           boost::spirit::ascii::space_type> qualified_join,
-    join_parentheses;
+      join_parentheses;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Joined_Table (),
                           boost::spirit::ascii::space_type> joined_table;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Derived_Correlation (),
-                          boost::spirit::ascii::space_type> derived_correlation;
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Derived_Correlation (),
+                          boost::spirit::ascii::space_type>
+      derived_correlation;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query_Specification (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Query_Specification (),
                           boost::spirit::ascii::space_type> query_no_geometry;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Subquery (),
                           boost::spirit::ascii::space_type> subquery;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query_Specification (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Query_Specification (),
                           boost::spirit::qi::locals<std::string>,
                           boost::spirit::ascii::space_type> query;
 };

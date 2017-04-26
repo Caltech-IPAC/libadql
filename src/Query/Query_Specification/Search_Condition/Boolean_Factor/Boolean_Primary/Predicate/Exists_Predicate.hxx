@@ -17,5 +17,4 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Exists_Predicate,
-                           (ADQL::Subquery, subquery))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Exists_Predicate, (ADQL::Subquery, subquery))

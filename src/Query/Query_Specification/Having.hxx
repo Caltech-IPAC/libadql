@@ -8,10 +8,7 @@ class Having
 {
 public:
   Search_Condition search_condition;
-  bool empty() const
-  {
-    return search_condition.empty();
-  }
+  bool empty () const { return search_condition.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Having &having)

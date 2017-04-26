@@ -22,13 +22,12 @@ public:
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Coordinate& coordinate)
+                                const ADQL::Coordinate &coordinate)
 {
   os << coordinate.ra << "," << coordinate.dec;
   return os;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Coordinate,
-                           (ADQL::Column_or_Number, ra)
-                           (ADQL::Column_or_Number, dec))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Coordinate, (ADQL::Column_or_Number,
+                                              ra)(ADQL::Column_or_Number, dec))

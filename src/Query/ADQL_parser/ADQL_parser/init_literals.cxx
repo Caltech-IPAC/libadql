@@ -1,6 +1,6 @@
 #include "../../ADQL_parser.hxx"
 
-void ADQL_parser::init_literals()
+void ADQL_parser::init_literals ()
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;
@@ -24,9 +24,8 @@ void ADQL_parser::init_literals()
   namespace ascii = boost::spirit::ascii;
 
   unsigned_integer %= +digit;
-  exact_numeric_literal
-    %= (unsigned_integer >> -(period >> unsigned_integer))
-    | (period >> unsigned_integer);
+  exact_numeric_literal %= (unsigned_integer >> -(period >> unsigned_integer))
+                           | (period >> unsigned_integer);
 
   sign %= char_ ('+') | char_ ('-');
   signed_integer %= -sign >> unsigned_integer;
@@ -35,7 +34,7 @@ void ADQL_parser::init_literals()
   exponent %= signed_integer;
   approximate_numeric_literal %= hold[mantissa >> char_ ("Ee") >> exponent];
   unsigned_numeric_literal %= approximate_numeric_literal
-    | exact_numeric_literal;
+                              | exact_numeric_literal;
 
   quote %= char_ ('\'');
   space %= char_ (' ');
@@ -53,8 +52,8 @@ void ADQL_parser::init_literals()
   separator %= comment | space | newline;
 
   character_string_literal
-    %= quote >> *character_representation >> quote
-             >> *hold[+separator >> quote >> *character_representation >> quote];
+      %= quote >> *character_representation >> quote
+         >> *hold[+separator >> quote >> *character_representation >> quote];
 
   general_literal %= character_string_literal;
   unsigned_literal %= unsigned_numeric_literal | general_literal;

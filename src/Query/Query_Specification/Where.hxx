@@ -10,22 +10,21 @@ class Where
 public:
   Search_Condition search_condition;
   Geometry geometry;
-  bool empty() const
+  bool empty () const
   {
-    return geometry.empty() && search_condition.empty();
+    return geometry.empty () && search_condition.empty ();
   }
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Where& where)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Where &where)
 {
-  if(!where.geometry.empty())
+  if (!where.geometry.empty ())
     {
       os << where.geometry;
-      if(!where.search_condition.empty())
+      if (!where.search_condition.empty ())
         os << " AND (" << where.search_condition << ")";
     }
-  else if(!where.search_condition.empty())
+  else if (!where.search_condition.empty ())
     os << where.search_condition;
   return os;
 }

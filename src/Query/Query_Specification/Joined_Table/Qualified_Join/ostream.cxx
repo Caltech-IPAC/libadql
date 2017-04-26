@@ -30,11 +30,13 @@ namespace ADQL
 {
 std::ostream &operator<<(std::ostream &os, const Qualified_Join &j)
 {
-  Qualified_Join_ostream_Visitor visitor(os);
+  Qualified_Join_ostream_Visitor visitor (os);
   boost::apply_visitor (visitor, j.variant);
   os << " ";
-  for (auto &suffix: j.join_suffixes)
-    { os << suffix << " "; }
+  for (auto &suffix : j.join_suffixes)
+    {
+      os << suffix << " ";
+    }
   return os;
 }
 }

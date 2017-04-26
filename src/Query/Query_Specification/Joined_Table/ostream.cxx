@@ -26,12 +26,10 @@ public:
 
 namespace ADQL
 {
-std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Joined_Table &j)
+std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table &j)
 {
-  Joined_Table_ostream_Visitor visitor(os);
+  Joined_Table_ostream_Visitor visitor (os);
   boost::apply_visitor (visitor, j.variant);
   return os;
 }
 }
-

@@ -11,10 +11,7 @@ class Join_Specification
 public:
   typedef boost::variant<Named_Columns_Join, Join_Condition> Variant;
   Variant variant;
-  bool empty() const
-  {
-    return empty_variant (variant);
-  }
+  bool empty () const { return empty_variant (variant); }
 };
 }
 

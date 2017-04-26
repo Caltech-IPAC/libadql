@@ -1,6 +1,6 @@
 #include "../../ADQL_parser.hxx"
 
-void ADQL_parser::init_identifier()
+void ADQL_parser::init_identifier ()
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;
@@ -24,7 +24,7 @@ void ADQL_parser::init_identifier()
   namespace ascii = boost::spirit::ascii;
 
   keyword %= (SQL_reserved_word | ADQL_reserved_word)
-    >> &!(digit | simple_Latin_letter | char_ ("_"));
+             >> &!(digit | simple_Latin_letter | char_ ("_"));
 
   simple_Latin_letter %= char_ ("a-zA-Z");
   identifier_character %= digit | simple_Latin_letter | char_ ("_");
@@ -39,10 +39,10 @@ void ADQL_parser::init_identifier()
   nondoublequote_character %= char_ - char_ ('"');
   /// Note that all of these delimited_identifier* rules do not skip spaces
   delimited_identifier_part %= nondoublequote_character
-    | ascii::string ("\"\"");
+                               | ascii::string ("\"\"");
   delimited_identifier_body %= +delimited_identifier_part;
   delimited_identifier %= char_ ('"') >> delimited_identifier_body
-                                      >> char_ ('"');
+                          >> char_ ('"');
 
   identifier %= regular_identifier | delimited_identifier;
   identifier.name ("identifier");

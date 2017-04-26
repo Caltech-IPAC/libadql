@@ -1,6 +1,6 @@
 #include "../../ADQL_parser.hxx"
 
-void ADQL_parser::init_search_condition()
+void ADQL_parser::init_search_condition ()
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;
@@ -24,23 +24,22 @@ void ADQL_parser::init_search_condition()
   namespace ascii = boost::spirit::ascii;
 
   boolean_literal %= ascii::no_case[ascii::string ("True")]
-    | ascii::no_case[ascii::string ("False")];
+                     | ascii::no_case[ascii::string ("False")];
 
   boolean_value_expression %= boolean_literal | user_defined_function;
 
   boolean_primary %= predicate
-    | hold[lit ('(') >> search_condition >> lit (')')]
-    | boolean_value_expression;
+                     | hold[lit ('(') >> search_condition >> lit (')')]
+                     | boolean_value_expression;
 
   boolean_factor %= -lexeme[ascii::no_case[ascii::string ("NOT")]
-                            >> &boost::spirit::qi::space]
-    >> boolean_primary;
+                            >> &boost::spirit::qi::space] >> boolean_primary;
 
   boolean_term %= boolean_factor
-    >> lexeme[(ascii::no_case[ascii::string ("AND")]
-               | ascii::no_case[ascii::string ("OR")])
-              >> &boost::spirit::qi::space] >> search_condition;
+                  >> lexeme[(ascii::no_case[ascii::string ("AND")]
+                             | ascii::no_case[ascii::string ("OR")])
+                            >> &boost::spirit::qi::space] >> search_condition;
 
   search_condition
-    = (boolean_term | boolean_factor)[push_back (at_c<0>(_val), _1)];
+      = (boolean_term | boolean_factor)[push_back (at_c<0>(_val), _1)];
 }

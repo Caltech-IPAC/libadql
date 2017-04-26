@@ -18,10 +18,7 @@ public:
   typedef boost::variant<Table_Correlation, Joined_Table_Wrap,
                          Derived_Correlation> Variant;
   Variant variant;
-  bool empty () const
-  {
-    return empty_variant (variant);
-  }
+  bool empty () const { return empty_variant (variant); }
 };
 }
 
@@ -32,12 +29,14 @@ inline bool ADQL::empty (const Table_Reference_Wrap &t)
 
 namespace ADQL
 {
-inline std::ostream &operator<<(std::ostream &os, const ADQL::Table_Reference &table)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Table_Reference &table)
 {
   return os << table.variant;
 }
 
-inline std::ostream &operator<<(std::ostream &os, const ADQL::Table_Reference_Wrap &j)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Table_Reference_Wrap &j)
 {
   return os << j.get ();
 }

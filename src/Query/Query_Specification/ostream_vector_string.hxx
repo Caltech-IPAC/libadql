@@ -6,8 +6,8 @@
 
 namespace ADQL
 {
-inline std::ostream & operator<<(std::ostream &os,
-                                 const std::vector<std::string> &v)
+inline std::ostream &operator<<(std::ostream &os,
+                                const std::vector<std::string> &v)
 {
   os << "(";
   for (auto n = v.begin (); n != v.end ();)

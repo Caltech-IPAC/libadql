@@ -10,7 +10,7 @@ class Contains
 {
 public:
   typedef boost::variant<Point, Column_Reference> Point_or_Column;
-  
+
   Point_or_Column point_or_column;
   Shape shape;
 
@@ -18,7 +18,7 @@ public:
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Contains& contains)
+                                const ADQL::Contains &contains)
 {
   os << "CONTAINS(" << contains.point_or_column << "," << contains.shape
      << ")=1";
@@ -27,6 +27,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Contains,
-                           (ADQL::Contains::Point_or_Column, point_or_column)
-                           (ADQL::Shape, shape))
-
+                           (ADQL::Contains::Point_or_Column,
+                            point_or_column)(ADQL::Shape, shape))

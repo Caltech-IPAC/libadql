@@ -7,8 +7,6 @@
 namespace ADQL
 {
 typedef boost::variant<Catalog_Schema_Qualifier_Column,
-                       Schema_Qualifier_Column,
-                       Qualifier_Column,
+                       Schema_Qualifier_Column, Qualifier_Column,
                        std::string> Column_Reference;
 }
-

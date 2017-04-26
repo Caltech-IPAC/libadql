@@ -13,8 +13,8 @@ class Predicate
 {
 public:
   typedef boost::variant<Comparison_Predicate, Between_Predicate, In_Predicate,
-                         Null_Predicate, Like_Predicate, Exists_Predicate>
-  Variant;
+                         Null_Predicate, Like_Predicate,
+                         Exists_Predicate> Variant;
   Variant variant;
 };
 }

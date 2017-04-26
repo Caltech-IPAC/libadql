@@ -11,13 +11,11 @@ class Table_Correlation
 {
 public:
   std::string name, as;
-  bool empty () const
-  {
-    return name.empty ();
-  }
+  bool empty () const { return name.empty (); }
 };
 
-inline std::ostream &operator<<(std::ostream &os, const ADQL::Table_Correlation &table)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Table_Correlation &table)
 {
   os << table.name;
   if (!table.as.empty ())

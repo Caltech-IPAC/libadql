@@ -20,8 +20,7 @@ public:
   bool empty () const { return variant.empty (); }
 };
 
-std::ostream &operator<<(std::ostream &os,
-                         const ADQL::Search_Condition &s);
+std::ostream &operator<<(std::ostream &os, const ADQL::Search_Condition &s);
 }
 
 namespace ADQL
@@ -36,8 +35,8 @@ inline std::ostream &operator<<(std::ostream &os,
   return os;
 }
 
-
-inline std::ostream &operator<<(std::ostream &os, const Search_Condition_Wrap &s)
+inline std::ostream &operator<<(std::ostream &os,
+                                const Search_Condition_Wrap &s)
 {
   return os << s.get ();
 }

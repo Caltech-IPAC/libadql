@@ -18,24 +18,24 @@ public:
   Query_Specification query_specification;
 
   Query (const std::string &input,
-         const std::map<std::string,std::string> &table_mapping);
-  Query (const std::string &input): Query(input,{{}}) {}
+         const std::map<std::string, std::string> &table_mapping);
+  Query (const std::string &input) : Query (input, { {} }) {}
 
-  std::vector<std::pair<std::string,std::string> > simplified_columns() const;
+  std::vector<std::pair<std::string, std::string> >
+  simplified_columns () const;
 
-  bool simple_query() const
+  bool simple_query () const
   {
-    return (query_specification.all_or_distinct.empty()
-            || query_specification.all_or_distinct=="ALL")
-      && query_specification.where.search_condition.empty()
-      && query_specification.group_by.empty()
-      && query_specification.order_by.empty()
-      && query_specification.having.empty();
+    return (query_specification.all_or_distinct.empty ()
+            || query_specification.all_or_distinct == "ALL")
+           && query_specification.where.search_condition.empty ()
+           && query_specification.group_by.empty ()
+           && query_specification.order_by.empty ()
+           && query_specification.having.empty ();
   }
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Query &query)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Query &query)
 {
   return os << query.query_specification;
 }

@@ -14,12 +14,13 @@ public:
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Geometry& geometry)
+                                const ADQL::Geometry &geometry)
 {
-  if(!geometry.empty())
+  if (!geometry.empty ())
     os << geometry.predicate;
   return os;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Geometry, (ADQL::Geometry::Predicate, predicate))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Geometry,
+                           (ADQL::Geometry::Predicate, predicate))

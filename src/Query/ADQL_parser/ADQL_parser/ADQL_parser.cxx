@@ -1,8 +1,9 @@
 #include "../../ADQL_parser.hxx"
 
-ADQL_parser::ADQL_parser (const std::map<std::string, std::string> &Table_mapping)
-  : ADQL_parser::base_type (query, "ADQL query"),
-    table_mapping (Table_mapping)
+ADQL_parser::ADQL_parser (
+    const std::map<std::string, std::string> &Table_mapping)
+    : ADQL_parser::base_type (query, "ADQL query"),
+      table_mapping (Table_mapping)
 {
   using boost::phoenix::at_c;
   using boost::phoenix::push_back;

@@ -33,13 +33,15 @@ void ADQL_parser::init_query ()
              | (search_condition[at_c<1>(_val) = _1]));
   where.name ("where");
 
-  where_no_geometry = lexeme[ascii::no_case["WHERE"] >> &boost::spirit::qi::space]
-    >> search_condition[at_c<1>(_val) = _1];
+  where_no_geometry
+      = lexeme[ascii::no_case["WHERE"] >> &boost::spirit::qi::space]
+        >> search_condition[at_c<1>(_val) = _1];
   where_no_geometry.name ("where_no_geometry");
 
   grouping_column_reference %= column_reference_string;
-  grouping_column_reference_list %= grouping_column_reference
-                                    >> *(char_ (',') >> column_reference_string);
+  grouping_column_reference_list
+      %= grouping_column_reference
+         >> *(char_ (',') >> column_reference_string);
   group_by_clause
       %= lexeme[ascii::no_case["GROUP"] > &boost::spirit::qi::space]
          > lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
@@ -69,30 +71,29 @@ void ADQL_parser::init_query ()
   /// The expectation operator messes up the automatic calculation of
   /// semantic actions.  So instead of %=, we have to do it manually
   /// with [at_c<>(_val)=_1]
-  query = (lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space]
-           >> -set_quantifier[at_c<0>(_val) = _1]
-           >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
-                > lexeme[ulong_long
-                         > &boost::spirit::qi::space])[at_c<1>(_val)=_1]
-           > columns[at_c<2>(_val)=_1]
-           > from_clause[at_c<3>(_val)=_1])
-    >> -where[at_c<4>(_val)=_1]
-    >> -group_by_clause[at_c<5>(_val)=_1]
-    >> -having_clause[at_c<6>(_val)=_1]
-    >> -order_by_clause[at_c<7>(_val)=_1];
+  query
+      = (lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space]
+         >> -set_quantifier[at_c<0>(_val) = _1]
+         >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
+              > lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val)
+                                                                = _1]
+         > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
+        >> -where[at_c<4>(_val) = _1] >> -group_by_clause[at_c<5>(_val) = _1]
+        >> -having_clause[at_c<6>(_val) = _1]
+        >> -order_by_clause[at_c<7>(_val) = _1];
   query.name ("select");
 
-  query_no_geometry = (lexeme[ascii::no_case["SELECT"] >> &boost::spirit::qi::space]
-           >> -set_quantifier[at_c<0>(_val) = _1]
-           >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
-                > lexeme[ulong_long
-                         > &boost::spirit::qi::space])[at_c<1>(_val)=_1]
-           > columns[at_c<2>(_val)=_1]
-           > from_clause[at_c<3>(_val)=_1])
-    >> -where_no_geometry[at_c<4>(_val)=_1]
-    >> -group_by_clause[at_c<5>(_val)=_1]
-    >> -having_clause[at_c<6>(_val)=_1]
-    >> -order_by_clause[at_c<7>(_val)=_1];
+  query_no_geometry
+      = (lexeme[ascii::no_case["SELECT"] >> &boost::spirit::qi::space]
+         >> -set_quantifier[at_c<0>(_val) = _1]
+         >> -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]]
+              > lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val)
+                                                                = _1]
+         > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
+        >> -where_no_geometry[at_c<4>(_val) = _1]
+        >> -group_by_clause[at_c<5>(_val) = _1]
+        >> -having_clause[at_c<6>(_val) = _1]
+        >> -order_by_clause[at_c<7>(_val) = _1];
   query.name ("select");
 
   subquery %= lit ('(') >> (query_no_geometry | joined_table) >> lit (')');

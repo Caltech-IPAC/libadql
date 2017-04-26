@@ -11,12 +11,9 @@ class Joined_Table
 public:
   typedef boost::variant<Qualified_Join, Joined_Table_Wrap> Variant;
   Variant variant;
-  bool empty () const
-  {
-    return empty_variant (variant);
-  }
+  bool empty () const { return empty_variant (variant); }
 };
-  std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table &j);
+std::ostream &operator<<(std::ostream &os, const ADQL::Joined_Table &j);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Joined_Table,

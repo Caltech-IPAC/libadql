@@ -13,15 +13,15 @@ public:
   Column_or_Number radius;
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Circle& circle)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Circle &circle)
 {
-  os << "CIRCLE(\'" << circle.coord_sys << "\'," << circle.center
-     << "," << circle.radius << ")";
+  os << "CIRCLE(\'" << circle.coord_sys << "\'," << circle.center << ","
+     << circle.radius << ")";
   return os;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle, (ADQL::Coord_Sys, coord_sys)
-                           (ADQL::Coordinate, center)
-                           (ADQL::Column_or_Number, radius))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Circle,
+                           (ADQL::Coord_Sys,
+                            coord_sys)(ADQL::Coordinate,
+                                       center)(ADQL::Column_or_Number, radius))

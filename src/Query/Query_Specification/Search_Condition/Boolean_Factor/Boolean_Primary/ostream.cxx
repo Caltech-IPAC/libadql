@@ -26,8 +26,7 @@ public:
 
 namespace ADQL
 {
-std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Boolean_Primary &b)
+std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b)
 {
   Boolean_Primary_Variant_Visitor visitor (os);
   return boost::apply_visitor (visitor, b.variant);
