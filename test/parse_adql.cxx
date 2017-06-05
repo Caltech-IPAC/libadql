@@ -29,7 +29,11 @@ int main (int argc, char *argv[])
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
     "CONTAINS(POINT('J2000 Geocenter',ra,dec),ELLIPSE('J2000',+10 , -20,1,2,3))= 1",
     "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),ELLIPSE(+10 , -20,1,2,3))",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
     "CONTAINS(POINT('J2000 Geocenter',ra,dec),POLYGON('J2000',0,1,2,3,4,5,6,7,8,9,10,11,12,13))= 1",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),POLYGON(0,1,2,3,4,5,6,7,8,9,10,11,12,13))",
     "SELECT * FROM mytable WHERE "
     "CONTAINS(POINT('J2000',mytable.ra,dec),CIRCLE('J2000',+10 , -20,-1)) = 1",
     "SELECT * FROM my_table WHERE "
@@ -46,7 +50,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x>2",
     "SELECT * FROM my_table1 where x>2 AND x<4",
     "SELECT * FROM my_table1 WHERE "
-    "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
+    "1= CONTAINS(POINT(my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
     "And (x<1 And x>2 Or y < 3 Or y >5)",
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , -20,-1)) "
@@ -56,7 +60,7 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 where x is null",
     "SELECT * FROM my_table1 where x is not null",
     "SELECT * FROM fp_psc WHERE CONTAINS(POINT('J2000',ccc.fp_psc.ra, aaa.ccc.fp_pscdec),"
-    "CIRCLE('J2000',1,1,0.08))=1 and (ra between 0.95 and 1.05)",
+    "CIRCLE(1,1,0.08))=1 and (ra between 0.95 and 1.05)",
     "SELECT * FROM my_table1 where x in (select y from my_table2)",
     "SELECT * FROM my_table1 where x in (10,20,30)",
     "SELECT * FROM my_table1 where x not in (10,20,30)",

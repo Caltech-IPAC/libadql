@@ -40,27 +40,27 @@ void ADQL_parser::init_geometry ()
   column_or_number.name ("column or number");
   coord %= column_or_number >> ',' > column_or_number;
   coord.name ("coordinate");
-  point %= ascii::no_case["POINT"] >> '(' >> coord_sys > ',' > coord > ')';
+  point %= ascii::no_case["POINT"] >> '(' >> -(coord_sys > ',') > coord > ')';
   point.name ("point");
   point_or_column %= point | column_reference;
   point_or_column.name ("point or column");
 
   // FIXME: In theory, the radius should be an expression, not a
   // number.  In practice, we can only handle numbers.
-  circle %= ascii::no_case["CIRCLE"] >> '(' >> coord_sys > ',' > coord > ','
+  circle %= ascii::no_case["CIRCLE"] >> '(' >> -(coord_sys > ',') > coord > ','
             > column_or_number > ')';
   circle.name ("circle");
-  ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> coord_sys > ',' > coord > ','
-             > column_or_number > ',' > column_or_number > ','
+  ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> -(coord_sys > ',') > coord
+             > ',' > column_or_number > ',' > column_or_number > ','
              > column_or_number > ')';
   ellipse.name ("ellipse");
-  box %= ascii::no_case["BOX"] >> '(' >> coord_sys > ',' > coord > ','
+  box %= ascii::no_case["BOX"] >> '(' >> -(coord_sys > ',') > coord > ','
          > column_or_number > ',' > column_or_number > ')';
   box.name ("box");
   coord_list %= coord % ',';
   coord_list.name ("coordinate list");
-  polygon %= ascii::no_case["POLYGON"] >> '(' >> coord_sys > ',' > coord_list
-             > ')';
+  polygon %= ascii::no_case["POLYGON"] >> '(' >> -(coord_sys > ',')
+             > coord_list > ')';
   polygon.name ("polygon");
 
   shape %= point | circle | box | ellipse | polygon;
