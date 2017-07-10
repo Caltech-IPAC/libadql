@@ -78,6 +78,10 @@ void ADQL_parser::init_factor ()
   case_expression %= case_specification;
   case_expression.name ("case_expression");
 
+  any_expression %= ascii::no_case[ascii::string ("ANY")]
+    >> char_ ('(') > value_expression > char_ (')');
+  any_expression.name ("any_expression");
+  
   /// The BNF for SQL 99 uses an array_element_reference intermediate
   /// rule.  However, that rule first checks for value_expression, so
   /// you get an infinite recursion because it keeps matching the
@@ -87,6 +91,7 @@ void ADQL_parser::init_factor ()
       %= (array_value_constructor_by_enumeration | unsigned_value_specification
           | column_reference_string | set_function_specification
           | case_expression
+          | any_expression
           | hold[char_ ('(') >> value_expression >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
