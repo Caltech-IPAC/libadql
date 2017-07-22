@@ -37,7 +37,7 @@ void ADQL_parser::init_factor ()
   set_quantifier.name ("set_quantifier");
   general_set_function
       %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
-          > char_ ('(')) >> -set_quantifier > value_expression > char_ (')');
+          > char_ ('(')) >> -set_quantifier > value_expression_string > char_ (')');
   general_set_function.name ("general_set_function");
 
   set_function_specification
@@ -45,11 +45,11 @@ void ADQL_parser::init_factor ()
                >> char_ ('*')] > char_ (')')) | general_set_function;
   set_function_specification.name ("set_function_specification");
 
-  case_operand %= value_expression;
+  case_operand %= value_expression_string;
   case_operand.name ("case_operand");
-  when_operand %= value_expression;
+  when_operand %= value_expression_string;
   when_operand.name ("when_operand");
-  result_expression %= value_expression;
+  result_expression %= value_expression_string;
   result_expression.name ("result_expression");
   result %= result_expression | ascii::no_case[ascii::string ("NULL")];
   result.name ("result");
@@ -79,7 +79,7 @@ void ADQL_parser::init_factor ()
   case_expression.name ("case_expression");
 
   any_expression %= ascii::no_case[ascii::string ("ANY")]
-    >> char_ ('(') > value_expression > char_ (')');
+    >> char_ ('(') > value_expression_string > char_ (')');
   any_expression.name ("any_expression");
   
   /// The BNF for SQL 99 uses an array_element_reference intermediate
@@ -92,7 +92,7 @@ void ADQL_parser::init_factor ()
           | column_reference_string | set_function_specification
           | case_expression
           | any_expression
-          | hold[char_ ('(') >> value_expression >> char_ (')')])
+          | hold[char_ ('(') >> value_expression_string >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
 
@@ -153,7 +153,7 @@ void ADQL_parser::init_factor ()
              | ascii::no_case[ascii::string ("LOWER")]
              | ascii::no_case[ascii::string ("TRIM")]);
   user_defined_function_name.name ("user_defined_function_name");
-  user_defined_function_param %= value_expression;
+  user_defined_function_param %= value_expression_string;
   user_defined_function_param.name ("user_defined_function_param");
   user_defined_function
       %= hold[user_defined_function_name >> char_ ('(')]
@@ -167,7 +167,7 @@ void ADQL_parser::init_factor ()
   /// (e.g. mod()) only take numeric arguments, not double precision.
   cast_function
       %= hold[ascii::no_case[ascii::string ("CAST")] >> char_ ('(')
-              >> value_expression >> no_skip[boost::spirit::qi::space]
+              >> value_expression_string >> no_skip[boost::spirit::qi::space]
               >> ascii::no_case[ascii::string ("AS")]
               >> no_skip[boost::spirit::qi::space]
               > (ascii::no_case[ascii::string ("NUMERIC")]

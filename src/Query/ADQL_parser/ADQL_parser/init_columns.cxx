@@ -52,7 +52,7 @@ void ADQL_parser::init_columns ()
   /// through
   array_value_constructor_by_enumeration
       %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
-              >> -(value_expression >> *(char_ (',') >> value_expression))
+              >> -(value_expression_string >> *(char_ (',') >> value_expression_string))
               > char_ (']')];
   array_value_constructor_by_enumeration.name (
       "array_value_constructor_by_enumeration");
@@ -66,20 +66,20 @@ void ADQL_parser::init_columns ()
   /// would cause the parse to fail.  We can not put
   /// string_value_expression first, because that would partially
   /// match arithmetic.  For 'a+b', it matches 'a' but not the '+'.
-  value_expression %= (hold[character_factor >> concatenation_operator]
+  value_expression_string %= (hold[character_factor >> concatenation_operator]
                        >> character_value_expression)
                       | numeric_value_expression | string_value_expression;
-  value_expression.name ("value_expression");
+  value_expression_string.name ("value_expression");
 
   column_name %= identifier;
   column_name.name ("column_name");
 
-  as %= value_expression
+  as %= value_expression_string
         >> lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
         > column_name;
 
   select_non_as_item %= hold[qualifier_string >> ascii::string (".*")]
-                        | value_expression;
+                        | value_expression_string;
   select_item %= as | select_non_as_item;
   select_list %= select_item % ',';
   columns %= ascii::string ("*") | select_list;
