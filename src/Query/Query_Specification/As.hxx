@@ -1,16 +1,14 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
+#include "Value_Expression.hxx"
 
 namespace ADQL
 {
 class As
 {
 public:
-  std::string expression, as;
+  Value_Expression expression;
+  std::string as;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::As &as)
@@ -19,5 +17,5 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::As &as)
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::As,
-                           (std::string, expression)(std::string, as))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::As, (ADQL::Value_Expression,
+                                      expression)(std::string, as))

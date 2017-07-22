@@ -13,7 +13,7 @@ public:
 
   std::pair<std::string, std::string> operator()(const ADQL::As &as)
   {
-    return std::make_pair (as.expression, as.as);
+    return std::make_pair (to_string(as.expression), as.as);
   }
 };
 

@@ -127,6 +127,10 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> as;
 
   boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Value_Expression (),
+                          boost::spirit::ascii::space_type> value_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Table_Correlation (),
                           boost::spirit::ascii::space_type> table_correlation;
 
