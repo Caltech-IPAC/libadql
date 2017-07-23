@@ -97,7 +97,7 @@ void ADQL_parser::init_columns ()
        > column_name[at_c<1>(_val) = _1];
 
   non_as %= hold[qualifier_string >> ascii::string (".*")]
-            | value_expression_string;
+            | value_expression;
   select_item %= as | non_as;
   select_list %= select_item % ',';
   columns %= ascii::string ("*") | select_list;
