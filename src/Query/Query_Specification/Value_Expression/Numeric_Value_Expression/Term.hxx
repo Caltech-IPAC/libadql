@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Term/Operator_Term.hxx"
-#include "Term/Factor.hxx"
 
 #include <boost/variant.hpp>
 
@@ -10,7 +9,7 @@ namespace ADQL
 class Term
 {
 public:
-  typedef boost::variant<std::string, Operator_Term> Variant;
+  typedef boost::variant<Factor, Operator_Term> Variant;
   Variant variant;
 };
 

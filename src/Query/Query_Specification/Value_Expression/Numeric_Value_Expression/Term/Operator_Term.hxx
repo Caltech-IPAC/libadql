@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Term_Wrap.hxx"
+#include "Factor.hxx"
 
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -12,7 +13,8 @@ namespace ADQL
 class Operator_Term
 {
 public:
-  std::string factor, multiply_or_divide;
+  Factor factor;
+  std::string multiply_or_divide;
   Term_Wrap term;
 };
 
@@ -24,6 +26,6 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Operator_Term,
-                           (std::string,
+                           (ADQL::Factor,
                             factor)(std::string,
                                     multiply_or_divide)(ADQL::Term_Wrap, term))
