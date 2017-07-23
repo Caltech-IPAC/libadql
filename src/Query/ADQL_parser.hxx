@@ -76,13 +76,13 @@ struct ADQL_parser
       set_function_specification, value_expression_primary,
       value_expression_string, numeric_value_expression_string,
       numeric_primary_string, factor_string, term_string,
-      numeric_value_function_string, trig_function, math_function,
-      cast_function, user_defined_function, user_defined_function_name,
-      user_defined_function_param, default_function_prefix,
-      grouping_column_reference, grouping_column_reference_list,
-      group_by_clause, sort_specification_list, order_by_clause,
-      string_value_function, character_primary, character_factor,
-      character_value_expression, match_value, pattern,
+      numeric_value_function_string, trig_function_string,
+      math_function_string, cast_function_string, user_defined_function_string,
+      user_defined_function_name, user_defined_function_param,
+      default_function_prefix, grouping_column_reference,
+      grouping_column_reference_list, group_by_clause, sort_specification_list,
+      order_by_clause, string_value_function, character_primary,
+      character_factor, character_value_expression, match_value, pattern,
       string_value_expression_string, array_value_constructor_by_enumeration,
       correlation_specification, boolean_value_expression, boolean_literal,
       case_operand, when_operand, result_expression, result,
@@ -162,6 +162,26 @@ struct ADQL_parser
                           ADQL::Numeric_Value_Function (),
                           boost::spirit::ascii::space_type>
       numeric_value_function;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Trig_Function (),
+                          boost::spirit::ascii::space_type>
+      trig_function;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Math_Function (),
+                          boost::spirit::ascii::space_type>
+      math_function;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Cast_Function (),
+                          boost::spirit::ascii::space_type>
+      cast_function;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::User_Defined_Function (),
+                          boost::spirit::ascii::space_type>
+      user_defined_function;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::String_Value_Expression (),

@@ -188,8 +188,68 @@ void ADQL_parser::init_factor ()
   factor %= -sign >> numeric_primary_string;
   factor.name ("factor");
 
-  numeric_value_function_string %= trig_function | math_function
-                                   | cast_function | user_defined_function;
+  trig_function_string
+      %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
+                       | ascii::no_case[ascii::string ("ASIN")]
+                       | ascii::no_case[ascii::string ("ATAN")]
+                       | ascii::no_case[ascii::string ("COS")]
+                       | ascii::no_case[ascii::string ("COT")]
+                       | ascii::no_case[ascii::string ("SIN")]
+                       | ascii::no_case[ascii::string ("TAN")])
+                      >> &nonidentifier_character]] > char_ ('(')
+          > numeric_value_expression_string > char_ (')'))
+         | (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
+                        >> &nonidentifier_character]] > char_ ('(')
+            > numeric_value_expression_string > char_ (',')
+            > numeric_value_expression_string > char_ (')'));
+
+  math_function_string
+      %= (hold[lexeme[(ascii::no_case[ascii::string ("ABS")]
+                       | ascii::no_case[ascii::string ("CEILING")]
+                       | ascii::no_case[ascii::string ("DEGREES")]
+                       | ascii::no_case[ascii::string ("EXP")]
+                       | ascii::no_case[ascii::string ("FLOOR")]
+                       | ascii::no_case[ascii::string ("LOG10")]
+                       | ascii::no_case[ascii::string ("LOG")]
+                       | ascii::no_case[ascii::string ("RADIANS")]
+                       | ascii::no_case[ascii::string ("SQRT")])
+                      >> &nonidentifier_character]] > char_ ('(')
+          > numeric_value_expression_string > char_ (')'))
+         | (hold[lexeme[(ascii::no_case[ascii::string ("MOD")]
+                         | ascii::no_case[ascii::string ("POWER")])
+                        >> &nonidentifier_character]] > char_ ('(')
+            > numeric_value_expression_string > char_ (',')
+            > numeric_value_expression_string > char_ (')'))
+         | (hold[lexeme[ascii::no_case[ascii::string ("PI")]
+                        >> &nonidentifier_character]] > char_ ('(')
+            > char_ (')'))
+         | (hold[lexeme[ascii::no_case[ascii::string ("RAND")]
+                        >> &nonidentifier_character]] > char_ ('(')
+            >> -numeric_value_expression_string > char_ (')'))
+         | (hold[lexeme[(ascii::no_case[ascii::string ("ROUND")]
+                         | ascii::no_case[ascii::string ("TRUNCATE")])
+                        >> &nonidentifier_character]] > char_ ('(')
+            > numeric_value_expression_string
+            >> -(char_ (',') > signed_integer) > char_ (')'));
+
+  user_defined_function_string
+      %= hold[user_defined_function_name >> char_ ('(')]
+         /// Use this awkward syntax instead of the usual list parser so
+         /// that the attribute is still a string overall.
+         >> -(user_defined_function_param
+              >> *(char_ (',') >> user_defined_function_param)) >> char_ (')');
+
+  cast_function_string
+      %= hold[ascii::no_case[ascii::string ("CAST")] >> char_ ('(')
+              >> value_expression_string >> no_skip[boost::spirit::qi::space]
+              >> ascii::no_case[ascii::string ("AS")]
+              >> no_skip[boost::spirit::qi::space]
+              > (ascii::no_case[ascii::string ("NUMERIC")]
+                 | ascii::no_case[ascii::string ("FLOAT4")]
+                 | ascii::no_case[ascii::string ("FLOAT8")]) > char_ (')')];
+  numeric_value_function_string %= trig_function_string | math_function_string
+                                   | cast_function_string
+                                   | user_defined_function_string;
   numeric_primary_string %= numeric_value_function_string
                             | value_expression_primary;
   factor_string %= -sign >> numeric_primary_string;

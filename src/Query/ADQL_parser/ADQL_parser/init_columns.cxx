@@ -40,7 +40,7 @@ void ADQL_parser::init_columns ()
   numeric_value_expression_string.name ("numeric_value_expression");
 
   // FIXME: string_value_function should have a string_geometry_function;
-  string_value_function %= user_defined_function;
+  string_value_function %= user_defined_function_string;
   /// Flipped the order here because a value_expression_primary can
   /// match a function name that should be matched by
   /// string_value_function
