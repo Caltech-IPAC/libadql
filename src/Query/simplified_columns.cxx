@@ -8,7 +8,8 @@ class Column_Visitor
 public:
   std::pair<std::string, std::string> operator()(const ADQL::Non_As &non_as)
   {
-    return std::make_pair (non_as.non_as, non_as.non_as);
+    std::string s (ADQL::to_string (non_as));
+    return std::make_pair (s, s);
   }
 
   std::pair<std::string, std::string> operator()(const ADQL::As &as)
