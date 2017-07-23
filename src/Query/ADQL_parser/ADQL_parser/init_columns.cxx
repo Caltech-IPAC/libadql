@@ -28,12 +28,12 @@ void ADQL_parser::init_columns ()
   /// runs out of stack space.  With that reordering, the first term
   /// is always the same and the second part becomes optional.
 
-  operator_term %= factor >> char_ ("*/") >> term;
-  term %= operator_term | factor;
+  operator_term %= factor_string >> char_ ("*/") >> term;
+  term %= operator_term | factor_string;
   numeric_value_expression
       %= term >> -(char_ ("+-") >> numeric_value_expression_string);
   
-  term_string %= factor >> -(char_ ("*/") >> term_string);
+  term_string %= factor_string >> -(char_ ("*/") >> term_string);
   numeric_value_expression_string
       %= term_string >> -(char_ ("+-") >> numeric_value_expression_string);
   numeric_value_expression_string.name ("numeric_value_expression");
