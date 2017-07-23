@@ -6,9 +6,9 @@ class Column_Visitor
     : public boost::static_visitor<std::pair<std::string, std::string> >
 {
 public:
-  std::pair<std::string, std::string> operator()(const std::string &s)
+  std::pair<std::string, std::string> operator()(const ADQL::Non_As &non_as)
   {
-    return std::make_pair (s, s);
+    return std::make_pair (non_as.non_as, non_as.non_as);
   }
 
   std::pair<std::string, std::string> operator()(const ADQL::As &as)

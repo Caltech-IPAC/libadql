@@ -13,7 +13,7 @@ namespace ADQL
 class Query_Specification
 {
 public:
-  typedef boost::variant<As, std::string> Column_Variant;
+  typedef boost::variant<As, Non_As> Column_Variant;
   typedef boost::variant<std::string, std::vector<Column_Variant> > Columns;
 
   Columns columns;
