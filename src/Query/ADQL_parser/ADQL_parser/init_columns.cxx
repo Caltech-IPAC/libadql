@@ -27,11 +27,13 @@ void ADQL_parser::init_columns ()
   /// right.  Otherwise the rule greedily recurses on itself and
   /// runs out of stack space.  With that reordering, the first term
   /// is always the same and the second part becomes optional.
-  term %= factor >> -(char_ ("*/") >> term);
+  term %= factor >> -(char_ ("*/") >> term_string);
   numeric_value_expression
       %= term >> -(char_ ("+-") >> numeric_value_expression_string);
+  
+  term_string %= factor >> -(char_ ("*/") >> term_string);
   numeric_value_expression_string
-      %= term >> -(char_ ("+-") >> numeric_value_expression_string);
+      %= term_string >> -(char_ ("+-") >> numeric_value_expression_string);
   numeric_value_expression_string.name ("numeric_value_expression");
 
   // FIXME: string_value_function should have a string_geometry_function;
