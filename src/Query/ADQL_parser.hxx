@@ -74,15 +74,15 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> general_literal,
       unsigned_literal, unsigned_value_specification, general_set_function,
       set_function_specification, value_expression_primary,
-      value_expression_string, numeric_value_expression, numeric_primary,
-      factor, term, numeric_value_function, trig_function, math_function,
-      cast_function, user_defined_function, user_defined_function_name,
-      user_defined_function_param, default_function_prefix,
-      grouping_column_reference, grouping_column_reference_list,
-      group_by_clause, sort_specification_list, order_by_clause,
-      string_value_function, character_primary, character_factor,
-      character_value_expression, match_value, pattern,
-      string_value_expression, array_value_constructor_by_enumeration,
+      value_expression_string, numeric_value_expression_string,
+      numeric_primary, factor, term, numeric_value_function, trig_function,
+      math_function, cast_function, user_defined_function,
+      user_defined_function_name, user_defined_function_param,
+      default_function_prefix, grouping_column_reference,
+      grouping_column_reference_list, group_by_clause, sort_specification_list,
+      order_by_clause, string_value_function, character_primary,
+      character_factor, character_value_expression, match_value, pattern,
+      string_value_expression_string, array_value_constructor_by_enumeration,
       select_non_as_item, correlation_specification, boolean_value_expression,
       boolean_literal, case_operand, when_operand, result_expression, result,
       simple_when_clause, else_clause, simple_case, case_specification,
@@ -125,6 +125,21 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::As (),
                           boost::spirit::ascii::space_type> as;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Concatenation_Expression (),
+                          boost::spirit::ascii::space_type>
+      concatenation_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Numeric_Value_Expression (),
+                          boost::spirit::ascii::space_type>
+      numeric_value_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::String_Value_Expression (),
+                          boost::spirit::ascii::space_type>
+      string_value_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression (),

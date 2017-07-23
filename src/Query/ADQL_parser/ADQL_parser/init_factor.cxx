@@ -37,7 +37,8 @@ void ADQL_parser::init_factor ()
   set_quantifier.name ("set_quantifier");
   general_set_function
       %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
-          > char_ ('(')) >> -set_quantifier > value_expression_string > char_ (')');
+          > char_ ('(')) >> -set_quantifier > value_expression_string
+         > char_ (')');
   general_set_function.name ("general_set_function");
 
   set_function_specification
@@ -78,10 +79,10 @@ void ADQL_parser::init_factor ()
   case_expression %= case_specification;
   case_expression.name ("case_expression");
 
-  any_expression %= ascii::no_case[ascii::string ("ANY")]
-    >> char_ ('(') > value_expression_string > char_ (')');
+  any_expression %= ascii::no_case[ascii::string ("ANY")] >> char_ ('(')
+                    > value_expression_string > char_ (')');
   any_expression.name ("any_expression");
-  
+
   /// The BNF for SQL 99 uses an array_element_reference intermediate
   /// rule.  However, that rule first checks for value_expression, so
   /// you get an infinite recursion because it keeps matching the
@@ -90,10 +91,9 @@ void ADQL_parser::init_factor ()
   value_expression_primary
       %= (array_value_constructor_by_enumeration | unsigned_value_specification
           | column_reference_string | set_function_specification
-          | case_expression
-          | any_expression
+          | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
-         >> *(char_ ('[') >> numeric_value_expression >> char_ (']'));
+         >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
 
   trig_function %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
@@ -104,11 +104,11 @@ void ADQL_parser::init_factor ()
                                  | ascii::no_case[ascii::string ("SIN")]
                                  | ascii::no_case[ascii::string ("TAN")])
                                 >> &nonidentifier_character]] > char_ ('(')
-                    > numeric_value_expression > char_ (')'))
+                    > numeric_value_expression_string > char_ (')'))
                    | (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
                                   >> &nonidentifier_character]] > char_ ('(')
-                      > numeric_value_expression > char_ (',')
-                      > numeric_value_expression > char_ (')'));
+                      > numeric_value_expression_string > char_ (',')
+                      > numeric_value_expression_string > char_ (')'));
   trig_function.name ("trig_function");
 
   math_function
@@ -122,22 +122,23 @@ void ADQL_parser::init_factor ()
                        | ascii::no_case[ascii::string ("RADIANS")]
                        | ascii::no_case[ascii::string ("SQRT")])
                       >> &nonidentifier_character]] > char_ ('(')
-          > numeric_value_expression > char_ (')'))
+          > numeric_value_expression_string > char_ (')'))
          | (hold[lexeme[(ascii::no_case[ascii::string ("MOD")]
                          | ascii::no_case[ascii::string ("POWER")])
                         >> &nonidentifier_character]] > char_ ('(')
-            > numeric_value_expression > char_ (',') > numeric_value_expression
-            > char_ (')')) | (hold[lexeme[ascii::no_case[ascii::string ("PI")]
-                                          >> &nonidentifier_character]]
-                              > char_ ('(') > char_ (')'))
+            > numeric_value_expression_string > char_ (',')
+            > numeric_value_expression_string > char_ (')'))
+         | (hold[lexeme[ascii::no_case[ascii::string ("PI")]
+                        >> &nonidentifier_character]] > char_ ('(')
+            > char_ (')'))
          | (hold[lexeme[ascii::no_case[ascii::string ("RAND")]
                         >> &nonidentifier_character]] > char_ ('(')
-            >> -numeric_value_expression > char_ (')'))
+            >> -numeric_value_expression_string > char_ (')'))
          | (hold[lexeme[(ascii::no_case[ascii::string ("ROUND")]
                          | ascii::no_case[ascii::string ("TRUNCATE")])
                         >> &nonidentifier_character]] > char_ ('(')
-            > numeric_value_expression >> -(char_ (',') > signed_integer)
-            > char_ (')'));
+            > numeric_value_expression_string
+            >> -(char_ (',') > signed_integer) > char_ (')'));
   math_function.name ("math_function");
 
   /// default_function_prefix is a bit useless since it is optional.

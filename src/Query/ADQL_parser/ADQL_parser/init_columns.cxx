@@ -28,9 +28,11 @@ void ADQL_parser::init_columns ()
   /// runs out of stack space.  With that reordering, the first term
   /// is always the same and the second part becomes optional.
   term %= factor >> -(char_ ("*/") >> term);
-  numeric_value_expression %= term
-                              >> -(char_ ("+-") >> numeric_value_expression);
-  numeric_value_expression.name ("numeric_value_expression");
+  numeric_value_expression
+      %= term >> -(char_ ("+-") >> numeric_value_expression_string);
+  numeric_value_expression_string
+      %= term >> -(char_ ("+-") >> numeric_value_expression_string);
+  numeric_value_expression_string.name ("numeric_value_expression");
 
   // FIXME: string_value_function should have a string_geometry_function;
   string_value_function %= user_defined_function;
@@ -47,6 +49,7 @@ void ADQL_parser::init_columns ()
          >> -(concatenation_operator >> character_value_expression);
 
   string_value_expression %= character_value_expression;
+  string_value_expression_string %= character_value_expression;
 
   /// Custom array_expression so that SQL 99 array literals can pass
   /// through
@@ -67,15 +70,18 @@ void ADQL_parser::init_columns ()
   /// would cause the parse to fail.  We can not put
   /// string_value_expression first, because that would partially
   /// match arithmetic.  For 'a+b', it matches 'a' but not the '+'.
-  value_expression %= (hold[character_factor >> concatenation_operator]
-                       >> character_value_expression)
-                      | numeric_value_expression | string_value_expression;
+
+  concatenation_expression %= hold[character_factor >> concatenation_operator]
+                              >> character_value_expression;
+
+  value_expression %= concatenation_expression | numeric_value_expression
+                      | string_value_expression;
   value_expression.name ("value_expression");
 
   value_expression_string %= (hold[character_factor >> concatenation_operator]
                               >> character_value_expression)
-                             | numeric_value_expression
-                             | string_value_expression;
+                             | numeric_value_expression_string
+                             | string_value_expression_string;
   value_expression_string.name ("value_expression");
 
   column_name %= identifier;
