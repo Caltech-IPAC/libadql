@@ -136,6 +136,11 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type>
       numeric_value_expression;
 
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Operator_Numeric_Value_Expression (),
+                          boost::spirit::ascii::space_type>
+      operator_numeric_value_expression;
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Term (),
                           boost::spirit::ascii::space_type> term;
 

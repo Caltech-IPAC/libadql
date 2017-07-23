@@ -30,9 +30,10 @@ void ADQL_parser::init_columns ()
 
   operator_term %= factor >> char_ ("*/") >> term;
   term %= operator_term | factor;
-  numeric_value_expression
-      %= term >> -(char_ ("+-") >> numeric_value_expression_string);
-  
+  operator_numeric_value_expression %= term >> char_ ("+-")
+                                       >> numeric_value_expression;
+  numeric_value_expression %= operator_numeric_value_expression | term;
+
   term_string %= factor_string >> -(char_ ("*/") >> term_string);
   numeric_value_expression_string
       %= term_string >> -(char_ ("+-") >> numeric_value_expression_string);

@@ -85,6 +85,7 @@ def build(ctx):
                  'src/Query/Query_Specification/Joined_Table/ostream.cxx',
                  'src/Query/Query_Specification/Joined_Table/Qualified_Join/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Term_Wrap/ostream.cxx',
+                 'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Numeric_Value_Expression_Wrap/ostream.cxx',
                  'src/Query/Subquery/ostream.cxx',
                  'src/Query/Subquery/empty.cxx'
                  ]
