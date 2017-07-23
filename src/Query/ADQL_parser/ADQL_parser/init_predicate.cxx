@@ -39,20 +39,21 @@ void ADQL_parser::init_predicate ()
              | ascii::string ("<") | ascii::string (">")) >> value_expression;
 
   between_predicate
-      %= value_expression_string >> -lexeme[ascii::no_case[ascii::string ("NOT")]
+      %= value_expression >> -lexeme[ascii::no_case[ascii::string ("NOT")]
                                      > &boost::spirit::qi::space]
          >> lexeme[ascii::no_case["BETWEEN"] > &boost::spirit::qi::space]
-         >> value_expression_string
+         >> value_expression
          >> lexeme[ascii::no_case["AND"] > &boost::spirit::qi::space]
-         >> value_expression_string;
+         >> value_expression;
 
   in_predicate
-      %= value_expression_string >> -lexeme[ascii::no_case[ascii::string ("NOT")]
-                                     > boost::spirit::qi::space]
+      %= value_expression
+         >> -lexeme[ascii::no_case[ascii::string ("NOT")]
+                    > boost::spirit::qi::space]
          >> lexeme[ascii::no_case["IN"] > &boost::spirit::qi::space]
          >> (subquery | (lit ('(') >> (value_expression_string % ',') >> ')'));
 
-  null_predicate %= value_expression_string
+  null_predicate %= value_expression
                     >> lexeme[ascii::no_case["IS"] > &boost::spirit::qi::space]
                     >> -lexeme[ascii::no_case[ascii::string ("NOT")]
                                > &boost::spirit::qi::space]

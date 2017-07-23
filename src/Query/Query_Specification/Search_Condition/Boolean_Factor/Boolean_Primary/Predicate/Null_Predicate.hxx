@@ -5,7 +5,7 @@ namespace ADQL
 class Null_Predicate
 {
 public:
-  std::string column;
+  Value_Expression column;
   std::string Not;
 };
 
@@ -18,4 +18,4 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Null_Predicate,
-                           (std::string, column)(std::string, Not))
+                           (ADQL::Value_Expression, column)(std::string, Not))

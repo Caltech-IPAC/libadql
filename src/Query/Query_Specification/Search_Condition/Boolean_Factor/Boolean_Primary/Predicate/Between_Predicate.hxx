@@ -5,7 +5,7 @@ namespace ADQL
 class Between_Predicate
 {
 public:
-  std::string value, low, high;
+  Value_Expression value, low, high;
   std::string Not;
 };
 
@@ -18,6 +18,7 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Between_Predicate,
-                           (std::string, value)(std::string,
-                                                Not)(std::string,
-                                                     low)(std::string, high))
+                           (ADQL::Value_Expression,
+                            value)(std::string,
+                                   Not)(ADQL::Value_Expression,
+                                        low)(ADQL::Value_Expression, high))

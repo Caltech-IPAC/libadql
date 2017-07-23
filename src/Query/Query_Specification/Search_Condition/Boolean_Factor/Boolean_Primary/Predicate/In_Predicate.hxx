@@ -12,7 +12,7 @@ namespace ADQL
 class In_Predicate
 {
 public:
-  std::string value;
+  Value_Expression value;
   std::string Not;
 
   typedef boost::variant<std::vector<std::string>, Subquery> Variant;
@@ -53,6 +53,6 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::In_Predicate &p)
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::In_Predicate,
-                           (std::string,
+                           (ADQL::Value_Expression,
                             value)(std::string,
                                    Not)(ADQL::In_Predicate::Variant, variant))
