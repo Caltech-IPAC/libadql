@@ -76,8 +76,8 @@ struct ADQL_parser
       set_function_specification, value_expression_primary,
       value_expression_string, numeric_value_expression_string,
       numeric_primary_string, factor_string, term_string,
-      numeric_value_function, trig_function, math_function, cast_function,
-      user_defined_function, user_defined_function_name,
+      numeric_value_function_string, trig_function, math_function,
+      cast_function, user_defined_function, user_defined_function_name,
       user_defined_function_param, default_function_prefix,
       grouping_column_reference, grouping_column_reference_list,
       group_by_clause, sort_specification_list, order_by_clause,
@@ -154,8 +154,14 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Factor (),
                           boost::spirit::ascii::space_type> factor;
 
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Numeric_Primary (),
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Numeric_Primary (),
                           boost::spirit::ascii::space_type> numeric_primary;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Numeric_Value_Function (),
+                          boost::spirit::ascii::space_type>
+      numeric_value_function;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::String_Value_Expression (),

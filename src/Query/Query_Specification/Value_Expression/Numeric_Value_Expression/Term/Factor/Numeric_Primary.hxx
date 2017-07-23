@@ -1,10 +1,6 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
-
-#include <string>
-#include <iostream>
+#include "Numeric_Primary/Numeric_Value_Function.hxx"
 
 namespace ADQL
 {
