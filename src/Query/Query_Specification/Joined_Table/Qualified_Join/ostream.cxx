@@ -21,7 +21,6 @@ public:
   std::ostream &operator()(const ADQL::Joined_Table_Wrap &s) const
   {
     return os << s.get ();
-    // return os << "(" << s.get () << ")";
   }
 };
 }

@@ -1,26 +1,22 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
+#include "Term/Operator_Term.hxx"
 
-#include <iostream>
-#include <string>
+#include <boost/variant.hpp>
 
 namespace ADQL
 {
 class Term
 {
 public:
-  std::string factor, multiply_or_divide, term;
+  typedef boost::variant<std::string, Operator_Term> Variant;
+  Variant variant;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Term &term)
 {
-  return os << term.factor << term.multiply_or_divide << term.term;
+  return os << term.variant;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Term,
-                           (std::string,
-                            factor)(std::string,
-                                    multiply_or_divide)(std::string, term))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Term, (ADQL::Term::Variant, variant))

@@ -27,7 +27,9 @@ void ADQL_parser::init_columns ()
   /// right.  Otherwise the rule greedily recurses on itself and
   /// runs out of stack space.  With that reordering, the first term
   /// is always the same and the second part becomes optional.
-  term %= factor >> -(char_ ("*/") >> term_string);
+
+  operator_term %= factor >> char_ ("*/") >> term;
+  term %= operator_term | factor;
   numeric_value_expression
       %= term >> -(char_ ("+-") >> numeric_value_expression_string);
   
