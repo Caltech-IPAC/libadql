@@ -83,10 +83,10 @@ struct ADQL_parser
       order_by_clause, string_value_function, character_primary,
       character_factor, character_value_expression, match_value, pattern,
       string_value_expression_string, array_value_constructor_by_enumeration,
-      select_non_as_item, correlation_specification, boolean_value_expression,
-      boolean_literal, case_operand, when_operand, result_expression, result,
-      simple_when_clause, else_clause, simple_case, case_specification,
-      case_expression, any_expression;
+      select_non_as_item_string, correlation_specification,
+      boolean_value_expression, boolean_literal, case_operand, when_operand,
+      result_expression, result, simple_when_clause, else_clause, simple_case,
+      case_specification, case_expression, any_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;

@@ -2,6 +2,7 @@
 
 #include "Query_Specification_Wrap.hxx"
 #include "Query_Specification/As.hxx"
+#include "Query_Specification/Non_As.hxx"
 #include "Query_Specification/Where.hxx"
 #include "Query_Specification/Having.hxx"
 #include "Query_Specification/Table_Reference.hxx"
