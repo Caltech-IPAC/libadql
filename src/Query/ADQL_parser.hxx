@@ -154,6 +154,9 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Factor (),
                           boost::spirit::ascii::space_type> factor;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Numeric_Primary (),
+                          boost::spirit::ascii::space_type> numeric_primary;
+
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::String_Value_Expression (),
                           boost::spirit::ascii::space_type>
