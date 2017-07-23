@@ -87,7 +87,6 @@ void ADQL_parser::init_columns ()
                               >> character_value_expression)
                              | numeric_value_expression_string
                              | string_value_expression_string;
-  value_expression_string.name ("value_expression");
 
   column_name %= identifier;
   column_name.name ("column_name");
