@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../../Value_Expression.hxx"
+
 namespace ADQL
 {
 class Between_Predicate

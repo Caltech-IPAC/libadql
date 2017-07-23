@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../ostream_vector_string.hxx"
+#include "../../ostream_vector.hxx"
 namespace ADQL
 {
 class Named_Columns_Join

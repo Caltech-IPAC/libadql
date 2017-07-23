@@ -51,7 +51,7 @@ void ADQL_parser::init_predicate ()
          >> -lexeme[ascii::no_case[ascii::string ("NOT")]
                     > boost::spirit::qi::space]
          >> lexeme[ascii::no_case["IN"] > &boost::spirit::qi::space]
-         >> (subquery | (lit ('(') >> (value_expression_string % ',') >> ')'));
+         >> (subquery | (lit ('(') >> (value_expression % ',') >> ')'));
 
   null_predicate %= value_expression
                     >> lexeme[ascii::no_case["IS"] > &boost::spirit::qi::space]

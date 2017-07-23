@@ -1,10 +1,6 @@
 #pragma once
 
-#include <string>
-#include <sstream>
-#include <boost/fusion/include/adapt_struct.hpp>
-#include "boost/variant.hpp"
-#include "../../../../ostream_vector_string.hxx"
+#include "../../../../ostream_vector.hxx"
 #include "../../../../../Subquery.hxx"
 
 namespace ADQL
@@ -15,7 +11,7 @@ public:
   Value_Expression value;
   std::string Not;
 
-  typedef boost::variant<std::vector<std::string>, Subquery> Variant;
+  typedef boost::variant<std::vector<Value_Expression>, Subquery> Variant;
   Variant variant;
 };
 }
@@ -29,7 +25,7 @@ public:
   In_Predicate_Visitor (std::ostream &OS) : os (OS) {}
   In_Predicate_Visitor () = delete;
 
-  std::ostream &operator()(const std::vector<std::string> &v) const
+  std::ostream &operator()(const std::vector<ADQL::Value_Expression> &v) const
   {
     using namespace ADQL;
     return os << v;
