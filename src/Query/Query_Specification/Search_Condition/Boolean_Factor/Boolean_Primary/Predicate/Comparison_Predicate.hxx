@@ -1,15 +1,13 @@
 #pragma once
 
-#include <string>
-#include <sstream>
-#include <boost/fusion/include/adapt_struct.hpp>
+#include "../../../../Value_Expression.hxx"
 
 namespace ADQL
 {
 class Comparison_Predicate
 {
 public:
-  std::string left, right;
+  Value_Expression left, right;
   std::string op;
 };
 
@@ -21,5 +19,6 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Comparison_Predicate,
-                           (std::string, left)(std::string, op)(std::string,
-                                                                right))
+                           (ADQL::Value_Expression,
+                            left)(std::string, op)(ADQL::Value_Expression,
+                                                   right))

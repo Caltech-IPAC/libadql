@@ -33,10 +33,10 @@ void ADQL_parser::init_predicate ()
   from_clause.name ("from");
 
   comparison_predicate
-      %= value_expression_string
+      %= value_expression
          >> (ascii::string ("=") | ascii::string ("!=") | ascii::string ("<>")
              | ascii::string ("<=") | ascii::string (">=")
-             | ascii::string ("<") | ascii::string (">")) >> value_expression_string;
+             | ascii::string ("<") | ascii::string (">")) >> value_expression;
 
   between_predicate
       %= value_expression_string >> -lexeme[ascii::no_case[ascii::string ("NOT")]
