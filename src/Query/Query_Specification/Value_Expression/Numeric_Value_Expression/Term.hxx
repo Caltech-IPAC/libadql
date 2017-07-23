@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Term/Operator_Term.hxx"
+#include "Term/Factor.hxx"
 
 #include <boost/variant.hpp>
 

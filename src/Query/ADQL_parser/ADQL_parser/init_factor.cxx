@@ -184,6 +184,8 @@ void ADQL_parser::init_factor ()
   /// function name.
   numeric_primary %= numeric_value_function | value_expression_primary;
   numeric_primary.name ("numeric_primary");
+
+  factor %= -sign >> numeric_primary;
   factor_string %= -sign >> numeric_primary;
   factor_string.name ("factor");
 }
