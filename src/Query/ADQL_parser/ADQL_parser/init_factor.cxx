@@ -98,7 +98,7 @@ void ADQL_parser::init_factor ()
 
   /// We do not have a rule for default_function_prefix since, being
   /// optional, it does not change the parsing rules.
-  
+
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
   user_defined_function_name %= regular_identifier
@@ -110,12 +110,10 @@ void ADQL_parser::init_factor ()
   user_defined_function_name.name ("user_defined_function_name");
   user_defined_function_param %= value_expression_string;
   user_defined_function_param.name ("user_defined_function_param");
-  user_defined_function
-      %= hold[user_defined_function_name >> char_ ('(')]
-         /// Use this awkward syntax instead of the usual list parser so
-         /// that the attribute is still a string overall.
-         >> -(user_defined_function_param
-              >> *(char_ (',') >> user_defined_function_param)) >> char_ (')');
+
+  user_defined_function %= hold[user_defined_function_name >> '(']
+                           >> (user_defined_function_param % ',') >> ')';
+
   user_defined_function.name ("user_defined_function");
 
   /// Special case casting to numeric, since some functions

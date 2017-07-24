@@ -11,15 +11,30 @@ namespace ADQL
 class User_Defined_Function
 {
 public:
-  std::string value;
+  std::string function;
+  std::vector<std::string> args;
 };
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::User_Defined_Function &user_defined_function)
 {
-  return os << user_defined_function.value;
+  os << user_defined_function.function << '(';
+  for (auto a = user_defined_function.args.begin ();
+       a != user_defined_function.args.end ();)
+    {
+      os << *a;
+      ++a;
+      if (a != user_defined_function.args.end ())
+        {
+          os << '<';
+        }
+    }
+  os << ')';
+  return os;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::User_Defined_Function, (std::string, value))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::User_Defined_Function,
+                           (std::string, function)(std::vector<std::string>,
+                                                   args))
