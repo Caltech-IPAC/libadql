@@ -68,7 +68,8 @@ struct ADQL_parser
       column_name, sort_key, ordering_specification, sort_specification,
       concatenation_operator, set_function_type, column_reference_string,
       table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
-      catalog_name_string, correlation_name, qualifier_string;
+      catalog_name_string, correlation_name, qualifier_string,
+      trig_one_arg_names;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> general_literal,
@@ -163,20 +164,20 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type>
       numeric_value_function;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Trig_Function (),
-                          boost::spirit::ascii::space_type>
-      trig_function;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Trig_Function (),
+                          boost::spirit::ascii::space_type> trig_function;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Math_Function (),
-                          boost::spirit::ascii::space_type>
-      math_function;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Trig_One_Arg (),
+                          boost::spirit::ascii::space_type> trig_one_arg;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Cast_Function (),
-                          boost::spirit::ascii::space_type>
-      cast_function;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Trig_Two_Arg (),
+                          boost::spirit::ascii::space_type> trig_two_arg;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Math_Function (),
+                          boost::spirit::ascii::space_type> math_function;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Cast_Function (),
+                          boost::spirit::ascii::space_type> cast_function;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::User_Defined_Function (),

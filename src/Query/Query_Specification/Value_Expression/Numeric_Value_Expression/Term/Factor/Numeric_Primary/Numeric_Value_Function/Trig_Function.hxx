@@ -1,25 +1,25 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
+#include "Trig_Function/Trig_One_Arg.hxx"
+#include "Trig_Function/Trig_Two_Arg.hxx"
 
-#include <string>
-#include <iostream>
+#include <boost/variant.hpp>
 
 namespace ADQL
 {
 class Trig_Function
 {
 public:
-  std::string value;
+  typedef boost::variant<Trig_One_Arg, Trig_Two_Arg> Variant;
+  Variant variant;
 };
 
-inline std::ostream &
-operator<<(std::ostream &os,
-           const ADQL::Trig_Function &trig_function)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Trig_Function &trig_function)
 {
-  return os << trig_function.value;
+  return os << trig_function.variant;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Trig_Function, (std::string, value))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Trig_Function,
+                           (ADQL::Trig_Function::Variant, variant))

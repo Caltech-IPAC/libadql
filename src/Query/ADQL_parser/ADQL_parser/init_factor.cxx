@@ -96,19 +96,22 @@ void ADQL_parser::init_factor ()
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
 
-  trig_function %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
-                                 | ascii::no_case[ascii::string ("ASIN")]
-                                 | ascii::no_case[ascii::string ("ATAN")]
-                                 | ascii::no_case[ascii::string ("COS")]
-                                 | ascii::no_case[ascii::string ("COT")]
-                                 | ascii::no_case[ascii::string ("SIN")]
-                                 | ascii::no_case[ascii::string ("TAN")])
-                                >> &nonidentifier_character]] > char_ ('(')
-                    > numeric_value_expression_string > char_ (')'))
-                   | (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
-                                  >> &nonidentifier_character]] > char_ ('(')
-                      > numeric_value_expression_string > char_ (',')
-                      > numeric_value_expression_string > char_ (')'));
+  trig_one_arg_names %= ascii::no_case[ascii::string ("ACOS")]
+                        | ascii::no_case[ascii::string ("ASIN")]
+                        | ascii::no_case[ascii::string ("ATAN")]
+                        | ascii::no_case[ascii::string ("COS")]
+                        | ascii::no_case[ascii::string ("COT")]
+                        | ascii::no_case[ascii::string ("SIN")]
+                        | ascii::no_case[ascii::string ("TAN")];
+  trig_one_arg %= (hold[lexeme[trig_one_arg_names >> &nonidentifier_character]]
+                   > '(' > numeric_value_expression_string > ')');
+
+  trig_two_arg %= (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
+                               >> &nonidentifier_character]] > '('
+                   > numeric_value_expression_string > ','
+                   > numeric_value_expression_string > ')');
+
+  trig_function %= trig_one_arg | trig_two_arg;
   trig_function.name ("trig_function");
 
   math_function
