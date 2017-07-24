@@ -1,10 +1,6 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
-
-#include <iostream>
-#include <string>
+#include "Value_Expression_Primary/Array_Constructor.hxx"
 
 namespace ADQL
 {

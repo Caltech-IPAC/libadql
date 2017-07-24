@@ -86,7 +86,7 @@ struct ADQL_parser
       grouping_column_reference_list, group_by_clause, sort_specification_list,
       order_by_clause, string_value_function, character_primary,
       character_factor, character_value_expression, match_value, pattern,
-      string_value_expression_string, array_value_constructor_by_enumeration,
+      string_value_expression_string, array_value_constructor_by_enumeration_string,
       correlation_specification, boolean_value_expression, boolean_literal,
       case_operand, when_operand, result_expression, result,
       simple_when_clause, else_clause, simple_case, case_specification,
@@ -209,6 +209,10 @@ struct ADQL_parser
                           ADQL::Value_Expression_Primary (),
                           boost::spirit::ascii::space_type>
       value_expression_primary;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Array_Constructor (),
+                          boost::spirit::ascii::space_type> array_constructor;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Table_Correlation (),

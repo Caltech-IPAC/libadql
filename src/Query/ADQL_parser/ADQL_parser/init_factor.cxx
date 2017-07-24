@@ -89,12 +89,21 @@ void ADQL_parser::init_factor ()
   /// value_expression part of the array element.  So instead we
   /// implement array elements as optional decorators after an expression.
   value_expression_primary
-      %= (array_value_constructor_by_enumeration | unsigned_value_specification
+      %= (array_value_constructor_by_enumeration_string | unsigned_value_specification
           | column_reference_string | set_function_specification
           | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
+
+  /// Custom array_expression so that SQL 99 array literals can pass
+  /// through
+  // array_constructor
+  //     %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
+  //             >> -(value_expression_string
+  //                  >> *(char_ (',') >> value_expression_string))
+  //             > char_ (']')];
+  // array_constructor.name ("array_constructor");
 
   /// We do not have a rule for default_function_prefix since, being
   /// optional, it does not change whether something parses.
@@ -188,7 +197,7 @@ void ADQL_parser::init_factor ()
             >> -(char_ (',') > signed_integer) > char_ (')'));
 
   value_expression_primary_string
-      %= (array_value_constructor_by_enumeration | unsigned_value_specification
+      %= (array_value_constructor_by_enumeration_string | unsigned_value_specification
           | column_reference_string | set_function_specification
           | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])

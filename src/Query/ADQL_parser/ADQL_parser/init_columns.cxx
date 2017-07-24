@@ -57,13 +57,17 @@ void ADQL_parser::init_columns ()
   string_value_expression_string %= character_value_expression;
 
   /// Custom array_expression so that SQL 99 array literals can pass
-  /// through
-  array_value_constructor_by_enumeration
+  /// through.
+
+  /// This has to be in a different translation unit than
+  /// value_expression_string.  Otherwise Spirit will recurse
+  /// infinitely trying to optimize it.
+  array_value_constructor_by_enumeration_string
       %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
               >> -(value_expression_string
                    >> *(char_ (',') >> value_expression_string))
               > char_ (']')];
-  array_value_constructor_by_enumeration.name (
+  array_value_constructor_by_enumeration_string.name (
       "array_value_constructor_by_enumeration");
 
   // FIXME: value_expression should also have a
