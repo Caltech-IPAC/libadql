@@ -1,25 +1,26 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
+#include "Math_Function/Math_Zero_Arg.hxx"
+#include "Math_Function/Math_One_Arg.hxx"
+#include "Math_Function/Math_Two_Arg.hxx"
 
-#include <string>
-#include <iostream>
+#include <boost/variant.hpp>
 
 namespace ADQL
 {
 class Math_Function
 {
 public:
-  std::string value;
+  typedef boost::variant<Math_Zero_Arg, Math_One_Arg, Math_Two_Arg> Variant;
+  Variant variant;
 };
 
-inline std::ostream &
-operator<<(std::ostream &os,
-           const ADQL::Math_Function &math_function)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Math_Function &math_function)
 {
-  return os << math_function.value;
+  return os << math_function.variant;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Math_Function, (std::string, value))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Math_Function,
+                           (ADQL::Math_Function::Variant, variant))

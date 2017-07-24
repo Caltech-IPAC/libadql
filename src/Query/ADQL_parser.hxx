@@ -69,7 +69,8 @@ struct ADQL_parser
       concatenation_operator, set_function_type, column_reference_string,
       table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
       catalog_name_string, correlation_name, qualifier_string,
-      trig_one_arg_names;
+      trig_one_arg_names, math_zero_arg_names, math_one_arg_names,
+      math_two_arg_names;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> general_literal,
@@ -175,6 +176,15 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Math_Function (),
                           boost::spirit::ascii::space_type> math_function;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Math_Zero_Arg (),
+                          boost::spirit::ascii::space_type> math_zero_arg;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Math_One_Arg (),
+                          boost::spirit::ascii::space_type> math_one_arg;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Math_Two_Arg (),
+                          boost::spirit::ascii::space_type> math_two_arg;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Cast_Function (),
                           boost::spirit::ascii::space_type> cast_function;
