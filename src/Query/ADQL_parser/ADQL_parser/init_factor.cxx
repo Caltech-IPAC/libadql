@@ -96,18 +96,17 @@ void ADQL_parser::init_factor ()
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
 
-  /// default_function_prefix is a bit useless since it is optional.
-  default_function_prefix %= ascii::string ("udf_");
-  default_function_prefix.name ("default_function_prefix");
+  /// We do not have a rule for default_function_prefix since, being
+  /// optional, it does not change the parsing rules.
+  
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
-  user_defined_function_name
-      %= -default_function_prefix
-         >> (regular_identifier | ascii::no_case[ascii::string ("RIGHT")]
-             | ascii::no_case[ascii::string ("LEFT")]
-             | ascii::no_case[ascii::string ("UPPER")]
-             | ascii::no_case[ascii::string ("LOWER")]
-             | ascii::no_case[ascii::string ("TRIM")]);
+  user_defined_function_name %= regular_identifier
+                                | ascii::no_case[ascii::string ("RIGHT")]
+                                | ascii::no_case[ascii::string ("LEFT")]
+                                | ascii::no_case[ascii::string ("UPPER")]
+                                | ascii::no_case[ascii::string ("LOWER")]
+                                | ascii::no_case[ascii::string ("TRIM")];
   user_defined_function_name.name ("user_defined_function_name");
   user_defined_function_param %= value_expression_string;
   user_defined_function_param.name ("user_defined_function_param");

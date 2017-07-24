@@ -72,7 +72,7 @@ struct ADQL_parser
       table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
       catalog_name_string, correlation_name, qualifier_string,
       trig_one_arg_names, math_zero_arg_names, math_one_arg_names,
-      math_two_arg_names, cast_as;
+      math_two_arg_names, cast_as, user_defined_function_name;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type> general_literal,
@@ -82,8 +82,7 @@ struct ADQL_parser
       numeric_primary_string, factor_string, term_string,
       numeric_value_function_string, trig_function_string,
       math_function_string, cast_function_string, user_defined_function_string,
-      user_defined_function_name, user_defined_function_param,
-      default_function_prefix, grouping_column_reference,
+      user_defined_function_param, grouping_column_reference,
       grouping_column_reference_list, group_by_clause, sort_specification_list,
       order_by_clause, string_value_function, character_primary,
       character_factor, character_value_expression, match_value, pattern,
