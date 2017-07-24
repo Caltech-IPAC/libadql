@@ -121,14 +121,12 @@ void ADQL_parser::init_factor ()
 
   /// Special case casting to numeric, since some functions
   /// (e.g. mod()) only take numeric arguments, not double precision.
-  cast_function
-      %= hold[ascii::no_case[ascii::string ("CAST")] >> char_ ('(')
-              >> value_expression_string >> no_skip[boost::spirit::qi::space]
-              >> ascii::no_case[ascii::string ("AS")]
-              >> no_skip[boost::spirit::qi::space]
-              > (ascii::no_case[ascii::string ("NUMERIC")]
-                 | ascii::no_case[ascii::string ("FLOAT4")]
-                 | ascii::no_case[ascii::string ("FLOAT8")]) > char_ (')')];
+
+  cast_as %= ascii::no_case[ascii::string ("NUMERIC")]
+             | ascii::no_case[ascii::string ("FLOAT4")]
+             | ascii::no_case[ascii::string ("FLOAT8")];
+
+  cast_function %= value_expression >> cast_as;
   cast_function.name ("cast_function");
   // FIXME: numeric_value_function should have
   // numeric_geometry_function

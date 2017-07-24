@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../../../Value_Expression_Wrap.hxx"
+
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
@@ -11,15 +13,18 @@ namespace ADQL
 class Cast_Function
 {
 public:
-  std::string value;
+  Value_Expression_Wrap expression;
+  std::string as;
 };
 
-inline std::ostream &
-operator<<(std::ostream &os,
-           const ADQL::Cast_Function &cast_function)
+inline std::ostream &operator<<(std::ostream &os,
+                                const ADQL::Cast_Function &cast_function)
 {
-  return os << cast_function.value;
+  return os << "CAST(" << cast_function.expression << " AS "
+            << cast_function.as << ")";
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Cast_Function, (std::string, value))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Cast_Function,
+                           (ADQL::Value_Expression_Wrap,
+                            expression)(std::string, as))
