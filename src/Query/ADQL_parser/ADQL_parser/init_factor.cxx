@@ -96,58 +96,6 @@ void ADQL_parser::init_factor ()
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
 
-  trig_one_arg_names %= ascii::no_case[ascii::string ("ACOS")]
-                        | ascii::no_case[ascii::string ("ASIN")]
-                        | ascii::no_case[ascii::string ("ATAN")]
-                        | ascii::no_case[ascii::string ("COS")]
-                        | ascii::no_case[ascii::string ("COT")]
-                        | ascii::no_case[ascii::string ("SIN")]
-                        | ascii::no_case[ascii::string ("TAN")];
-  trig_one_arg %= (hold[lexeme[trig_one_arg_names >> &nonidentifier_character]]
-                   > '(' > numeric_value_expression > ')');
-
-  trig_two_arg
-      %= (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
-                      >> &nonidentifier_character]] > '('
-          > numeric_value_expression > ',' > numeric_value_expression > ')');
-
-  trig_function %= trig_one_arg | trig_two_arg;
-  trig_function.name ("trig_function");
-
-  /// Include names that optionally have zero arg.
-  math_zero_arg_names %= ascii::no_case[ascii::string ("PI")]
-                         | ascii::no_case[ascii::string ("RAND")];
-
-  math_zero_arg %= math_zero_arg_names >> '(' >> ')';
-
-  /// Include names that optionally have one arg.
-  math_one_arg_names %= ascii::no_case[ascii::string ("ABS")]
-                        | ascii::no_case[ascii::string ("CEILING")]
-                        | ascii::no_case[ascii::string ("DEGREES")]
-                        | ascii::no_case[ascii::string ("EXP")]
-                        | ascii::no_case[ascii::string ("FLOOR")]
-                        | ascii::no_case[ascii::string ("LOG10")]
-                        | ascii::no_case[ascii::string ("LOG")]
-                        | ascii::no_case[ascii::string ("RADIANS")]
-                        | ascii::no_case[ascii::string ("SQRT")]
-                        | ascii::no_case[ascii::string ("RAND")]
-                        | ascii::no_case[ascii::string ("ROUND")]
-                        | ascii::no_case[ascii::string ("TRUNCATE")];
-
-  math_one_arg %= math_one_arg_names >> '(' >> numeric_value_expression >> ')';
-
-  /// Include names that optionally have two args.
-  math_two_arg_names %= ascii::no_case[ascii::string ("MOD")]
-                        | ascii::no_case[ascii::string ("POWER")]
-                        | ascii::no_case[ascii::string ("ROUND")]
-                        | ascii::no_case[ascii::string ("TRUNCATE")];
-
-  math_two_arg %= math_two_arg_names >> '(' >> numeric_value_expression >> ','
-                  >> numeric_value_expression >> ')';
-
-  math_function %= math_zero_arg | math_one_arg | math_two_arg;
-  math_function.name ("math_function");
-
   /// default_function_prefix is a bit useless since it is optional.
   default_function_prefix %= ascii::string ("udf_");
   default_function_prefix.name ("default_function_prefix");
