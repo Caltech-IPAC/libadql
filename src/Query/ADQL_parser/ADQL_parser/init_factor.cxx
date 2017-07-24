@@ -97,7 +97,7 @@ void ADQL_parser::init_factor ()
   value_expression_primary.name ("value_expression_primary");
 
   /// We do not have a rule for default_function_prefix since, being
-  /// optional, it does not change the parsing rules.
+  /// optional, it does not change whether something parses.
 
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
@@ -135,9 +135,14 @@ void ADQL_parser::init_factor ()
   numeric_primary %= numeric_value_function | value_expression_primary;
   numeric_primary.name ("numeric_primary");
 
-  factor %= -sign >> numeric_primary_string;
+  factor %= -sign >> numeric_primary;
   factor.name ("factor");
 
+
+
+
+
+  
   trig_function_string
       %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
                        | ascii::no_case[ascii::string ("ASIN")]
@@ -182,6 +187,13 @@ void ADQL_parser::init_factor ()
             > numeric_value_expression_string
             >> -(char_ (',') > signed_integer) > char_ (')'));
 
+  value_expression_primary_string
+      %= (array_value_constructor_by_enumeration | unsigned_value_specification
+          | column_reference_string | set_function_specification
+          | case_expression | any_expression
+          | hold[char_ ('(') >> value_expression_string >> char_ (')')])
+         >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
+  
   user_defined_function_param_string %= value_expression_string;
   user_defined_function_string
       %= hold[user_defined_function_name >> char_ ('(')]
@@ -203,6 +215,6 @@ void ADQL_parser::init_factor ()
                                    | cast_function_string
                                    | user_defined_function_string;
   numeric_primary_string %= numeric_value_function_string
-                            | value_expression_primary;
+                            | value_expression_primary_string;
   factor_string %= -sign >> numeric_primary_string;
 }

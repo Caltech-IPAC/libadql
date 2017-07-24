@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Numeric_Primary/Numeric_Value_Function.hxx"
+#include "../../../Value_Expression_Primary_Wrap.hxx"
+#include "../../../Value_Expression_Primary.hxx"
 
 #include <boost/variant.hpp>
 
@@ -9,7 +11,8 @@ namespace ADQL
 class Numeric_Primary
 {
 public:
-  typedef boost::variant<std::string, Numeric_Value_Function> Variant;
+  typedef boost::variant<Value_Expression_Primary_Wrap, Numeric_Value_Function>
+      Variant;
   Variant variant;
 };
 
