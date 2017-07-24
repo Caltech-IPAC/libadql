@@ -82,7 +82,7 @@ struct ADQL_parser
       numeric_primary_string, factor_string, term_string,
       numeric_value_function_string, trig_function_string,
       math_function_string, cast_function_string, user_defined_function_string,
-      user_defined_function_param, grouping_column_reference,
+      user_defined_function_param_string, grouping_column_reference,
       grouping_column_reference_list, group_by_clause, sort_specification_list,
       order_by_clause, string_value_function, character_primary,
       character_factor, character_value_expression, match_value, pattern,
@@ -202,7 +202,8 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression (),
-                          boost::spirit::ascii::space_type> value_expression;
+                          boost::spirit::ascii::space_type> value_expression,
+    user_defined_function_param;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Table_Correlation (),

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Value_Expression/Value_Expression_Wrap.hxx"
+
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
@@ -12,7 +14,7 @@ class User_Defined_Function
 {
 public:
   std::string function;
-  std::vector<std::string> args;
+  std::vector<ADQL::Value_Expression_Wrap> args;
 };
 
 inline std::ostream &
@@ -36,5 +38,6 @@ operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::User_Defined_Function,
-                           (std::string, function)(std::vector<std::string>,
-                                                   args))
+                           (std::string,
+                            function)(std::vector<ADQL::Value_Expression_Wrap>,
+                                      args))

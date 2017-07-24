@@ -108,7 +108,7 @@ void ADQL_parser::init_factor ()
                                 | ascii::no_case[ascii::string ("LOWER")]
                                 | ascii::no_case[ascii::string ("TRIM")];
   user_defined_function_name.name ("user_defined_function_name");
-  user_defined_function_param %= value_expression_string;
+  user_defined_function_param %= value_expression;
   user_defined_function_param.name ("user_defined_function_param");
 
   user_defined_function %= hold[user_defined_function_name >> '(']
@@ -182,12 +182,14 @@ void ADQL_parser::init_factor ()
             > numeric_value_expression_string
             >> -(char_ (',') > signed_integer) > char_ (')'));
 
+  user_defined_function_param_string %= value_expression_string;
   user_defined_function_string
       %= hold[user_defined_function_name >> char_ ('(')]
          /// Use this awkward syntax instead of the usual list parser so
          /// that the attribute is still a string overall.
-         >> -(user_defined_function_param
-              >> *(char_ (',') >> user_defined_function_param)) >> char_ (')');
+         >> -(user_defined_function_param_string
+              >> *(char_ (',') >> user_defined_function_param_string))
+         >> char_ (')');
 
   cast_function_string
       %= hold[ascii::no_case[ascii::string ("CAST")] >> char_ ('(')
