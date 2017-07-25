@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Value_Expression_Wrap.hxx"
+
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
@@ -11,7 +13,7 @@ namespace ADQL
 class Value_Subexpression
 {
 public:
-  std::string expression;
+  Value_Expression_Wrap expression;
 };
 
 inline std::ostream &
@@ -23,4 +25,4 @@ operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Value_Subexpression,
-                           (std::string, expression))
+                           (ADQL::Value_Expression_Wrap, expression))

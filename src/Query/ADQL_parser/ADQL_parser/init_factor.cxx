@@ -88,7 +88,7 @@ void ADQL_parser::init_factor ()
   /// value_expression part of the array element.  So instead we
   /// implement array elements as optional decorators after an expression.
 
-  value_subexpression %= hold['(' >> value_expression_string >> ')'];
+  value_subexpression %= hold['(' >> value_expression >> ')'];
   value_subexpression.name ("value_subexpression");
 
   array_index %= hold['[' >> numeric_value_expression >> ']'];
