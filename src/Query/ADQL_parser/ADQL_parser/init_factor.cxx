@@ -91,14 +91,17 @@ void ADQL_parser::init_factor ()
 
   value_subexpression %= hold['(' >> value_expression_string >> ')'];
   value_subexpression.name ("value_subexpression");
-  
+
+  array_index %= '[' >> numeric_value_expression_string >> ']';
+  array_index.name ("array_index");
+
   value_expression_primary
       %= (array_value_constructor_by_enumeration_string
           | unsigned_value_specification | column_reference_string
           | set_function_specification_string | case_expression_string
           | any_expression_string
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
-         >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
+         >> *array_index;
   value_expression_primary.name ("value_expression_primary");
 
   /// Custom array_expression so that SQL 99 array literals can pass

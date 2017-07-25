@@ -90,7 +90,8 @@ struct ADQL_parser
       array_value_constructor_by_enumeration_string, correlation_specification,
       boolean_value_expression, boolean_literal, case_operand, when_operand,
       result_expression, result, simple_when_clause, else_clause, simple_case,
-      case_specification, case_expression_string, any_expression_string;
+      case_specification, case_expression_string, any_expression_string,
+      array_index;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;

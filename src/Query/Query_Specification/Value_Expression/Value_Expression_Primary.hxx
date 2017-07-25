@@ -12,15 +12,22 @@ class Value_Expression_Primary
 {
 public:
   std::string expression;
+  std::vector<std::string> array_indices;
 };
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::Value_Expression_Primary &value_expression_primary)
 {
-  return os << value_expression_primary.expression;
+  os << value_expression_primary.expression;
+  for (auto &index : value_expression_primary.array_indices)
+    {
+      os << '[' << index << ']';
+    }
+  return os;
 }
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Value_Expression_Primary,
-                           (std::string, expression))
+                           (std::string, expression)(std::vector<std::string>,
+                                                     array_indices))
