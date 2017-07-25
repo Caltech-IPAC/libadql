@@ -35,7 +35,8 @@ void ADQL_parser::init_factor ()
                                  | ascii::no_case[ascii::string ("ALL")])
                                 >> &boost::spirit::qi::space]];
   set_quantifier.name ("set_quantifier");
-  general_set_function
+  general_set_function %= general_set_function_string;
+  general_set_function_string
       %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
           > char_ ('(')) >> -set_quantifier > value_expression_string
          > char_ (')');
@@ -79,8 +80,7 @@ void ADQL_parser::init_factor ()
   case_expression %= case_specification;
   case_expression.name ("case_expression");
 
-  any_expression %= ascii::no_case["ANY"] >> '(' > value_expression
-                    > ')';
+  any_expression %= ascii::no_case["ANY"] >> '(' > value_expression > ')';
   any_expression.name ("any_expression");
 
   /// The BNF for SQL 99 uses an array_element_reference intermediate
@@ -150,13 +150,12 @@ void ADQL_parser::init_factor ()
   numeric_primary %= numeric_value_function | value_expression_primary;
   numeric_primary.name ("numeric_primary");
 
-  // factor %= -sign >> numeric_primary;
   factor %= -sign >> numeric_primary;
   factor.name ("factor");
 
   set_function_specification_string
       %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
-               >> char_ ('*')] > char_ (')')) | general_set_function;
+               >> char_ ('*')] > char_ (')')) | general_set_function_string;
 
   case_expression_string %= case_specification;
 

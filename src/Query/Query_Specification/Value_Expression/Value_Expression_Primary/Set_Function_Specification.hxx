@@ -1,26 +1,26 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
+#include "Set_Function_Specification/General_Set_Function.hxx"
 
-#include <iostream>
-#include <string>
+#include <boost/variant.hpp>
 
 namespace ADQL
 {
 class Set_Function_Specification
 {
 public:
-  std::string expression;
+  typedef boost::variant<std::string, General_Set_Function> Variant;
+  Variant variant;
 };
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::Set_Function_Specification &set_function_specification)
 {
-  return os << set_function_specification.expression;
+  return os << set_function_specification.variant;
 }
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Set_Function_Specification,
-                           (std::string, expression))
+                           (ADQL::Set_Function_Specification::Variant,
+                            variant))
