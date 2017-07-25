@@ -79,7 +79,8 @@ void ADQL_parser::init_factor ()
   case_expression %= case_specification;
   case_expression.name ("case_expression");
 
-  any_expression %= any_expression_string;
+  any_expression %= ascii::no_case["ANY"] >> '(' > value_expression
+                    > ')';
   any_expression.name ("any_expression");
 
   /// The BNF for SQL 99 uses an array_element_reference intermediate
