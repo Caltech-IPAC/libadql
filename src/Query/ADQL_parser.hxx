@@ -89,9 +89,9 @@ struct ADQL_parser
       string_value_expression_string,
       array_value_constructor_by_enumeration_string, correlation_specification,
       boolean_value_expression, boolean_literal, case_operand, when_operand,
-      result_expression, result, simple_when_clause, else_clause, simple_case,
-      case_specification, case_expression_string, any_expression_string,
-      count_star;
+      result_expression_string, result_string, simple_when_clause_string,
+      else_clause_string, simple_case_string, case_specification_string,
+      case_expression_string, any_expression_string, count_star;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -230,12 +230,48 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::General_Set_Args (),
-                          boost::spirit::ascii::space_type>
-      general_set_args;
+                          boost::spirit::ascii::space_type> general_set_args;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Case_Expression (),
                           boost::spirit::ascii::space_type> case_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Case_Abbreviation (),
+                          boost::spirit::ascii::space_type> case_abbreviation;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Nullif (),
+                          boost::spirit::ascii::space_type> nullif;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coalesce (),
+                          boost::spirit::ascii::space_type> coalesce;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Case_Specification (),
+                          boost::spirit::ascii::space_type> case_specification;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Simple_Case (),
+                          boost::spirit::ascii::space_type> simple_case;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Simple_Whens (),
+                          boost::spirit::ascii::space_type> simple_whens;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Simple_When (),
+                          boost::spirit::ascii::space_type> simple_when;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Searched_Case (),
+                          boost::spirit::ascii::space_type> searched_case;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Searched_When (),
+                          boost::spirit::ascii::space_type> searched_when;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Result (),
+                          boost::spirit::ascii::space_type> result, result_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Else_Clause (),
+                          boost::spirit::ascii::space_type> else_clause;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Any_Expression (),
                           boost::spirit::ascii::space_type> any_expression;
