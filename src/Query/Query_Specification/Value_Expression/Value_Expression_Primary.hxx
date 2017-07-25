@@ -22,17 +22,9 @@ public:
   std::vector<std::string> array_indices;
 };
 
-inline std::ostream &
+std::ostream &
 operator<<(std::ostream &os,
-           const ADQL::Value_Expression_Primary &value_expression_primary)
-{
-  os << value_expression_primary.variant;
-  for (auto &index : value_expression_primary.array_indices)
-    {
-      os << '[' << index << ']';
-    }
-  return os;
-}
+           const ADQL::Value_Expression_Primary &value_expression_primary);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Value_Expression_Primary,
