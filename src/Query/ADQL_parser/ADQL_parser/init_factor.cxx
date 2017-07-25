@@ -35,11 +35,8 @@ void ADQL_parser::init_factor ()
                                  | ascii::no_case[ascii::string ("ALL")])
                                 >> &boost::spirit::qi::space]];
   set_quantifier.name ("set_quantifier");
-  general_set_function %= general_set_function_string;
-  general_set_function_string
-      %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
-          > char_ ('(')) >> -set_quantifier > value_expression_string
-         > char_ (')');
+  general_set_args = -set_quantifier >> value_expression;
+  general_set_function %= set_function_type >> '(' > general_set_args > ')';
   general_set_function.name ("general_set_function");
 
   count_star %= ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
@@ -153,6 +150,10 @@ void ADQL_parser::init_factor ()
   factor %= -sign >> numeric_primary;
   factor.name ("factor");
 
+  general_set_function_string
+      %= (hold[lexeme[set_function_type >> &nonidentifier_character]]
+          > char_ ('(')) >> -set_quantifier > value_expression_string
+         > char_ (')');
   set_function_specification_string
       %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
                >> char_ ('*')] > char_ (')')) | general_set_function_string;

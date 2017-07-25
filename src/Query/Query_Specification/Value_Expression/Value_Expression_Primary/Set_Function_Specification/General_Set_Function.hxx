@@ -1,25 +1,25 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
-
-#include <iostream>
-#include <string>
+#include "General_Set_Function/General_Set_Args.hxx"
 
 namespace ADQL
 {
 class General_Set_Function
 {
 public:
-  std::string general;
+  std::string set_function_type;
+  General_Set_Args args;
 };
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::General_Set_Function &general_set_function)
 {
-  return os << general_set_function.general;
+  return os << general_set_function.set_function_type << '('
+            << general_set_function.args << ')';
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::General_Set_Function, (std::string, general))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::General_Set_Function,
+                           (std::string,
+                            set_function_type)(ADQL::General_Set_Args, args))

@@ -229,6 +229,11 @@ struct ADQL_parser
       general_set_function;
 
   boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::General_Set_Args (),
+                          boost::spirit::ascii::space_type>
+      general_set_args;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Case_Expression (),
                           boost::spirit::ascii::space_type> case_expression;
 
