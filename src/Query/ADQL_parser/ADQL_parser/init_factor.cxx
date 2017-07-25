@@ -53,27 +53,22 @@ void ADQL_parser::init_factor ()
   result %= result_string;
   // result %= result_expression | ascii::no_case[ascii::string ("NULL")];
   result.name ("result");
-  simple_when %= ascii::no_case["WHEN"]
-                 > &no_skip[boost::spirit::qi::space] > when_operand
-                 > ascii::no_case["THEN"]
+  simple_when %= ascii::no_case["WHEN"] > &no_skip[boost::spirit::qi::space]
+                 > when_operand > ascii::no_case["THEN"]
                  > &no_skip[boost::spirit::qi::space] > result;
   simple_when.name ("simple_when_clause");
 
   simple_whens %= simple_when >> *simple_when;
   simple_whens.name ("simple_whens");
-  
+
   else_clause %= ascii::no_case["ELSE"] >> &no_skip[boost::spirit::qi::space]
                  >> result;
   else_clause.name ("else_clause");
 
   /// boost::spirit gets wonky if I try to use the '>' operator for
   /// simple_whens
-  simple_case %= ascii::no_case["CASE"]
-    >> &no_skip[boost::spirit::qi::space]
-    > case_operand
-    >> simple_whens
-    >> -else_clause
-    > ascii::no_case["END"];
+  simple_case %= value_expression >> simple_whens >> -else_clause
+                 > ascii::no_case["END"];
   simple_case.name ("simple_case");
 
   // searched_when %= ascii::no_case[ascii::string ("WHEN")]
@@ -81,12 +76,14 @@ void ADQL_parser::init_factor ()
   //                  >> ascii::no_case[ascii::string ("THEN")]
   //                  >> result;
 
-  searched_case %= ascii::no_case["CASE"] >> &no_skip[boost::spirit::qi::space]
-                   >> searched_when >> -else_clause
+  searched_case %= searched_when >> -else_clause
                    >> &no_skip[boost::spirit::qi::space]
                    >> ascii::no_case["END"];
-
-  case_specification %= simple_case | searched_case;
+  searched_case.name ("searched_case");
+  
+  case_specification %= ascii::no_case["CASE"]
+                        >> &no_skip[boost::spirit::qi::space]
+                        > (simple_case | searched_case);
   case_specification.name ("case_specification");
 
   nullif %= ascii::no_case["NULLIF"] >> '(' >> value_expression_string >> ','
@@ -185,18 +182,17 @@ void ADQL_parser::init_factor ()
       %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
                >> char_ ('*')] > char_ (')')) | general_set_function_string;
 
-  simple_when_clause_string %= ascii::no_case[ascii::string ("WHEN")]
-                               > no_skip[boost::spirit::qi::space]
-                               > when_operand
-                               > no_skip[boost::spirit::qi::space]
-                               > ascii::no_case[ascii::string ("THEN")]
-                               > no_skip[boost::spirit::qi::space] > result_string;
+  simple_when_clause_string
+      %= ascii::no_case[ascii::string ("WHEN")]
+         >> no_skip[boost::spirit::qi::space] >> when_operand
+         > ascii::no_case[ascii::string ("THEN")]
+         > no_skip[boost::spirit::qi::space] > result_string;
 
   else_clause_string %= ascii::no_case[ascii::string ("ELSE")]
                         >> no_skip[boost::spirit::qi::space] >> result_string;
   simple_case_string
       %= ascii::no_case[ascii::string ("CASE")]
-         >> no_skip[boost::spirit::qi::space] > case_operand
+         >> no_skip[boost::spirit::qi::space] >> case_operand
          > +hold[no_skip[boost::spirit::qi::space]
                  >> simple_when_clause_string]
          >> -hold[no_skip[boost::spirit::qi::space] >> else_clause_string]

@@ -15,7 +15,7 @@ inline std::ostream &operator<<(std::ostream &os,
 {
   for (auto &when : simple_whens.simple_whens)
     {
-      os << when;
+      os << when << " ";
     }
   return os;
 }

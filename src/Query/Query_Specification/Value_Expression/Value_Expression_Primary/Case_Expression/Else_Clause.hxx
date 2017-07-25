@@ -14,7 +14,7 @@ public:
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Else_Clause &else_clause)
 {
-  return os << " ELSE " << else_clause.result;
+  return os << "ELSE " << else_clause.result;
 }
 }
 
