@@ -77,7 +77,7 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
-      general_set_function, set_function_specification,
+      general_set_function, set_function_specification_string,
       value_expression_primary_string, value_expression_string,
       numeric_value_expression_string, numeric_primary_string, factor_string,
       term_string, numeric_value_function_string, trig_function_string,
@@ -213,6 +213,11 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Array_Constructor (),
                           boost::spirit::ascii::space_type> array_constructor;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Set_Function_Specification (),
+                          boost::spirit::ascii::space_type>
+      set_function_specification;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Table_Correlation (),

@@ -92,7 +92,7 @@ void ADQL_parser::init_factor ()
   value_expression_primary
       %= (array_value_constructor_by_enumeration_string
           | unsigned_value_specification | column_reference_string
-          | set_function_specification | case_expression | any_expression
+          | set_function_specification_string | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
@@ -153,6 +153,12 @@ void ADQL_parser::init_factor ()
   factor %= -sign >> numeric_primary;
   factor.name ("factor");
 
+
+  set_function_specification_string
+      %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
+               >> char_ ('*')] > char_ (')')) | general_set_function;
+
+  
   trig_function_string
       %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
                        | ascii::no_case[ascii::string ("ASIN")]
@@ -200,7 +206,7 @@ void ADQL_parser::init_factor ()
   value_expression_primary_string
       %= (array_value_constructor_by_enumeration_string
           | unsigned_value_specification | column_reference_string
-          | set_function_specification | case_expression | any_expression
+          | set_function_specification_string | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
 
