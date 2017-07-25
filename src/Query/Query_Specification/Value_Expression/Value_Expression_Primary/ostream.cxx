@@ -9,7 +9,7 @@ operator<<(std::ostream &os,
   os << value_expression_primary.variant;
   for (auto &index : value_expression_primary.array_indices)
     {
-      os << '[' << index << ']';
+      os << index;
     }
   return os;
 }

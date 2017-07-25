@@ -91,7 +91,7 @@ void ADQL_parser::init_factor ()
   value_subexpression %= hold['(' >> value_expression_string >> ')'];
   value_subexpression.name ("value_subexpression");
 
-  array_index %= hold['[' >> numeric_value_expression_string >> ']'];
+  array_index %= hold['[' >> numeric_value_expression >> ']'];
   array_index.name ("array_index");
 
   value_expression_primary
