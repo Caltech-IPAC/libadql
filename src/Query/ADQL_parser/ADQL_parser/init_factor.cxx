@@ -41,9 +41,9 @@ void ADQL_parser::init_factor ()
          > char_ (')');
   general_set_function.name ("general_set_function");
 
-  set_function_specification
-      %= (hold[ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
-               >> char_ ('*')] > char_ (')')) | general_set_function;
+  count_star %= ascii::no_case[ascii::string ("COUNT")] >> char_ ('(')
+                >> char_ ('*') > char_ (')');
+  set_function_specification %= count_star | general_set_function;
   set_function_specification.name ("set_function_specification");
 
   case_operand %= value_expression_string;
@@ -79,8 +79,7 @@ void ADQL_parser::init_factor ()
   case_expression %= case_specification;
   case_expression.name ("case_expression");
 
-  any_expression %= ascii::no_case[ascii::string ("ANY")] >> char_ ('(')
-                    > value_expression_string > char_ (')');
+  any_expression %= any_expression_string;
   any_expression.name ("any_expression");
 
   /// The BNF for SQL 99 uses an array_element_reference intermediate
@@ -92,25 +91,24 @@ void ADQL_parser::init_factor ()
   value_subexpression %= hold['(' >> value_expression_string >> ')'];
   value_subexpression.name ("value_subexpression");
 
-  array_index %= '[' >> numeric_value_expression_string >> ']';
+  array_index %= hold['[' >> numeric_value_expression_string >> ']'];
   array_index.name ("array_index");
 
   value_expression_primary
-      %= (array_value_constructor_by_enumeration_string
-          | unsigned_value_specification | column_reference_string
-          | set_function_specification_string | case_expression_string
-          | any_expression_string
-          | hold[char_ ('(') >> value_expression_string >> char_ (')')])
-         >> *array_index;
+      %= (array_constructor
+          | (unsigned_value_specification | column_reference_string)
+          // | column_reference
+          | set_function_specification | case_expression | any_expression
+          | value_subexpression) >> *array_index;
   value_expression_primary.name ("value_expression_primary");
 
   /// Custom array_expression so that SQL 99 array literals can pass
   /// through
-  array_constructor
-      %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
-              >> -(value_expression_string
-                   >> *(char_ (',') >> value_expression_string))
-              > char_ (']')];
+  array_constructor %= array_value_constructor_by_enumeration_string;
+      // %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
+      //         >> -(value_expression_string
+      //              >> *(char_ (',') >> value_expression_string))
+      //         > char_ (']')];
   array_constructor.name ("array_constructor");
 
   /// We do not have a rule for default_function_prefix since, being

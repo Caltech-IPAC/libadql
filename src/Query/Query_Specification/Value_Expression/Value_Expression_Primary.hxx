@@ -6,12 +6,18 @@
 #include "Value_Expression_Primary/Any_Expression.hxx"
 #include "Value_Expression_Primary/Value_Subexpression.hxx"
 
+#include <boost/variant.hpp>
+
 namespace ADQL
 {
 class Value_Expression_Primary
 {
 public:
-  std::string expression;
+  typedef boost::variant<Array_Constructor, std::string,
+                         // Column_Reference,
+                         Set_Function_Specification, Case_Expression,
+                         Any_Expression, Value_Subexpression> Variant;
+  Variant variant;
   std::vector<std::string> array_indices;
 };
 
@@ -19,7 +25,7 @@ inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::Value_Expression_Primary &value_expression_primary)
 {
-  os << value_expression_primary.expression;
+  os << value_expression_primary.variant;
   for (auto &index : value_expression_primary.array_indices)
     {
       os << '[' << index << ']';
@@ -29,5 +35,5 @@ operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Value_Expression_Primary,
-                           (std::string, expression)(std::vector<std::string>,
-                                                     array_indices))
+                           (ADQL::Value_Expression_Primary::Variant,
+                            variant)(std::vector<std::string>, array_indices))
