@@ -93,6 +93,7 @@ def build(ctx):
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary_Wrap/ostream.cxx',
+                 'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary/Array_Constructor/ostream.cxx',
                  'src/Query/Query_Specification/User_Defined_Function_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/Numeric_Value_Function/ostream.cxx',

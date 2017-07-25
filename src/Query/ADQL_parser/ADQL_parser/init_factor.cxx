@@ -95,20 +95,15 @@ void ADQL_parser::init_factor ()
   array_index.name ("array_index");
 
   value_expression_primary
-      %= (array_constructor
-          | unsigned_value_specification
-          | column_reference
+      %= (array_constructor | unsigned_value_specification | column_reference
           | set_function_specification | case_expression | any_expression
           | value_subexpression) >> *array_index;
   value_expression_primary.name ("value_expression_primary");
 
   /// Custom array_expression so that SQL 99 array literals can pass
   /// through
-  array_constructor %= array_value_constructor_by_enumeration_string;
-      // %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
-      //         >> -(value_expression_string
-      //              >> *(char_ (',') >> value_expression_string))
-      //         > char_ (']')];
+  array_constructor %= ascii::no_case["ARRAY"] >> '['
+                       >> (value_expression % ',') > ']';
   array_constructor.name ("array_constructor");
 
   /// We do not have a rule for default_function_prefix since, being

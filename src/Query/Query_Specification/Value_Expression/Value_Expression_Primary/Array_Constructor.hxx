@@ -4,23 +4,20 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 
 #include <iostream>
-#include <string>
+#include <vector>
 
 namespace ADQL
 {
+class Value_Expression;
 class Array_Constructor
 {
 public:
-  std::string expression;
+  std::vector<Value_Expression> values;
 };
 
-inline std::ostream &
-operator<<(std::ostream &os,
-           const ADQL::Array_Constructor &array_constructor)
-{
-  return os << array_constructor.expression;
-}
+std::ostream &operator<<(std::ostream &os,
+                         const ADQL::Array_Constructor &array_constructor);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Array_Constructor,
-                           (std::string, expression))
+                           (std::vector<ADQL::Value_Expression>, values))
