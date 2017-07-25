@@ -2,6 +2,8 @@
 
 #include "Value_Expression_Primary/Array_Constructor.hxx"
 #include "Value_Expression_Primary/Set_Function_Specification.hxx"
+#include "Value_Expression_Primary/Case_Expression.hxx"
+#include "Value_Expression_Primary/Any_Expression.hxx"
 
 namespace ADQL
 {

@@ -90,7 +90,7 @@ struct ADQL_parser
       array_value_constructor_by_enumeration_string, correlation_specification,
       boolean_value_expression, boolean_literal, case_operand, when_operand,
       result_expression, result, simple_when_clause, else_clause, simple_case,
-      case_specification, case_expression, any_expression;
+      case_specification, case_expression_string, any_expression_string;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -218,6 +218,13 @@ struct ADQL_parser
                           ADQL::Set_Function_Specification (),
                           boost::spirit::ascii::space_type>
       set_function_specification;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Case_Expression (),
+                          boost::spirit::ascii::space_type> case_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Any_Expression (),
+                          boost::spirit::ascii::space_type> any_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Table_Correlation (),
