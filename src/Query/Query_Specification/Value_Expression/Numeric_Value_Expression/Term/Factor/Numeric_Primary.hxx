@@ -13,6 +13,7 @@ public:
   typedef boost::variant<Value_Expression_Primary_Wrap, Numeric_Value_Function>
       Variant;
   Variant variant;
+  bool empty () const;
 };
 
 std::ostream &operator<<(std::ostream &os,

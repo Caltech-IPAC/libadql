@@ -12,6 +12,7 @@ class String_Value_Expression
 {
 public:
   std::string expression;
+  bool empty () const { return expression.empty (); }
 };
 
 inline std::ostream &

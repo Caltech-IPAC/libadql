@@ -13,16 +13,17 @@ namespace ADQL
 class Value_Subexpression
 {
 public:
-  Value_Expression_Wrap expression;
+  Value_Expression_Wrap wrap;
+  bool empty () const { return ADQL::empty (wrap); }
 };
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::Value_Subexpression &value_subexpression)
 {
-  return os << '(' << value_subexpression.expression << ')';
+  return os << '(' << value_subexpression.wrap << ')';
 }
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Value_Subexpression,
-                           (ADQL::Value_Expression_Wrap, expression))
+                           (ADQL::Value_Expression_Wrap, wrap))

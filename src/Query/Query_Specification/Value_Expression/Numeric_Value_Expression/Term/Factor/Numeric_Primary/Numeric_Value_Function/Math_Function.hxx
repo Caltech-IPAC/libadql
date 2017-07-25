@@ -3,6 +3,7 @@
 #include "Math_Function/Math_Zero_Arg.hxx"
 #include "Math_Function/Math_One_Arg.hxx"
 #include "Math_Function/Math_Two_Arg.hxx"
+#include "../../../../../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -13,6 +14,7 @@ class Math_Function
 public:
   typedef boost::variant<Math_Zero_Arg, Math_One_Arg, Math_Two_Arg> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

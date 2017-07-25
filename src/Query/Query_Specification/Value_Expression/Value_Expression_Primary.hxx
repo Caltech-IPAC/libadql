@@ -7,6 +7,7 @@
 #include "Value_Expression_Primary/Value_Subexpression.hxx"
 #include "Value_Expression_Primary/Array_Index.hxx"
 #include "../Column_Reference.hxx"
+#include "../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -20,6 +21,10 @@ public:
                          Any_Expression, Value_Subexpression> Variant;
   Variant variant;
   std::vector<Array_Index> array_indices;
+  bool empty () const
+  {
+    return empty_variant (variant);
+  }
 };
 
 std::ostream &

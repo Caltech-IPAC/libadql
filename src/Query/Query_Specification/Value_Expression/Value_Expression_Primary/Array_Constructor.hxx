@@ -13,6 +13,7 @@ class Array_Constructor
 {
 public:
   std::vector<Value_Expression> values;
+  bool empty () const { return values.empty (); }
 };
 
 std::ostream &operator<<(std::ostream &os,

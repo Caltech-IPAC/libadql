@@ -73,7 +73,8 @@ struct ADQL_parser
       catalog_name_string, correlation_name, qualifier_string,
       trig_one_arg_names, math_zero_arg_names, math_one_arg_names,
       math_two_arg_names, cast_as, user_defined_function_name,
-      unsigned_literal, unsigned_value_specification, general_literal;
+      unsigned_literal, unsigned_value_specification, general_literal,
+      null_string;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
@@ -265,12 +266,10 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Searched_When (),
                           boost::spirit::ascii::space_type> searched_when;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Result (),
-                          boost::spirit::ascii::space_type> result, result_expression;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Result (),
+                          boost::spirit::ascii::space_type> result;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Else_Clause (),
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Else_Clause (),
                           boost::spirit::ascii::space_type> else_clause;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Any_Expression (),

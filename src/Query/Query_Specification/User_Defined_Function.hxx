@@ -15,6 +15,7 @@ class User_Defined_Function
 public:
   std::string function;
   std::vector<ADQL::Value_Expression> args;
+  bool empty () const { return function.empty (); }
 };
 
 inline std::ostream &

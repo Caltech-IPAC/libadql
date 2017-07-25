@@ -15,6 +15,7 @@ class Math_One_Arg
 public:
   std::string function;
   Numeric_Value_Expression_Wrap arg;
+  bool empty () const { return function.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

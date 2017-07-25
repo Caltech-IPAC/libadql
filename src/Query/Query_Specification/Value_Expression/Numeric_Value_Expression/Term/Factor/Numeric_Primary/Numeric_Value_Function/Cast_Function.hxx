@@ -15,6 +15,7 @@ class Cast_Function
 public:
   Value_Expression_Wrap expression;
   std::string as;
+  bool empty () const { return as.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

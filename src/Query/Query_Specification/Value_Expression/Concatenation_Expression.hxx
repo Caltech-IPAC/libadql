@@ -13,6 +13,7 @@ class Concatenation_Expression
 public:
   std::string character_factor, concatenation_operator,
       character_value_expression;
+  bool empty () const { return character_factor.empty (); }
 };
 
 inline std::ostream &
@@ -28,5 +29,5 @@ operator<<(std::ostream &os,
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Concatenation_Expression,
                            (std::string,
                             character_factor)(std::string,
-                                              concatenation_operator)(std::string,
-                                              character_value_expression))
+                                              concatenation_operator)(
+                               std::string, character_value_expression))

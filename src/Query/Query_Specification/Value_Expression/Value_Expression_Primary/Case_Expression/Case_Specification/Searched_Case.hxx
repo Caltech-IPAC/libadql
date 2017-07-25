@@ -10,6 +10,7 @@ class Searched_Case
 public:
   Searched_When when;
   Else_Clause else_clause;
+  bool empty () const { return when.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

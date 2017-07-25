@@ -2,6 +2,7 @@
 
 #include "Case_Specification/Simple_Case.hxx"
 #include "Case_Specification/Searched_Case.hxx"
+#include "../../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -12,6 +13,7 @@ class Case_Specification
 public:
   typedef boost::variant<Simple_Case, Searched_Case> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 
 inline std::ostream &

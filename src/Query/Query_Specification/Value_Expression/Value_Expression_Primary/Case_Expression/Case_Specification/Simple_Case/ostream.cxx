@@ -9,7 +9,7 @@ std::ostream &operator<<(std::ostream &os,
   os << "CASE " << simple_case.case_operand << " " << simple_case.simple_whens;
   if (!simple_case.else_clause.empty ())
     {
-      os << simple_case.else_clause;
+      os << simple_case.else_clause << " ";
     }
   os << "END";
   return os;

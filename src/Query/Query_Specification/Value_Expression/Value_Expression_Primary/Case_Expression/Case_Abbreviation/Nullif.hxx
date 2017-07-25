@@ -12,10 +12,10 @@ class Nullif
 {
 public:
   std::string nullif;
+  bool empty () const { return nullif.empty (); }
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Nullif &nullif)
+inline std::ostream &operator<<(std::ostream &os, const ADQL::Nullif &nullif)
 {
   return os << nullif.nullif;
 }

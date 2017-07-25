@@ -9,6 +9,7 @@ class Factor
 public:
   std::string sign;
   Numeric_Primary numeric_primary;
+  bool empty () const { return numeric_primary.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Factor &factor)

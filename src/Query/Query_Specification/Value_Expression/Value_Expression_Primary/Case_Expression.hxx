@@ -2,6 +2,7 @@
 
 #include "Case_Expression/Case_Abbreviation.hxx"
 #include "Case_Expression/Case_Specification.hxx"
+#include "../../../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -10,6 +11,7 @@ class Case_Expression
 public:
   typedef boost::variant<Case_Abbreviation, Case_Specification> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

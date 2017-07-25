@@ -12,6 +12,7 @@ class Coalesce
 {
 public:
   std::string coalesce;
+  bool empty () const { return coalesce.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

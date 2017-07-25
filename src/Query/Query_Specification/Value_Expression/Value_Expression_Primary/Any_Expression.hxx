@@ -14,6 +14,7 @@ class Any_Expression
 {
 public:
   Value_Expression_Wrap wrap;
+  bool empty () const { return ADQL::empty (wrap); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Term/Operator_Term.hxx"
+#include "../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -11,6 +12,7 @@ class Term
 public:
   typedef boost::variant<Factor, Operator_Term> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Term &term)

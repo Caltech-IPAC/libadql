@@ -16,6 +16,7 @@ public:
   Term term;
   std::string plus_or_minus;
   Numeric_Value_Expression_Wrap wrap;
+  bool empty () const { return plus_or_minus.empty (); }
 };
 
 inline std::ostream &

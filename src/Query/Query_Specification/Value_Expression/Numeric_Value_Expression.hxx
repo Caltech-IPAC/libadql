@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Numeric_Value_Expression/Operator_Numeric_Value_Expression.hxx"
+#include "../../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -9,6 +10,10 @@ class Numeric_Value_Expression
 public:
   typedef boost::variant<Term, Operator_Numeric_Value_Expression> Variant;
   Variant variant;
+  bool empty () const
+  {
+    return empty_variant (variant);
+  }
 };
 
 inline std::ostream &

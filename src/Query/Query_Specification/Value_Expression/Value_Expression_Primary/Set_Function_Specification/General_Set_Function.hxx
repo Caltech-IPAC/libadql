@@ -9,6 +9,7 @@ class General_Set_Function
 public:
   std::string set_function_type;
   General_Set_Args args;
+  bool empty () const { return set_function_type.empty (); }
 };
 
 inline std::ostream &

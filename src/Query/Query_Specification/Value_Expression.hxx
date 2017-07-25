@@ -4,6 +4,7 @@
 #include "Value_Expression/Numeric_Value_Expression.hxx"
 #include "Value_Expression/String_Value_Expression.hxx"
 #include "Value_Expression/Value_Expression_Primary.hxx"
+#include "../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -15,6 +16,10 @@ public:
   typedef boost::variant<Concatenation_Expression, Numeric_Value_Expression,
                          String_Value_Expression> Variant;
   Variant variant;
+  bool empty () const
+  {
+    return empty_variant (variant);
+  }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

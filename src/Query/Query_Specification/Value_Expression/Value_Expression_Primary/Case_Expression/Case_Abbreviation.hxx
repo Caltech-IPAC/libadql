@@ -2,6 +2,7 @@
 
 #include "Case_Abbreviation/Nullif.hxx"
 #include "Case_Abbreviation/Coalesce.hxx"
+#include "../../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -12,6 +13,7 @@ class Case_Abbreviation
 public:
   typedef boost::variant<Nullif, Coalesce> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 
 inline std::ostream &

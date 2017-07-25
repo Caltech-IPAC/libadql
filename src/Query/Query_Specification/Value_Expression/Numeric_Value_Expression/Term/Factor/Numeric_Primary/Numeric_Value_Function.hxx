@@ -15,6 +15,7 @@ public:
   typedef boost::variant<Trig_Function, Math_Function, Cast_Function,
                          User_Defined_Function_Wrap> Variant;
   Variant variant;
+  bool empty () const;
 };
 
 std::ostream &

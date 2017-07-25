@@ -12,6 +12,7 @@ class Math_Zero_Arg
 {
 public:
   std::string function;
+  bool empty () const { return function.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

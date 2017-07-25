@@ -16,6 +16,7 @@ public:
   Factor factor;
   std::string multiply_or_divide;
   Term_Wrap term;
+  bool empty () const { return multiply_or_divide.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

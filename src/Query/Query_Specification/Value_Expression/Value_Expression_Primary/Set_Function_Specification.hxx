@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Set_Function_Specification/General_Set_Function.hxx"
+#include "../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 
@@ -11,6 +12,7 @@ class Set_Function_Specification
 public:
   typedef boost::variant<std::string, General_Set_Function> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 
 inline std::ostream &

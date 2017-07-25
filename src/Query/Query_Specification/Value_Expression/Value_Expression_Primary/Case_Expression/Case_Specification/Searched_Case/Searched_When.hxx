@@ -12,6 +12,7 @@ class Searched_When
 {
 public:
   std::string searched_when;
+  bool empty () const { return searched_when.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
