@@ -4,6 +4,7 @@
 #include "Value_Expression_Primary/Set_Function_Specification.hxx"
 #include "Value_Expression_Primary/Case_Expression.hxx"
 #include "Value_Expression_Primary/Any_Expression.hxx"
+#include "Value_Expression_Primary/Value_Subexpression.hxx"
 
 namespace ADQL
 {
