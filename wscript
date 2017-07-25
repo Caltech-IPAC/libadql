@@ -86,11 +86,15 @@ def build(ctx):
                  'src/Query/Query_Specification/Joined_Table_Wrap/empty.cxx',
                  'src/Query/Query_Specification/Joined_Table/ostream.cxx',
                  'src/Query/Query_Specification/Joined_Table/Qualified_Join/ostream.cxx',
+                 'src/Query/Query_Specification/Table_Reference/ostream.cxx',
+                 'src/Query/Query_Specification/Table_Reference_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Term_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Numeric_Value_Expression_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/User_Defined_Function_Wrap/ostream.cxx',
+                 'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/ostream.cxx',
+                 'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/Numeric_Value_Function/ostream.cxx',
                  'src/Query/Subquery/ostream.cxx',
                  'src/Query/Subquery/empty.cxx'
                  ]

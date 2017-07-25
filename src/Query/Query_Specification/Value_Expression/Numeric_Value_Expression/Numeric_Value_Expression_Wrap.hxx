@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/variant/recursive_wrapper.hpp>
 
 #include <iostream>

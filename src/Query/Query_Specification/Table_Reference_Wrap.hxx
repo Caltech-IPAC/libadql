@@ -1,5 +1,9 @@
 #pragma once
 
+#include <boost/variant/recursive_wrapper.hpp>
+
+#include <iostream>
+
 namespace ADQL
 {
 class Table_Reference;

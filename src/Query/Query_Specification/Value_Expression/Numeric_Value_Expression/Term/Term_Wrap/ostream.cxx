@@ -1,3 +1,4 @@
+#include "../Term_Wrap.hxx"
 #include "../../Term.hxx"
 
 namespace ADQL

@@ -88,22 +88,23 @@ void ADQL_parser::init_factor ()
   /// you get an infinite recursion because it keeps matching the
   /// value_expression part of the array element.  So instead we
   /// implement array elements as optional decorators after an expression.
+
   value_expression_primary
-      %= (array_value_constructor_by_enumeration_string | unsigned_value_specification
-          | column_reference_string | set_function_specification
-          | case_expression | any_expression
+      %= (array_value_constructor_by_enumeration_string
+          | unsigned_value_specification | column_reference_string
+          | set_function_specification | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
   value_expression_primary.name ("value_expression_primary");
 
   /// Custom array_expression so that SQL 99 array literals can pass
   /// through
-  // array_constructor
-  //     %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
-  //             >> -(value_expression_string
-  //                  >> *(char_ (',') >> value_expression_string))
-  //             > char_ (']')];
-  // array_constructor.name ("array_constructor");
+  array_constructor
+      %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
+              >> -(value_expression_string
+                   >> *(char_ (',') >> value_expression_string))
+              > char_ (']')];
+  array_constructor.name ("array_constructor");
 
   /// We do not have a rule for default_function_prefix since, being
   /// optional, it does not change whether something parses.
@@ -121,7 +122,7 @@ void ADQL_parser::init_factor ()
   user_defined_function_param.name ("user_defined_function_param");
 
   user_defined_function %= hold[user_defined_function_name >> '(']
-                           >> (user_defined_function_param % ',') >> ')';
+                           >> -(user_defined_function_param % ',') >> ')';
 
   user_defined_function.name ("user_defined_function");
 
@@ -132,8 +133,12 @@ void ADQL_parser::init_factor ()
              | ascii::no_case[ascii::string ("FLOAT4")]
              | ascii::no_case[ascii::string ("FLOAT8")];
 
-  cast_function %= value_expression >> cast_as;
+  cast_function
+      %= hold[ascii::no_case["CAST"] >> '(' >> value_expression
+              >> &no_skip[boost::spirit::qi::space] >> ascii::no_case["AS"]
+              >> &no_skip[boost::spirit::qi::space] >> cast_as >> ')'];
   cast_function.name ("cast_function");
+
   // FIXME: numeric_value_function should have
   // numeric_geometry_function
   numeric_value_function %= trig_function | math_function | cast_function
@@ -144,14 +149,10 @@ void ADQL_parser::init_factor ()
   numeric_primary %= numeric_value_function | value_expression_primary;
   numeric_primary.name ("numeric_primary");
 
+  // factor %= -sign >> numeric_primary;
   factor %= -sign >> numeric_primary;
   factor.name ("factor");
 
-
-
-
-
-  
   trig_function_string
       %= (hold[lexeme[(ascii::no_case[ascii::string ("ACOS")]
                        | ascii::no_case[ascii::string ("ASIN")]
@@ -197,12 +198,12 @@ void ADQL_parser::init_factor ()
             >> -(char_ (',') > signed_integer) > char_ (')'));
 
   value_expression_primary_string
-      %= (array_value_constructor_by_enumeration_string | unsigned_value_specification
-          | column_reference_string | set_function_specification
-          | case_expression | any_expression
+      %= (array_value_constructor_by_enumeration_string
+          | unsigned_value_specification | column_reference_string
+          | set_function_specification | case_expression | any_expression
           | hold[char_ ('(') >> value_expression_string >> char_ (')')])
          >> *(char_ ('[') >> numeric_value_expression_string >> char_ (']'));
-  
+
   user_defined_function_param_string %= value_expression_string;
   user_defined_function_string
       %= hold[user_defined_function_name >> char_ ('(')]

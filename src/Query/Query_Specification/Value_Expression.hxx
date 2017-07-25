@@ -3,6 +3,7 @@
 #include "Value_Expression/Concatenation_Expression.hxx"
 #include "Value_Expression/Numeric_Value_Expression.hxx"
 #include "Value_Expression/String_Value_Expression.hxx"
+#include "Value_Expression/Value_Expression_Primary.hxx"
 
 #include <boost/variant.hpp>
 

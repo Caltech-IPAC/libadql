@@ -4,7 +4,6 @@
 #include "Numeric_Value_Function/Math_Function.hxx"
 #include "Numeric_Value_Function/Cast_Function.hxx"
 #include "../../../../../User_Defined_Function_Wrap.hxx"
-#include "../../../../../User_Defined_Function.hxx"
 
 #include <boost/variant.hpp>
 
@@ -18,12 +17,9 @@ public:
   Variant variant;
 };
 
-inline std::ostream &
+std::ostream &
 operator<<(std::ostream &os,
-           const ADQL::Numeric_Value_Function &numeric_value_function)
-{
-  return os << numeric_value_function.variant;
-}
+           const ADQL::Numeric_Value_Function &numeric_value_function);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Numeric_Value_Function,

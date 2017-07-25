@@ -2,7 +2,6 @@
 
 #include "Numeric_Primary/Numeric_Value_Function.hxx"
 #include "../../../Value_Expression_Primary_Wrap.hxx"
-#include "../../../Value_Expression_Primary.hxx"
 
 #include <boost/variant.hpp>
 
@@ -16,11 +15,8 @@ public:
   Variant variant;
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Numeric_Primary &numeric_primary)
-{
-  return os << numeric_primary.variant;
-}
+std::ostream &operator<<(std::ostream &os,
+                         const ADQL::Numeric_Primary &numeric_primary);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Numeric_Primary,

@@ -1,4 +1,5 @@
 #include "../../Numeric_Value_Expression.hxx"
+#include "../Numeric_Value_Expression_Wrap.hxx"
 
 namespace ADQL
 {
