@@ -5,6 +5,7 @@
 #include "Value_Expression_Primary/Case_Expression.hxx"
 #include "Value_Expression_Primary/Any_Expression.hxx"
 #include "Value_Expression_Primary/Value_Subexpression.hxx"
+#include "../Column_Reference.hxx"
 
 #include <boost/variant.hpp>
 
@@ -14,7 +15,7 @@ class Value_Expression_Primary
 {
 public:
   typedef boost::variant<Array_Constructor, std::string,
-                         // Column_Reference,
+                         Column_Reference,
                          Set_Function_Specification, Case_Expression,
                          Any_Expression, Value_Subexpression> Variant;
   Variant variant;

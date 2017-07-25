@@ -96,8 +96,8 @@ void ADQL_parser::init_factor ()
 
   value_expression_primary
       %= (array_constructor
-          | (unsigned_value_specification | column_reference_string)
-          // | column_reference
+          | unsigned_value_specification
+          | column_reference
           | set_function_specification | case_expression | any_expression
           | value_subexpression) >> *array_index;
   value_expression_primary.name ("value_expression_primary");
