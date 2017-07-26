@@ -23,6 +23,14 @@ void ADQL_parser::init_strings ()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
+  column_reference_string
+      %= hold[tap_upload >> period >> identifier]
+         | hold[catalog_name >> period >> unqualified_schema_name >> period
+                >> identifier >> period >> identifier]
+         | hold[unqualified_schema_name >> period >> identifier >> period
+                >> identifier] | hold[identifier >> period >> identifier]
+         | identifier;
+
   result_expression_string %= value_expression_string;
   result_string %= result_expression_string
                    | ascii::no_case[ascii::string ("NULL")];
@@ -157,5 +165,4 @@ void ADQL_parser::init_strings ()
                               >> character_value_expression)
                              | numeric_value_expression_string
                              | string_value_expression_string;
-
 }

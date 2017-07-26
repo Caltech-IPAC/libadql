@@ -84,14 +84,6 @@ void ADQL_parser::init_column_reference ()
          | hold[unqualified_schema_name >> period >> identifier] | identifier;
   table_name.name ("table name");
 
-  column_reference_string
-      %= hold[tap_upload >> period >> identifier]
-         | hold[catalog_name >> period >> unqualified_schema_name >> period
-                >> identifier >> period >> identifier]
-         | hold[unqualified_schema_name >> period >> identifier >> period
-                >> identifier] | hold[identifier >> period >> identifier]
-         | identifier;
-  column_reference_string.name ("column reference string");
   catalog_name %= identifier;
   catalog_name.name ("catalog name");
 
