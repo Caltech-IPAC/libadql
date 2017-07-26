@@ -99,6 +99,7 @@ def build(ctx):
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary/Case_Expression/Result/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary/Case_Expression/Case_Specification/Simple_Case/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary/Case_Expression/Case_Specification/Simple_Case/Simple_Whens/Simple_When/ostream.cxx',
+                 'src/Query/Query_Specification/Value_Expression/Value_Expression_Primary/Case_Expression/Case_Specification/Searched_Case/Searched_Whens/Searched_When/ostream.cxx',
                  'src/Query/Query_Specification/User_Defined_Function_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/empty.cxx',

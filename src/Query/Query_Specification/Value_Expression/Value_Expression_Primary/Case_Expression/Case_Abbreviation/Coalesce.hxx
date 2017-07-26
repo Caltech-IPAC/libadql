@@ -11,15 +11,26 @@ namespace ADQL
 class Coalesce
 {
 public:
-  std::string coalesce;
+  std::vector<std::string> coalesce;
   bool empty () const { return coalesce.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Coalesce &coalesce)
 {
-  return os << coalesce.coalesce;
+  os << "COALESCE(";
+  for (auto c=coalesce.coalesce.begin (); c!=coalesce.coalesce.end (); )
+    {
+      os << *c;
+      ++c;
+      if (c!=coalesce.coalesce.end ())
+        {
+          os << ',';
+        }
+    }
+  os << ')';
+  return os;
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Coalesce, (std::string, coalesce))
+  BOOST_FUSION_ADAPT_STRUCT (ADQL::Coalesce, (std::vector<std::string>, coalesce))

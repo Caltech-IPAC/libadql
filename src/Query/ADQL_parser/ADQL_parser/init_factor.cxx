@@ -65,12 +65,17 @@ void ADQL_parser::init_factor ()
                  > ascii::no_case["END"];
   simple_case.name ("simple_case");
 
-  // searched_when %= ascii::no_case[ascii::string ("WHEN")]
-  //                  >> search_condition
-  //                  >> ascii::no_case[ascii::string ("THEN")]
-  //                  >> result;
-
-  searched_case %= searched_when >> -else_clause
+  searched_when %= ascii::no_case["WHEN"]
+                   >> &no_skip[boost::spirit::qi::space]
+                   >> search_condition
+                   >> ascii::no_case["THEN"]
+                   >> &no_skip[boost::spirit::qi::space]
+                   >> result;
+  searched_when.name ("searched_when");
+  searched_whens %= searched_when >> *searched_when;
+  searched_whens.name ("searched_whens");
+  
+  searched_case %= searched_whens >> -else_clause
                    >> &no_skip[boost::spirit::qi::space]
                    >> ascii::no_case["END"];
   searched_case.name ("searched_case");
@@ -84,7 +89,7 @@ void ADQL_parser::init_factor ()
             >> value_expression_string >> ')';
   nullif.name ("nullif");
   coalesce %= ascii::no_case["COALESCE"] >> '(' >> value_expression_string
-              >> *(char_ (',') >> value_expression_string) >> ')';
+              >> *(',' >> value_expression_string) >> ')';
   coalesce.name ("coalesce");
   case_abbreviation %= nullif | coalesce;
   case_abbreviation.name ("case_abbreviation");

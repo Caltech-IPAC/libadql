@@ -263,6 +263,9 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Searched_Case (),
                           boost::spirit::ascii::space_type> searched_case;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Searched_Whens (),
+                          boost::spirit::ascii::space_type> searched_whens;
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Searched_When (),
                           boost::spirit::ascii::space_type> searched_when;
 

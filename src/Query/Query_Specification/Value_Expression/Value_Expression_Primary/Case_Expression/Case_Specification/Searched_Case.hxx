@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Searched_Case/Searched_When.hxx"
+#include "Searched_Case/Searched_Whens.hxx"
 #include "../Result.hxx"
 
 namespace ADQL
@@ -8,24 +8,24 @@ namespace ADQL
 class Searched_Case
 {
 public:
-  Searched_When when;
+  Searched_Whens whens;
   Else_Clause else_clause;
-  bool empty () const { return when.empty (); }
+  bool empty () const { return whens.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Searched_Case &searched_case)
 {
-  os << "CASE " << searched_case.when;
+  os << "CASE " << searched_case.whens;
   if (!searched_case.else_clause.empty ())
     {
-      os << searched_case.else_clause;
+      os << searched_case.else_clause << " ";
     }
-  os << "END ";
+  os << "END";
   return os;
 }
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Searched_Case,
-                           (ADQL::Searched_When, when)(ADQL::Else_Clause,
-                                                       else_clause))
+                           (ADQL::Searched_Whens, whens)(ADQL::Else_Clause,
+                                                         else_clause))

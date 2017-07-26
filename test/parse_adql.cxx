@@ -229,8 +229,9 @@ int main (int argc, char *argv[])
     "select ST_MakeLine(ARRAY[ST_MakePoint(T5ad885ee5df7f9ca98e978.ra1, 2), ST_MakePoint(3, 4), ST_MakePoint(5, 6), ST_MakePoint(7, 8), ST_MakePoint(1, 2)]) from T5ad885ee5df7f9ca98e978",
     "select bar from foo where ('10' = ANY(bar))",
     "select NULLIf (a,b), Coalesce (a), Coalesce (a,b,c), Coalesce (a,b) from foo",
-    "select CASe when b then c when d then e else f end from foo",
-    "select Case when b then c end from foo",
+    "select CASe when b=1 then c when b=2 then e else f end from foo",
+    "select CASe when b=1 then c when b=2 then e end from foo",
+    "select Case when true then c else d end from foo",
   };
 
   std::vector<std::string> fail = {
