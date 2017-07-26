@@ -56,7 +56,7 @@ void ADQL_parser::init_column_reference ()
   /// The spec says to have correlation_name as an alternate, but
   /// table_name matches everything that correlation name matches,
   /// so correlation_name will never match.
-  qualifier_string %= table_name;
+  qualifier %= table_name;
 
   /// We have to put the tap_upload_identifier into its own rule
   /// instead of folding it in with tap_upload, because otherwise it
