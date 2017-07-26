@@ -155,7 +155,8 @@ void ADQL_parser::init_strings ()
   character_value_expression_string
       %= character_factor_string >> -(concatenation_operator_string
                                       >> character_value_expression_string);
-  character_primary_string %= string_value_function
+  string_value_function_string %= user_defined_function_string;
+  character_primary_string %= string_value_function_string
                               | value_expression_primary_string;
   character_factor_string %= character_primary_string;
   string_value_expression_string %= character_value_expression_string;

@@ -84,7 +84,7 @@ struct ADQL_parser
       term_string, numeric_value_function_string, trig_function_string,
       math_function_string, cast_function_string, user_defined_function_string,
       user_defined_function_param_string, sort_specification_list,
-      order_by_clause, string_value_function, character_primary_string,
+      order_by_clause, string_value_function_string, character_primary_string,
       character_factor_string, character_value_expression_string, match_value,
       pattern, concatenation_operator_string, string_value_expression_string,
       array_value_constructor_by_enumeration_string, correlation_specification,
