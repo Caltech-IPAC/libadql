@@ -34,11 +34,6 @@ void ADQL_parser::init_columns ()
                                        >> numeric_value_expression;
   numeric_value_expression %= operator_numeric_value_expression | term;
 
-  term_string %= factor_string >> -(char_ ("*/") >> term_string);
-  numeric_value_expression_string
-      %= term_string >> -(char_ ("+-") >> numeric_value_expression_string);
-  numeric_value_expression_string.name ("numeric_value_expression");
-
   // FIXME: string_value_function should have a string_geometry_function;
   string_value_function %= user_defined_function_string;
   /// Flipped the order here because a value_expression_primary can
@@ -54,21 +49,6 @@ void ADQL_parser::init_columns ()
          >> -(concatenation_operator >> character_value_expression);
 
   string_value_expression %= character_value_expression;
-  string_value_expression_string %= character_value_expression;
-
-  /// Custom array_expression so that SQL 99 array literals can pass
-  /// through.
-
-  /// This has to be in a different translation unit than
-  /// value_expression_string.  Otherwise Spirit will recurse
-  /// infinitely trying to optimize it.
-  array_value_constructor_by_enumeration_string
-      %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
-              >> -(value_expression_string
-                   >> *(char_ (',') >> value_expression_string))
-              > char_ (']')];
-  array_value_constructor_by_enumeration_string.name (
-      "array_value_constructor_by_enumeration");
 
   // FIXME: value_expression should also have a
   // geometry_value_expression, but the database can not handle it.
@@ -86,11 +66,6 @@ void ADQL_parser::init_columns ()
   value_expression %= concatenation_expression | numeric_value_expression
                       | string_value_expression;
   value_expression.name ("value_expression");
-
-  value_expression_string %= (hold[character_factor >> concatenation_operator]
-                              >> character_value_expression)
-                             | numeric_value_expression_string
-                             | string_value_expression_string;
 
   column_name %= identifier;
   column_name.name ("column_name");

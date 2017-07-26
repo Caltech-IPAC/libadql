@@ -136,4 +136,26 @@ void ADQL_parser::init_strings ()
   numeric_primary_string %= numeric_value_function_string
                             | value_expression_primary_string;
   factor_string %= -sign >> numeric_primary_string;
+
+  term_string %= factor_string >> -(char_ ("*/") >> term_string);
+  numeric_value_expression_string
+      %= term_string >> -(char_ ("+-") >> numeric_value_expression_string);
+  string_value_expression_string %= character_value_expression;
+
+  /// Custom array_expression so that SQL 99 array literals can pass
+  /// through.
+
+  /// This has to be in a different translation unit than
+  /// value_expression_string.  Otherwise Spirit will recurse
+  /// infinitely trying to optimize it.
+  array_value_constructor_by_enumeration_string
+      %= hold[ascii::no_case[ascii::string ("ARRAY")] >> char_ ('[')
+              >> -(value_expression_string
+                   >> *(char_ (',') >> value_expression_string))
+              > char_ (']')];
+  value_expression_string %= (hold[character_factor >> concatenation_operator]
+                              >> character_value_expression)
+                             | numeric_value_expression_string
+                             | string_value_expression_string;
+
 }
