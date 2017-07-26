@@ -3,6 +3,7 @@
 #include "Query_Specification/As.hxx"
 #include "Query_Specification/Non_As.hxx"
 #include "Query_Specification/Where.hxx"
+#include "Query_Specification/Group_By.hxx"
 #include "Query_Specification/Having.hxx"
 #include "Query_Specification/Table_Reference.hxx"
 #include "Query_Specification/Joined_Table.hxx"
@@ -21,7 +22,8 @@ public:
   size_t top = std::numeric_limits<size_t>::max ();
   std::vector<Table_Reference> tables;
   Where where;
-  std::string group_by, order_by;
+  Group_By group_by;
+  std::string order_by;
   Having having;
 
   bool empty () const
@@ -111,4 +113,4 @@ BOOST_FUSION_ADAPT_STRUCT (
      all_or_distinct)(size_t, top)(ADQL::Query_Specification::Columns,
                                    columns)(std::vector<ADQL::Table_Reference>,
                                             tables)(ADQL::Where, where)(
-        std::string, group_by)(ADQL::Having, having)(std::string, order_by))
+        ADQL::Group_By, group_by)(ADQL::Having, having)(std::string, order_by))

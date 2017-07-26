@@ -42,11 +42,10 @@ void ADQL_parser::init_query ()
   grouping_column_reference_list
       %= grouping_column_reference
          >> *(char_ (',') >> column_reference_string);
-  group_by_clause_string
-      %= lexeme[ascii::no_case["GROUP"] > &boost::spirit::qi::space]
-         > lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
-         > grouping_column_reference_list;
-  // group_by_clause.name ("group by");
+  group_by %= lexeme[ascii::no_case["GROUP"] > &boost::spirit::qi::space]
+              > lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
+              > grouping_column_reference_list;
+  group_by.name ("group by");
 
   having %= lexeme[ascii::no_case["HAVING"] > &boost::spirit::qi::space]
             > search_condition;
@@ -78,8 +77,7 @@ void ADQL_parser::init_query ()
               > lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val)
                                                                 = _1]
          > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
-        >> -where[at_c<4>(_val) = _1]
-        >> -group_by_clause_string[at_c<5>(_val) = _1]
+        >> -where[at_c<4>(_val) = _1] >> -group_by[at_c<5>(_val) = _1]
         >> -having[at_c<6>(_val) = _1] >> -order_by_clause[at_c<7>(_val) = _1];
   query.name ("select");
 
@@ -91,8 +89,8 @@ void ADQL_parser::init_query ()
                                                                 = _1]
          > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
         >> -where_no_geometry[at_c<4>(_val) = _1]
-        >> -group_by_clause_string[at_c<5>(_val) = _1]
-        >> -having[at_c<6>(_val) = _1] >> -order_by_clause[at_c<7>(_val) = _1];
+        >> -group_by[at_c<5>(_val) = _1] >> -having[at_c<6>(_val) = _1]
+        >> -order_by_clause[at_c<7>(_val) = _1];
   query.name ("select");
 
   subquery %= lit ('(') >> (query_no_geometry | joined_table) >> lit (')');

@@ -84,10 +84,10 @@ struct ADQL_parser
       term_string, numeric_value_function_string, trig_function_string,
       math_function_string, cast_function_string, user_defined_function_string,
       user_defined_function_param_string, grouping_column_reference,
-      grouping_column_reference_list, group_by_clause_string,
-      sort_specification_list, order_by_clause, string_value_function,
-      character_primary, character_factor, character_value_expression,
-      match_value, pattern, string_value_expression_string,
+      grouping_column_reference_list, sort_specification_list, order_by_clause,
+      string_value_function, character_primary, character_factor,
+      character_value_expression, match_value, pattern,
+      string_value_expression_string,
       array_value_constructor_by_enumeration_string, correlation_specification,
       boolean_value_expression, boolean_literal, case_operand, when_operand,
       result_expression_string, result_string, simple_when_clause_string,
@@ -363,6 +363,9 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Having (),
                           boost::spirit::ascii::space_type> having;
+
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Group_By (),
+                          boost::spirit::ascii::space_type> group_by;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where,
