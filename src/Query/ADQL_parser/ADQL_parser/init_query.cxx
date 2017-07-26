@@ -38,13 +38,9 @@ void ADQL_parser::init_query ()
         >> search_condition[at_c<1>(_val) = _1];
   where_no_geometry.name ("where_no_geometry");
 
-  grouping_column_reference %= column_reference_string;
-  grouping_column_reference_list
-      %= grouping_column_reference
-         >> *(char_ (',') >> column_reference_string);
   group_by %= lexeme[ascii::no_case["GROUP"] > &boost::spirit::qi::space]
               > lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
-              > grouping_column_reference_list;
+              > (column_reference % ',');
   group_by.name ("group by");
 
   having %= lexeme[ascii::no_case["HAVING"] > &boost::spirit::qi::space]
