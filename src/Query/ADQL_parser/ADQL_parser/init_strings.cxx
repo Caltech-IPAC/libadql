@@ -153,9 +153,11 @@ void ADQL_parser::init_strings ()
   /// Flip the order of character_factor and
   /// character_value_expression to prevent recursion.
   character_value_expression_string
-      %= character_factor_string
-         >> -(concatenation_operator_string >> character_value_expression_string);
-  character_factor_string %= character_primary;
+      %= character_factor_string >> -(concatenation_operator_string
+                                      >> character_value_expression_string);
+  character_primary_string %= string_value_function
+                              | value_expression_primary_string;
+  character_factor_string %= character_primary_string;
   string_value_expression_string %= character_value_expression_string;
 
   /// Custom array_expression so that SQL 99 array literals can pass

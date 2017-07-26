@@ -39,8 +39,8 @@ void ADQL_parser::init_columns ()
   /// Flipped the order here because a value_expression_primary can
   /// match a function name that should be matched by
   /// string_value_function
-  character_primary %= string_value_function | value_expression_primary_string;
-  character_factor %= character_primary;
+
+  character_factor %= user_defined_function | value_expression_primary;
   character_value_expression %= character_factor % "||";
   string_value_expression %= character_value_expression;
 

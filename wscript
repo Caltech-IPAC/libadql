@@ -109,6 +109,8 @@ def build(ctx):
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/empty.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/Numeric_Value_Function/empty.cxx',
                  'src/Query/Query_Specification/Value_Expression/Numeric_Value_Expression/Term/Factor/Numeric_Primary/Numeric_Value_Function/ostream.cxx',
+                 'src/Query/Query_Specification/Value_Expression/String_Value_Expression/Character_Factor/empty.cxx',
+                 'src/Query/Query_Specification/Value_Expression/String_Value_Expression/Character_Factor/ostream.cxx',
                  'src/Query/Subquery/ostream.cxx',
                  'src/Query/Subquery/empty.cxx'
                  ]
