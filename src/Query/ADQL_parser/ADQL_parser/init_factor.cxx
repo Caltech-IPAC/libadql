@@ -52,7 +52,7 @@ void ADQL_parser::init_factor ()
                  > &no_skip[boost::spirit::qi::space] > result;
   simple_when.name ("simple_when_clause");
 
-  simple_whens %= simple_when >> *simple_when;
+  simple_whens %= +simple_when;
   simple_whens.name ("simple_whens");
 
   else_clause %= ascii::no_case["ELSE"] >> &no_skip[boost::spirit::qi::space]
@@ -69,7 +69,7 @@ void ADQL_parser::init_factor ()
                    >> search_condition >> ascii::no_case["THEN"]
                    >> &no_skip[boost::spirit::qi::space] >> result;
   searched_when.name ("searched_when");
-  searched_whens %= searched_when >> *searched_when;
+  searched_whens %= +searched_when;
   searched_whens.name ("searched_whens");
 
   searched_case %= searched_whens >> -else_clause
