@@ -362,7 +362,7 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> search_condition;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Having (),
-                          boost::spirit::ascii::space_type> having_clause;
+                          boost::spirit::ascii::space_type> having;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where,
