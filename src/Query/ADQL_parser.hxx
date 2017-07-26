@@ -39,6 +39,7 @@ struct ADQL_parser
   void init_math ();
   void init_trig ();
   void init_factor ();
+  void init_strings ();
   void init_columns ();
   void init_predicate ();
   void init_search_condition ();

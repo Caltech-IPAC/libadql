@@ -71,6 +71,7 @@ def build(ctx):
                  'src/Query/ADQL_parser/ADQL_parser/init_column_reference.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_columns.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_factor.cxx',
+                 'src/Query/ADQL_parser/ADQL_parser/init_strings.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_trig.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_math.cxx',
                  'src/Query/ADQL_parser/ADQL_parser/init_geometry.cxx',
