@@ -148,7 +148,15 @@ void ADQL_parser::init_strings ()
   term_string %= factor_string >> -(char_ ("*/") >> term_string);
   numeric_value_expression_string
       %= term_string >> -(char_ ("+-") >> numeric_value_expression_string);
-  string_value_expression_string %= character_value_expression;
+
+  concatenation_operator_string %= ascii::string ("||");
+  /// Flip the order of character_factor and
+  /// character_value_expression to prevent recursion.
+  character_value_expression_string
+      %= character_factor_string
+         >> -(concatenation_operator_string >> character_value_expression_string);
+  character_factor_string %= character_primary;
+  string_value_expression_string %= character_value_expression_string;
 
   /// Custom array_expression so that SQL 99 array literals can pass
   /// through.
@@ -161,8 +169,8 @@ void ADQL_parser::init_strings ()
               >> -(value_expression_string
                    >> *(char_ (',') >> value_expression_string))
               > char_ (']')];
-  value_expression_string %= (hold[character_factor >> concatenation_operator]
-                              >> character_value_expression)
-                             | numeric_value_expression_string
-                             | string_value_expression_string;
+  value_expression_string
+      %= (hold[character_factor_string >> concatenation_operator_string]
+          >> character_value_expression_string)
+         | numeric_value_expression_string | string_value_expression_string;
 }

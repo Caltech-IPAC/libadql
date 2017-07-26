@@ -41,27 +41,20 @@ void ADQL_parser::init_columns ()
   /// string_value_function
   character_primary %= string_value_function | value_expression_primary_string;
   character_factor %= character_primary;
-  concatenation_operator %= ascii::string ("||");
-  /// Flip the order of character_factor and
-  /// character_value_expression to prevent recursion.
-  character_value_expression
-      %= character_factor
-         >> -(concatenation_operator >> character_value_expression);
-
+  character_value_expression %= character_factor % "||";
   string_value_expression %= character_value_expression;
 
   // FIXME: value_expression should also have a
   // geometry_value_expression, but the database can not handle it.
 
-  /// This expression first checks for a concatenation operator.
-  /// Otherwise a numeric_value_expression would match the first
-  /// half of a concatenation, meaning the concatenation operator
-  /// would cause the parse to fail.  We can not put
-  /// string_value_expression first, because that would partially
-  /// match arithmetic.  For 'a+b', it matches 'a' but not the '+'.
+  /// string_value_expression will stop short at any non-concatenation
+  /// operation but still consume the input.  Similarly,
+  /// numeric_value_expression will stop short at concatenation but
+  /// still consume the input.  So we add concatenation_expression,
+  /// which requires concatenation, to break this degeneracy.
 
-  concatenation_expression %= hold[character_factor >> concatenation_operator]
-                              >> character_value_expression;
+  concatenation_expression %= hold[character_factor >> "||"]
+                              >> (character_factor % "||");
 
   value_expression %= concatenation_expression | numeric_value_expression
                       | string_value_expression;

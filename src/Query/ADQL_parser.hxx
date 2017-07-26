@@ -69,10 +69,10 @@ struct ADQL_parser
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
-      concatenation_operator, set_function_type, column_reference_string,
-      table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
-      catalog_name, correlation_name, qualifier, trig_one_arg_names,
-      math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
+      set_function_type, column_reference_string, table_name, tap_upload,
+      tap_upload_identifier, unqualified_schema_name, catalog_name,
+      correlation_name, qualifier, trig_one_arg_names, math_zero_arg_names,
+      math_one_arg_names, math_two_arg_names, cast_as,
       user_defined_function_name, unsigned_literal,
       unsigned_value_specification, general_literal, null_literal;
 
@@ -85,8 +85,8 @@ struct ADQL_parser
       math_function_string, cast_function_string, user_defined_function_string,
       user_defined_function_param_string, sort_specification_list,
       order_by_clause, string_value_function, character_primary,
-      character_factor, character_value_expression, match_value, pattern,
-      string_value_expression_string,
+      character_factor_string, character_value_expression_string, match_value,
+      pattern, concatenation_operator_string, string_value_expression_string,
       array_value_constructor_by_enumeration_string, correlation_specification,
       boolean_value_expression, boolean_literal, case_operand, when_operand,
       result_expression_string, result_string, simple_when_clause_string,
@@ -133,11 +133,6 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Non_As (),
                           boost::spirit::ascii::space_type> non_as;
-
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Concatenation_Expression (),
-                          boost::spirit::ascii::space_type>
-      concatenation_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Numeric_Value_Expression (),
@@ -199,7 +194,12 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::String_Value_Expression (),
                           boost::spirit::ascii::space_type>
-      string_value_expression;
+      string_value_expression, character_value_expression,
+      concatenation_expression;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Character_Factor (),
+                          boost::spirit::ascii::space_type> character_factor;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression (),

@@ -1,27 +1,25 @@
 #pragma once
 
-#include <boost/fusion/include/io.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
-
-#include <iostream>
-#include <string>
+#include "String_Value_Expression/Character_Factor.hxx"
 
 namespace ADQL
 {
-class String_Value_Expression
-{
-public:
-  std::string expression;
-  bool empty () const { return expression.empty (); }
-};
+using String_Value_Expression = std::vector<ADQL::Character_Factor>;
 
 inline std::ostream &
 operator<<(std::ostream &os,
            const ADQL::String_Value_Expression &string_value_expression)
 {
-  return os << string_value_expression.expression;
+  for (auto s = string_value_expression.begin ();
+       s != string_value_expression.end ();)
+    {
+      os << *s;
+      ++s;
+      if (s != string_value_expression.end ())
+        {
+          os << " || ";
+        }
+    }
+  return os;
 }
 }
-
-BOOST_FUSION_ADAPT_STRUCT (ADQL::String_Value_Expression,
-                           (std::string, expression))
