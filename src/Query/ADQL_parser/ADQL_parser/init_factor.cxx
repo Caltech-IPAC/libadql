@@ -44,8 +44,8 @@ void ADQL_parser::init_factor ()
   set_function_specification %= count_star | general_set_function;
   set_function_specification.name ("set_function_specification");
 
-  null_string %= ascii::no_case[ascii::string ("NULL")];
-  result %= value_expression | null_string;
+  null_literal %= ascii::no_case[ascii::string ("NULL")];
+  result %= value_expression | null_literal;
   result.name ("result");
   simple_when %= ascii::no_case["WHEN"] >> &no_skip[boost::spirit::qi::space]
                  > value_expression >> ascii::no_case["THEN"]

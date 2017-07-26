@@ -71,10 +71,10 @@ struct ADQL_parser
       column_name, sort_key, ordering_specification, sort_specification,
       concatenation_operator, set_function_type, column_reference_string,
       table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
-      catalog_name_string, correlation_name, qualifier, trig_one_arg_names,
+      catalog_name, correlation_name, qualifier, trig_one_arg_names,
       math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
       user_defined_function_name, unsigned_literal,
-      unsigned_value_specification, general_literal, null_string;
+      unsigned_value_specification, general_literal, null_literal;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>

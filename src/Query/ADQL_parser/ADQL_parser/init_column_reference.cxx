@@ -79,21 +79,21 @@ void ADQL_parser::init_column_reference ()
   /// match against schema.table or table.column, gobbling up the
   /// table or column name and making the parse fail.
   table_name
-      %= tap_upload | hold[catalog_name_string >> period
-                           >> unqualified_schema_name >> period >> identifier]
+      %= tap_upload | hold[catalog_name >> period >> unqualified_schema_name
+                           >> period >> identifier]
          | hold[unqualified_schema_name >> period >> identifier] | identifier;
   table_name.name ("table name");
 
   column_reference_string
       %= hold[tap_upload >> period >> identifier]
-         | hold[catalog_name_string >> period >> unqualified_schema_name
-                >> period >> identifier >> period >> identifier]
+         | hold[catalog_name >> period >> unqualified_schema_name >> period
+                >> identifier >> period >> identifier]
          | hold[unqualified_schema_name >> period >> identifier >> period
                 >> identifier] | hold[identifier >> period >> identifier]
          | identifier;
   column_reference_string.name ("column reference string");
-  catalog_name_string %= identifier;
-  catalog_name_string.name ("catalog name string");
+  catalog_name %= identifier;
+  catalog_name.name ("catalog name");
 
   catalog_schema_qualifier_column %= identifier >> '.' >> identifier >> '.'
                                      >> identifier >> '.' >> identifier;
