@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../Value_Expression_Wrap.hxx"
+
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
@@ -11,26 +13,12 @@ namespace ADQL
 class Coalesce
 {
 public:
-  std::vector<std::string> coalesce;
-  bool empty () const { return coalesce.empty (); }
+  std::vector<Value_Expression_Wrap> wraps;
+  bool empty () const { return wraps.empty (); }
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Coalesce &coalesce)
-{
-  os << "COALESCE(";
-  for (auto c=coalesce.coalesce.begin (); c!=coalesce.coalesce.end (); )
-    {
-      os << *c;
-      ++c;
-      if (c!=coalesce.coalesce.end ())
-        {
-          os << ',';
-        }
-    }
-  os << ')';
-  return os;
-}
+std::ostream &operator<<(std::ostream &os, const ADQL::Coalesce &coalesce);
 }
 
-  BOOST_FUSION_ADAPT_STRUCT (ADQL::Coalesce, (std::vector<std::string>, coalesce))
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Coalesce,
+                           (std::vector<ADQL::Value_Expression_Wrap>, wraps))

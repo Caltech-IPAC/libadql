@@ -48,7 +48,7 @@ void ADQL_parser::init_factor ()
   result %= value_expression | null_string;
   result.name ("result");
   simple_when %= ascii::no_case["WHEN"] >> &no_skip[boost::spirit::qi::space]
-    > value_expression >> ascii::no_case["THEN"]
+                 > value_expression >> ascii::no_case["THEN"]
                  > &no_skip[boost::spirit::qi::space] > result;
   simple_when.name ("simple_when_clause");
 
@@ -65,21 +65,18 @@ void ADQL_parser::init_factor ()
                  > ascii::no_case["END"];
   simple_case.name ("simple_case");
 
-  searched_when %= ascii::no_case["WHEN"]
-                   >> &no_skip[boost::spirit::qi::space]
-                   >> search_condition
-                   >> ascii::no_case["THEN"]
-                   >> &no_skip[boost::spirit::qi::space]
-                   >> result;
+  searched_when %= ascii::no_case["WHEN"] >> &no_skip[boost::spirit::qi::space]
+                   >> search_condition >> ascii::no_case["THEN"]
+                   >> &no_skip[boost::spirit::qi::space] >> result;
   searched_when.name ("searched_when");
   searched_whens %= searched_when >> *searched_when;
   searched_whens.name ("searched_whens");
-  
+
   searched_case %= searched_whens >> -else_clause
                    >> &no_skip[boost::spirit::qi::space]
                    >> ascii::no_case["END"];
   searched_case.name ("searched_case");
-  
+
   case_specification %= ascii::no_case["CASE"]
                         >> &no_skip[boost::spirit::qi::space]
                         > (simple_case | searched_case);
@@ -88,8 +85,8 @@ void ADQL_parser::init_factor ()
   nullif %= ascii::no_case["NULLIF"] >> '(' >> value_expression >> ','
             >> value_expression >> ')';
   nullif.name ("nullif");
-  coalesce %= ascii::no_case["COALESCE"] >> '(' >> value_expression_string
-              >> *(',' >> value_expression_string) >> ')';
+  coalesce %= ascii::no_case["COALESCE"] >> '('
+              >> (value_expression % '.' >> *(',' >> value_expression)) >> ')';
   coalesce.name ("coalesce");
   case_abbreviation %= nullif | coalesce;
   case_abbreviation.name ("case_abbreviation");
