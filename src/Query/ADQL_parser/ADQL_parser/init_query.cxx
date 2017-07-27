@@ -57,11 +57,10 @@ void ADQL_parser::init_query ()
       %= sort_key >> -(boost::spirit::qi::space >> ordering_specification);
   sort_specification_list %= sort_specification
                              >> *(char_ (',') >> sort_specification);
-  order_by_clause
-      %= lexeme[ascii::no_case["ORDER"] > &boost::spirit::qi::space]
+  order_by %= lexeme[ascii::no_case["ORDER"] > &boost::spirit::qi::space]
          >> lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
          >> sort_specification_list;
-  order_by_clause.name ("order by");
+  order_by.name ("order by");
 
   /// The expectation operator messes up the automatic calculation of
   /// semantic actions.  So instead of %=, we have to do it manually
@@ -74,7 +73,8 @@ void ADQL_parser::init_query ()
                                                                 = _1]
          > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
         >> -where[at_c<4>(_val) = _1] >> -group_by[at_c<5>(_val) = _1]
-        >> -having[at_c<6>(_val) = _1] >> -order_by_clause[at_c<7>(_val) = _1];
+        >> -having[at_c<6>(_val) = _1]
+        >> -order_by[at_c<7>(_val) = _1];
   query.name ("select");
 
   query_no_geometry
@@ -86,7 +86,7 @@ void ADQL_parser::init_query ()
          > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
         >> -where_no_geometry[at_c<4>(_val) = _1]
         >> -group_by[at_c<5>(_val) = _1] >> -having[at_c<6>(_val) = _1]
-        >> -order_by_clause[at_c<7>(_val) = _1];
+        >> -order_by[at_c<7>(_val) = _1];
   query.name ("select");
 
   subquery %= lit ('(') >> (query_no_geometry | joined_table) >> lit (')');
