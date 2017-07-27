@@ -88,10 +88,10 @@ struct ADQL_parser
       character_factor_string, character_value_expression_string, match_value,
       pattern, concatenation_operator_string, string_value_expression_string,
       array_value_constructor_by_enumeration_string, correlation_specification,
-      boolean_value_expression, boolean_literal, case_operand, when_operand,
-      result_expression_string, result_string, simple_when_clause_string,
-      else_clause_string, simple_case_string, case_specification_string,
-      case_expression_string, any_expression_string, count_star;
+      boolean_literal, case_operand, when_operand, result_expression_string,
+      result_string, simple_when_clause_string, else_clause_string,
+      simple_case_string, case_specification_string, case_expression_string,
+      any_expression_string, count_star;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -349,6 +349,11 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Boolean_Primary (),
                           boost::spirit::ascii::space_type> boolean_primary;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Boolean_Value_Expression (),
+                          boost::spirit::ascii::space_type>
+      boolean_value_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Factor (),
                           boost::spirit::ascii::space_type> boolean_factor;

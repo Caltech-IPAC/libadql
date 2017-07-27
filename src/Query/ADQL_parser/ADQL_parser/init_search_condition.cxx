@@ -26,7 +26,7 @@ void ADQL_parser::init_search_condition ()
   boolean_literal %= ascii::no_case[ascii::string ("True")]
                      | ascii::no_case[ascii::string ("False")];
 
-  boolean_value_expression %= boolean_literal | user_defined_function_string;
+  boolean_value_expression %= boolean_literal | user_defined_function;
 
   boolean_primary %= predicate
                      | hold[lit ('(') >> search_condition >> lit (')')]
