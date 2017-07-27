@@ -1,22 +1,27 @@
 #pragma once
 
+#include "../../../../String_Value_Expression.hxx"
+
+#include <boost/fusion/include/io.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+
+#include <iostream>
+#include <string>
+
 namespace ADQL
 {
 class Like_Predicate
 {
 public:
-  std::string match, pattern;
+  String_Value_Expression match, pattern;
   std::string Not;
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Like_Predicate &c)
-{
-  return os << c.match << " " << c.Not << (c.Not.empty () ? "" : " ")
-            << "LIKE " << c.pattern;
-}
+std::ostream &operator<<(std::ostream &os, const ADQL::Like_Predicate &c);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Like_Predicate,
-                           (std::string, match)(std::string, Not)(std::string,
-                                                                  pattern))
+                           (ADQL::String_Value_Expression,
+                            match)(std::string,
+                                   Not)(ADQL::String_Value_Expression,
+                                        pattern))

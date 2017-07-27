@@ -47,9 +47,8 @@ void ADQL_parser::init_predicate ()
          >> value_expression;
 
   in_predicate
-      %= value_expression
-         >> -lexeme[ascii::no_case[ascii::string ("NOT")]
-                    > boost::spirit::qi::space]
+      %= value_expression >> -lexeme[ascii::no_case[ascii::string ("NOT")]
+                                     > boost::spirit::qi::space]
          >> lexeme[ascii::no_case["IN"] > &boost::spirit::qi::space]
          >> (subquery | (lit ('(') >> (value_expression % ',') >> ')'));
 
@@ -59,13 +58,13 @@ void ADQL_parser::init_predicate ()
                                > &boost::spirit::qi::space]
                     >> ascii::no_case["NULL"];
 
-  match_value %= character_value_expression_string;
-  pattern %= character_value_expression_string;
+  match_value %= character_value_expression;
+  pattern %= character_value_expression;
 
   like_predicate
       %= match_value >> -lexeme[ascii::no_case[ascii::string ("NOT")]
-                                > &boost::spirit::qi::space]
-         >> lexeme[ascii::no_case["LIKE"] > &boost::spirit::qi::space]
+                                >> &boost::spirit::qi::space]
+         >> lexeme[ascii::no_case["LIKE"] >> &boost::spirit::qi::space]
          >> pattern;
 
   exists_predicate

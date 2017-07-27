@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Value_Expression/Numeric_Value_Expression.hxx"
-#include "Value_Expression/String_Value_Expression.hxx"
-#include "Value_Expression/Value_Expression_Primary.hxx"
+#include "Numeric_Value_Expression.hxx"
+#include "String_Value_Expression.hxx"
+#include "Value_Expression_Primary.hxx"
 #include "../empty_variant.hxx"
 
 #include <boost/variant.hpp>
