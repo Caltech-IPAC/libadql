@@ -83,7 +83,6 @@ def build(ctx):
                  'src/Query/ADQL_parser/ADQL_parser/init_search_condition.cxx',
                  'src/Query/simplified_columns.cxx',
                  'src/Query/Query_Specification/Search_Condition/Boolean_Factor/Boolean_Primary/ostream.cxx',
-                 'src/Query/Query_Specification/Search_Condition/Boolean_Factor/Boolean_Primary/Boolean_Value_Expression/ostream.cxx',
                  'src/Query/Query_Specification/Search_Condition/Boolean_Factor/Boolean_Primary/Predicate/Like_Predicate/ostream.cxx',
                  'src/Query/Query_Specification/Joined_Table_Wrap/empty.cxx',
                  'src/Query/Query_Specification/Joined_Table/ostream.cxx',

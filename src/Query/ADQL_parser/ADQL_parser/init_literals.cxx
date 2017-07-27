@@ -55,7 +55,13 @@ void ADQL_parser::init_literals ()
       %= quote >> *character_representation >> quote
          >> *hold[+separator >> quote >> *character_representation >> quote];
 
-  general_literal %= character_string_literal;
+  boolean_literal %= ascii::no_case[ascii::string ("True")]
+                     | ascii::no_case[ascii::string ("False")];
+
+  /// Use SQL 99 syntax for where to put boolean_literal.  SQL 99 also
+  /// has datetime_literal's etc., but for now we are only adding
+  /// boolean_literal.
+  general_literal %= character_string_literal | boolean_literal;
   unsigned_literal %= unsigned_numeric_literal | general_literal;
   unsigned_value_specification %= unsigned_literal;
 }

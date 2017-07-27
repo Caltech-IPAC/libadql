@@ -2,7 +2,7 @@
 
 #include "../Search_Condition_Wrap.hxx"
 #include "Boolean_Primary/Predicate.hxx"
-#include "Boolean_Primary/Boolean_Value_Expression.hxx"
+#include "../../Value_Expression_Primary_Wrap.hxx"
 
 namespace ADQL
 {
@@ -10,7 +10,7 @@ class Boolean_Primary
 {
 public:
   typedef boost::variant<Predicate, Search_Condition_Wrap,
-                         Boolean_Value_Expression> Variant;
+                         Value_Expression_Primary_Wrap> Variant;
   Variant variant;
 };
 std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b);

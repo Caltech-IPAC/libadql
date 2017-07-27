@@ -336,11 +336,6 @@ struct ADQL_parser
                           ADQL::Boolean_Primary (),
                           boost::spirit::ascii::space_type> boolean_primary;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Boolean_Value_Expression (),
-                          boost::spirit::ascii::space_type>
-      boolean_value_expression;
-
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Boolean_Factor (),
                           boost::spirit::ascii::space_type> boolean_factor;
 
