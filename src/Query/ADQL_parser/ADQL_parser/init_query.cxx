@@ -53,13 +53,10 @@ void ADQL_parser::init_query ()
   /// I have the vague feeling that there are cases where there are
   /// no spaces between the sort_key and ordering_specification, but
   /// I can not think of any.
-  sort_specification
-      %= sort_key >> -(boost::spirit::qi::space >> ordering_specification);
-  sort_specification_list %= sort_specification
-                             >> *(char_ (',') >> sort_specification);
+  sort_specification %= sort_key >> -ordering_specification;
   order_by %= lexeme[ascii::no_case["ORDER"] > &boost::spirit::qi::space]
-         >> lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
-         >> sort_specification_list;
+              >> lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space]
+              >> (sort_specification % ',');
   order_by.name ("order by");
 
   /// The expectation operator messes up the automatic calculation of
@@ -73,8 +70,7 @@ void ADQL_parser::init_query ()
                                                                 = _1]
          > columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1])
         >> -where[at_c<4>(_val) = _1] >> -group_by[at_c<5>(_val) = _1]
-        >> -having[at_c<6>(_val) = _1]
-        >> -order_by[at_c<7>(_val) = _1];
+        >> -having[at_c<6>(_val) = _1] >> -order_by[at_c<7>(_val) = _1];
   query.name ("select");
 
   query_no_geometry

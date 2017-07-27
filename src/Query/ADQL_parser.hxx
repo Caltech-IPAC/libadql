@@ -67,17 +67,17 @@ struct ADQL_parser
       SQL_reserved_word_23, SQL_reserved_word_30, SQL_reserved_word_31,
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
-      column_name, sort_key, ordering_specification, sort_specification,
-      set_function_type, table_name, tap_upload, tap_upload_identifier,
-      unqualified_schema_name, catalog_name, correlation_name, qualifier,
-      trig_one_arg_names, math_zero_arg_names, math_one_arg_names,
-      math_two_arg_names, cast_as, user_defined_function_name,
-      unsigned_literal, unsigned_value_specification, general_literal,
-      null_literal, boolean_literal;
+      column_name, sort_key, ordering_specification, set_function_type,
+      table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
+      catalog_name, correlation_name, qualifier, trig_one_arg_names,
+      math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
+      user_defined_function_name, unsigned_literal,
+      unsigned_value_specification, general_literal, null_literal,
+      boolean_literal;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
-      sort_specification_list, correlation_specification, count_star;
+      correlation_specification, count_star;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
@@ -359,6 +359,10 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Order_By (),
                           boost::spirit::ascii::space_type> order_by;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Sort_Specification (),
+                          boost::spirit::ascii::space_type> sort_specification;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where,

@@ -9,7 +9,7 @@ namespace ADQL
 class Order_By
 {
 public:
-  std::vector<std::string> sort_specifications;
+  std::vector<Sort_Specification> sort_specifications;
   bool empty () const { return sort_specifications.empty (); }
 };
 
@@ -31,4 +31,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Order_By,
-                           (std::vector<std::string>, sort_specifications))
+                           (std::vector<ADQL::Sort_Specification>,
+                            sort_specifications))
