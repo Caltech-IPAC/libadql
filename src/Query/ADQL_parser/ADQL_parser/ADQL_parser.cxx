@@ -34,7 +34,6 @@ ADQL_parser::ADQL_parser (
   init_trig ();
   init_math ();
   init_factor ();
-  init_strings ();
   init_columns ();
   init_join ();
   init_predicate ();

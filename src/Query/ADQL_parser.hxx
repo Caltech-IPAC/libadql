@@ -39,7 +39,6 @@ struct ADQL_parser
   void init_math ();
   void init_trig ();
   void init_factor ();
-  void init_strings ();
   void init_columns ();
   void init_predicate ();
   void init_search_condition ();
@@ -69,29 +68,17 @@ struct ADQL_parser
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
       column_name, sort_key, ordering_specification, sort_specification,
-      set_function_type, column_reference_string, table_name, tap_upload,
-      tap_upload_identifier, unqualified_schema_name, catalog_name,
-      correlation_name, qualifier, trig_one_arg_names, math_zero_arg_names,
-      math_one_arg_names, math_two_arg_names, cast_as,
-      user_defined_function_name, unsigned_literal,
-      unsigned_value_specification, general_literal, null_literal;
+      set_function_type, table_name, tap_upload, tap_upload_identifier,
+      unqualified_schema_name, catalog_name, correlation_name, qualifier,
+      trig_one_arg_names, math_zero_arg_names, math_one_arg_names,
+      math_two_arg_names, cast_as, user_defined_function_name,
+      unsigned_literal, unsigned_value_specification, general_literal,
+      null_literal, boolean_literal;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
-      general_set_function_string, set_function_specification_string,
-      value_expression_primary_string, value_expression_string,
-      numeric_value_expression_string, numeric_primary_string, factor_string,
-      term_string, numeric_value_function_string, trig_function_string,
-      math_function_string, cast_function_string, user_defined_function_string,
-      user_defined_function_param_string, sort_specification_list,
-      order_by_clause, string_value_function_string, character_primary_string,
-      character_factor_string, character_value_expression_string,
-      concatenation_operator_string, string_value_expression_string,
-      array_value_constructor_by_enumeration_string, correlation_specification,
-      boolean_literal, case_operand, when_operand, result_expression_string,
-      result_string, simple_when_clause_string, else_clause_string,
-      simple_case_string, case_specification_string, case_expression_string,
-      any_expression_string, count_star;
+      sort_specification_list, order_by_clause, correlation_specification,
+      count_star;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys (),
                           boost::spirit::ascii::space_type> coord_sys;
