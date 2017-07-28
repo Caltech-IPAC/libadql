@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Search_Condition/Search_Condition_Wrap.hxx"
+#include "../../Search_Condition_Wrap.hxx"
 
 #include <boost/fusion/include/adapt_struct.hpp>
 

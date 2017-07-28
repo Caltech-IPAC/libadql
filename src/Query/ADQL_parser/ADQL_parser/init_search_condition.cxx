@@ -35,6 +35,6 @@ void ADQL_parser::init_search_condition ()
                              | ascii::no_case[ascii::string ("OR")])
                             >> &boost::spirit::qi::space] >> search_condition;
 
-  search_condition
-      = (boolean_term | boolean_factor)[push_back (at_c<0>(_val), _1)];
+  boolean_value_expression %= boolean_term | boolean_factor;
+  search_condition %= boolean_value_expression;
 }

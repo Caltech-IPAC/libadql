@@ -193,6 +193,11 @@ struct ADQL_parser
       user_defined_function_param;
 
   boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Value_Expression_Non_Bool (),
+                          boost::spirit::ascii::space_type>
+      value_expression_non_bool;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression_Primary (),
                           boost::spirit::ascii::space_type>
       value_expression_primary;
@@ -344,7 +349,8 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Search_Condition (),
-                          boost::spirit::ascii::space_type> search_condition;
+                          boost::spirit::ascii::space_type> search_condition,
+      boolean_value_expression;
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Having (),
                           boost::spirit::ascii::space_type> having;

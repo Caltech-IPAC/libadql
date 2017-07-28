@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../Result.hxx"
-#include "../../../../../Search_Condition/Search_Condition_Wrap.hxx"
+#include "../../../../../Search_Condition_Wrap.hxx"
 
 namespace ADQL
 {

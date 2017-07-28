@@ -54,8 +54,12 @@ void ADQL_parser::init_columns ()
   concatenation_expression %= hold[character_factor >> "||"]
                               >> (character_factor % "||");
 
-  value_expression %= concatenation_expression | numeric_value_expression
-                      | string_value_expression;
+  value_expression_non_bool %= concatenation_expression
+                               | numeric_value_expression
+                               | string_value_expression;
+  value_expression_non_bool.name ("value_expression_non_bool");
+
+  value_expression %= value_expression_non_bool | boolean_value_expression;
   value_expression.name ("value_expression");
 
   column_name %= identifier;

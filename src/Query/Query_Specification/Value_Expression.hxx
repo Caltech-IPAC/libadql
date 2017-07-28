@@ -1,28 +1,21 @@
 #pragma once
 
-#include "Numeric_Value_Expression.hxx"
-#include "String_Value_Expression.hxx"
-#include "Value_Expression_Primary.hxx"
-#include "../empty_variant.hxx"
-
-#include <boost/variant.hpp>
+#include "Value_Expression_Non_Bool.hxx"
+#include "Search_Condition_Wrap.hxx"
 
 namespace ADQL
 {
 class Value_Expression
 {
 public:
-  typedef boost::variant<Numeric_Value_Expression, String_Value_Expression>
+  typedef boost::variant<Value_Expression_Non_Bool, Search_Condition_Wrap>
       Variant;
   Variant variant;
-  bool empty () const { return empty_variant (variant); }
+  bool empty () const;
 };
 
-inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Value_Expression &value_expression)
-{
-  return os << value_expression.variant;
-}
+std::ostream &operator<<(std::ostream &os,
+                         const ADQL::Value_Expression &value_expression);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Value_Expression,

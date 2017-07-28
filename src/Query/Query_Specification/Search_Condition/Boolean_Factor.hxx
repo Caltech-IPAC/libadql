@@ -9,6 +9,7 @@ class Boolean_Factor
 public:
   std::string Not;
   Boolean_Primary boolean_primary;
+  bool empty () const { return boolean_primary.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,

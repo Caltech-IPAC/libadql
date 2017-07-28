@@ -9,6 +9,7 @@
 #include "Query_Specification/Table_Reference.hxx"
 #include "Query_Specification/Joined_Table.hxx"
 #include "Query_Specification/User_Defined_Function.hxx"
+#include "Query_Specification/Value_Expression_Primary.hxx"
 
 namespace ADQL
 {

@@ -11,4 +11,5 @@ typedef boost::recursive_wrapper<Value_Expression_Primary>
     Value_Expression_Primary_Wrap;
 std::ostream &operator<<(std::ostream &os,
                          const Value_Expression_Primary_Wrap &s);
+bool empty (const Value_Expression_Primary_Wrap &s);
 }

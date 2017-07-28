@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Search_Condition_Wrap.hxx"
+#include "../../Search_Condition_Wrap.hxx"
 #include "Boolean_Primary/Predicate.hxx"
 #include "../../Value_Expression_Primary_Wrap.hxx"
 
@@ -12,6 +12,7 @@ public:
   typedef boost::variant<Predicate, Search_Condition_Wrap,
                          Value_Expression_Primary_Wrap> Variant;
   Variant variant;
+  bool empty () const;
 };
 std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Primary &b);
 }

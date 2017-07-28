@@ -1,54 +1,34 @@
 #pragma once
 
-#include "../../../../ostream_vector.hxx"
-#include "../../../../../Subquery.hxx"
+#include "../../../../../Subquery_Wrap.hxx"
+#include "../../../../Value_Expression_Non_Bool_Wrap.hxx"
+
+#include <boost/fusion/include/io.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/variant.hpp>
+
+#include <iostream>
+#include <vector>
 
 namespace ADQL
 {
+class Value_Expression;
 class In_Predicate
 {
 public:
-  Value_Expression value;
+  Value_Expression_Non_Bool_Wrap value;
   std::string Not;
 
-  typedef boost::variant<std::vector<Value_Expression>, Subquery> Variant;
+  typedef boost::variant<Subquery_Wrap, std::vector<Value_Expression> >
+      Variant;
   Variant variant;
+  bool empty () const { return ADQL::empty (value); }
 };
-}
 
-namespace
-{
-class In_Predicate_Visitor : public boost::static_visitor<std::ostream &>
-{
-public:
-  std::ostream &os;
-  In_Predicate_Visitor (std::ostream &OS) : os (OS) {}
-  In_Predicate_Visitor () = delete;
-
-  std::ostream &operator()(const std::vector<ADQL::Value_Expression> &v) const
-  {
-    using namespace ADQL;
-    return os << v;
-  }
-
-  std::ostream &operator()(const ADQL::Subquery &subquery) const
-  {
-    return os << subquery;
-  }
-};
-}
-
-namespace ADQL
-{
-inline std::ostream &operator<<(std::ostream &os, const ADQL::In_Predicate &p)
-{
-  os << p.value << " " << (p.Not.empty () ? "" : "NOT ") << "IN ";
-  In_Predicate_Visitor visitor (os);
-  return boost::apply_visitor (visitor, p.variant);
-}
+std::ostream &operator<<(std::ostream &os, const ADQL::In_Predicate &p);
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::In_Predicate,
-                           (ADQL::Value_Expression,
+                           (ADQL::Value_Expression_Non_Bool_Wrap,
                             value)(std::string,
                                    Not)(ADQL::In_Predicate::Variant, variant))

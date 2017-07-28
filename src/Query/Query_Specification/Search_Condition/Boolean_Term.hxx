@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Search_Condition_Wrap.hxx"
+#include "../Search_Condition_Wrap.hxx"
 #include "Boolean_Factor.hxx"
+
+#include <boost/algorithm/string.hpp>
 
 namespace ADQL
 {
@@ -11,6 +13,7 @@ public:
   Search_Condition_Wrap search_condition_wrap;
   std::string logical_op;
   Boolean_Factor boolean_factor;
+  bool empty () const { return logical_op.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Boolean_Term &s)

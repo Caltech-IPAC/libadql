@@ -6,6 +6,7 @@
 #include "Predicate/Null_Predicate.hxx"
 #include "Predicate/Like_Predicate.hxx"
 #include "Predicate/Exists_Predicate.hxx"
+#include "../../../../empty_variant.hxx"
 
 namespace ADQL
 {
@@ -16,6 +17,7 @@ public:
                          Null_Predicate, Like_Predicate,
                          Exists_Predicate> Variant;
   Variant variant;
+  bool empty () const { return empty_variant (variant); }
 };
 }
 
