@@ -62,6 +62,7 @@ int main (int argc, char *argv[])
     "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
     "-20,-1)) "
     "And (x<1 And x>2)",
+    "SELECT * FROM my_table1 where (x AND x)",
     "SELECT * FROM my_table1 where (x>2 AND x<4) Or (x>6 and x<10)",
     "SELECT * FROM my_table1 where (x Between 2 AND 4) Or (x>6 and x<10)",
     "SELECT * FROM my_table1 where x is null",
@@ -70,6 +71,8 @@ int main (int argc, char *argv[])
     "aaa.ccc.fp_pscdec),"
     "CIRCLE(1,1,0.08))=1 and (ra between 0.95 and 1.05)",
     "SELECT * FROM my_table1 where x in (select y from my_table2)",
+    "SELECT * FROM my_table1 where x between y and z",
+    "SELECT * FROM my_table1 where x or z",
     "SELECT * FROM my_table1 where x in (10,20,30)",
     "SELECT * FROM my_table1 where x not in (10,20,30)",
     "SELECT All * FROM my_table1", "SELECT Distinct * FROM my_table1",
@@ -232,6 +235,35 @@ int main (int argc, char *argv[])
     "select CASe when b=1 then c when b=2 then e else f end from foo",
     "select CASe when b=1 then c when b=2 then e end from foo",
     "select Case when true then c else d end from foo",
+    "select (CASE a WHEN b THEN c END) as d from foo",
+    "SELECT o.target_name as name,"
+"          (p.time_bounds_lower + p.time_bounds_upper)/2 as DATE_TIME_OF_OBS,"
+"          o.proposal_id as PROGRAM_ID,"
+"          (CASE WHEN o.intent = 'science' THEN 'S'"
+"          WHEN o.target_standard  then 'T'"
+"                ELSE 'C' END)"
+"          as DY,"
+"          (o.instrument_name || ',' || o.instrument_keywords) as Instrument_Setup,"
+"          o.observationid as Group_ID,"
+"          MAX(CASE WHEN (a.productType='preview' and a.uri like '%_target.png') THEN"
+"            ('<a href=\"' || a.uri || '\">[T]<\a>') ELSE NULL END) as Target,"
+"          MAX(CASE WHEN (a.productType='info' and a.uri like '%program_%.txt') THEN"
+"            ('<a href=\"' || a.uri || '\">[P]<\a>') ELSE NULL END) as Program,"
+"          MAX(CASE WHEN (a.productType='preview' and a.uri like '%weather_%.png') THEN"
+"            ('<a href=\"' || a.uri || '\">[W]<\a>') ELSE NULL END) as Weather,"
+"          MAX(CASE WHEN (a.productType='preview' and a.uri like '%_qa.png') THEN"
+"            ('<a href=\"' || a.uri || '\">[Q]<\a>') ELSE NULL END) as Quality"
+"   FROM"
+"     (caom.plane p join caom.observation o on o.obsid = p.obsid) "
+"     join caom.artifact a on p.planeid = a.planeid "
+"   WHERE"
+"     INTERSECTS(caom.plane.poly, CIRCLE(10,10,1))"
+"     AND (caom.observation.telescope_name = 'IRTF'"
+"          AND (58036 <= caom.plane.time_bounds_upper"
+"               AND 58036 >= caom.plane.time_bounds_lower)"
+"          AND caom.observation.instrument = 'Spex Spectrograph')"
+"   GROUP BY"
+"     name, DATE_TIME_OF_OBS, PROGRAM_ID, DY, Instrument_Setup, Group_ID",
   };
 
   std::vector<std::string> fail = {
