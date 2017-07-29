@@ -12,7 +12,7 @@ import traceback
 from waflib import Build, Logs, Utils
 
 def options(ctx):
-    ctx.load('compiler_cxx cxx11 gnu_dirs waf_unit_test')
+    ctx.load('compiler_cxx cxx14 gnu_dirs waf_unit_test')
     ctx.add_option('--debug', help='Include debug symbols and turn ' +
                                    'compiler optimizations off',
                    action='store_true', default=False, dest='debug')
@@ -29,7 +29,7 @@ def options(ctx):
                    '(e.g. "boost_filesystem boost_system"')
 
 def configure(ctx):
-    ctx.load('compiler_cxx cxx11 gnu_dirs waf_unit_test')
+    ctx.load('compiler_cxx cxx14 gnu_dirs waf_unit_test')
     ctx.env.append_value('CXXFLAGS', '-Wall')
     ctx.env.append_value('CXXFLAGS', '-Wextra')
 
@@ -135,7 +135,7 @@ def build(ctx):
         target='adql_query',
         name='adql_query_st',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['boost','cxx11']
+        use=['boost','cxx14']
     )
     # shared library
     ctx.shlib(
@@ -144,7 +144,7 @@ def build(ctx):
         target='adql_query',
         name='adql_query_sh',
         install_path=os.path.join(ctx.env.PREFIX, 'lib'),
-        use=['boost','cxx11']
+        use=['boost','cxx14']
     )
 
     # Install headers
@@ -157,7 +157,7 @@ def build(ctx):
         source=['test/parse_adql.cxx'],
         target='parse_adql',
         name='parse_adql',
-        use=['boost','adql_query_st','cxx11']
+        use=['boost','adql_query_st','cxx14']
     )
 
     from waflib.Tools import waf_unit_test
