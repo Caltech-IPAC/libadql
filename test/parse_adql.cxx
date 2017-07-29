@@ -316,12 +316,14 @@ int main (int argc, char *argv[])
     {
       try
         {
-          std::cout << "query: " << i << "\n";
+          size_t initial_size (std::count (i.begin (), i.end (), '*'));
           ADQL::Query query (i, table_mapping);
           std::string formatted_query = ADQL::to_string (query);
-          std::cout << "formatted: " << formatted_query << "\n";
+          size_t formatted_size (std::count (formatted_query.begin (),
+                                             formatted_query.end (), '*'));
           ADQL::Query parsed_query (formatted_query);
-          if (formatted_query != ADQL::to_string (parsed_query))
+          if (initial_size != formatted_size
+              || formatted_query != ADQL::to_string (parsed_query))
             throw std::runtime_error (
                 "Reformatting formatted query gave different result:\n"
                 "  Original:    " + i + "\n" + "  Formatted:   "

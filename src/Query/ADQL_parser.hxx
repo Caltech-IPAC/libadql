@@ -73,7 +73,7 @@ struct ADQL_parser
       math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
       user_defined_function_name, unsigned_literal,
       unsigned_value_specification, general_literal, null_literal,
-      boolean_literal;
+      boolean_literal, qualifier_star;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
