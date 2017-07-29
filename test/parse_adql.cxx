@@ -229,41 +229,54 @@ int main (int argc, char *argv[])
     "select CASE a WHEN 'b' THEN 'c' ELSE NULL END from b",
     "select CASE a WHEN 'b' THEN 'c' when 'd' then 'e' ELSE 'f' END from b",
     "select cast('Inf' as FLOAT8), cast('-Inf' as Float4) from foo",
-    "select ST_MakeLine(ARRAY[ST_MakePoint(T5ad885ee5df7f9ca98e978.ra1, 2), ST_MakePoint(3, 4), ST_MakePoint(5, 6), ST_MakePoint(7, 8), ST_MakePoint(1, 2)]) from T5ad885ee5df7f9ca98e978",
+    "select ST_MakeLine(ARRAY[ST_MakePoint(T5ad885ee5df7f9ca98e978.ra1, 2), "
+    "ST_MakePoint(3, 4), ST_MakePoint(5, 6), ST_MakePoint(7, 8), "
+    "ST_MakePoint(1, 2)]) from T5ad885ee5df7f9ca98e978",
     "select bar from foo where ('10' = ANY(bar))",
-    "select NULLIf (a,b), Coalesce (a), Coalesce (a,b,c), Coalesce (a,b) from foo",
+    "select NULLIf (a,b), Coalesce (a), Coalesce (a,b,c), Coalesce (a,b) from "
+    "foo",
     "select CASe when b=1 then c when b=2 then e else f end from foo",
     "select CASe when b=1 then c when b=2 then e end from foo",
     "select Case when true then c else d end from foo",
     "select (CASE a WHEN b THEN c END) as d from foo",
     "SELECT o.target_name as name,"
-"          (p.time_bounds_lower + p.time_bounds_upper)/2 as DATE_TIME_OF_OBS,"
-"          o.proposal_id as PROGRAM_ID,"
-"          (CASE WHEN o.intent = 'science' THEN 'S'"
-"          WHEN o.target_standard  then 'T'"
-"                ELSE 'C' END)"
-"          as DY,"
-"          (o.instrument_name || ',' || o.instrument_keywords) as Instrument_Setup,"
-"          o.observationid as Group_ID,"
-"          MAX(CASE WHEN (a.productType='preview' and a.uri like '%_target.png') THEN"
-"            ('<a href=\"' || a.uri || '\">[T]<\a>') ELSE NULL END) as Target,"
-"          MAX(CASE WHEN (a.productType='info' and a.uri like '%program_%.txt') THEN"
-"            ('<a href=\"' || a.uri || '\">[P]<\a>') ELSE NULL END) as Program,"
-"          MAX(CASE WHEN (a.productType='preview' and a.uri like '%weather_%.png') THEN"
-"            ('<a href=\"' || a.uri || '\">[W]<\a>') ELSE NULL END) as Weather,"
-"          MAX(CASE WHEN (a.productType='preview' and a.uri like '%_qa.png') THEN"
-"            ('<a href=\"' || a.uri || '\">[Q]<\a>') ELSE NULL END) as Quality"
-"   FROM"
-"     (caom.plane p join caom.observation o on o.obsid = p.obsid) "
-"     join caom.artifact a on p.planeid = a.planeid "
-"   WHERE"
-"     INTERSECTS(caom.plane.poly, CIRCLE(10,10,1))"
-"     AND (caom.observation.telescope_name = 'IRTF'"
-"          AND (58036 <= caom.plane.time_bounds_upper"
-"               AND 58036 >= caom.plane.time_bounds_lower)"
-"          AND caom.observation.instrument = 'Spex Spectrograph')"
-"   GROUP BY"
-"     name, DATE_TIME_OF_OBS, PROGRAM_ID, DY, Instrument_Setup, Group_ID",
+    "          (p.time_bounds_lower + p.time_bounds_upper)/2 as "
+    "DATE_TIME_OF_OBS,"
+    "          o.proposal_id as PROGRAM_ID,"
+    "          (CASE WHEN o.intent = 'science' THEN 'S'"
+    "          WHEN o.target_standard  then 'T'"
+    "                ELSE 'C' END)"
+    "          as DY,"
+    "          (o.instrument_name || ',' || o.instrument_keywords) as "
+    "Instrument_Setup,"
+    "          o.observationid as Group_ID,"
+    "          MAX(CASE WHEN (a.productType='preview' and a.uri like "
+    "'%_target.png') THEN"
+    "            ('<a href=\"' || a.uri || '\">[T]<\a>') ELSE NULL END) as "
+    "Target,"
+    "          MAX(CASE WHEN (a.productType='info' and a.uri like "
+    "'%program_%.txt') THEN"
+    "            ('<a href=\"' || a.uri || '\">[P]<\a>') ELSE NULL END) as "
+    "Program,"
+    "          MAX(CASE WHEN (a.productType='preview' and a.uri like "
+    "'%weather_%.png') THEN"
+    "            ('<a href=\"' || a.uri || '\">[W]<\a>') ELSE NULL END) as "
+    "Weather,"
+    "          MAX(CASE WHEN (a.productType='preview' and a.uri like "
+    "'%_qa.png') THEN"
+    "            ('<a href=\"' || a.uri || '\">[Q]<\a>') ELSE NULL END) as "
+    "Quality"
+    "   FROM"
+    "     (caom.plane p join caom.observation o on o.obsid = p.obsid) "
+    "     join caom.artifact a on p.planeid = a.planeid "
+    "   WHERE"
+    "     INTERSECTS(caom.plane.poly, CIRCLE(10,10,1))"
+    "     AND (caom.observation.telescope_name = 'IRTF'"
+    "          AND (58036 <= caom.plane.time_bounds_upper"
+    "               AND 58036 >= caom.plane.time_bounds_lower)"
+    "          AND caom.observation.instrument = 'Spex Spectrograph')"
+    "   GROUP BY"
+    "     name, DATE_TIME_OF_OBS, PROGRAM_ID, DY, Instrument_Setup, Group_ID",
   };
 
   std::vector<std::string> fail = {
