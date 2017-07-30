@@ -126,6 +126,7 @@ void ADQL_parser::init_factor ()
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
   user_defined_function_name %= regular_identifier
+                                | ascii::no_case[ascii::string ("ANY")]
                                 | ascii::no_case[ascii::string ("RIGHT")]
                                 | ascii::no_case[ascii::string ("LEFT")]
                                 | ascii::no_case[ascii::string ("UPPER")]

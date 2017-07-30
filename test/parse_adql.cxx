@@ -277,6 +277,7 @@ int main (int argc, char *argv[])
     "          AND caom.observation.instrument = 'Spex Spectrograph')"
     "   GROUP BY"
     "     name, DATE_TIME_OF_OBS, PROGRAM_ID, DY, Instrument_Setup, Group_ID",
+    "select * from foo where foo.bar=ANY(ARRAY['bar','baz'])",
   };
 
   std::vector<std::string> fail = {
