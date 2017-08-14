@@ -48,7 +48,7 @@ def configure(ctx):
     if ctx.options.boost_libs:
         boost_libs=[ctx.options.boost_libs]
     else:
-        boost_libs=[]
+        boost_libs=['boost_system','boost_thread']
 
     ctx.check_cxx(msg="Checking for Boost",
                   fragment=frag,
