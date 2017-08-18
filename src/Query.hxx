@@ -20,7 +20,9 @@ public:
   Query (const std::string &input,
          const std::map<std::string, std::string> &table_mapping);
   Query (const std::string &input) : Query (input, { {} }) {}
-
+  Query () = default;
+  Query (const Query&) = default;
+  
   std::vector<std::pair<std::string, std::string> >
   simplified_columns () const;
 
