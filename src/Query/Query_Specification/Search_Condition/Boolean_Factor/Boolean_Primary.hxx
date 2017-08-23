@@ -2,7 +2,7 @@
 
 #include "../../Search_Condition_Wrap.hxx"
 #include "Boolean_Primary/Predicate.hxx"
-#include "../../Value_Expression_Primary_Wrap.hxx"
+#include "../../Value_Expression_Non_Bool_Wrap.hxx"
 
 namespace ADQL
 {
@@ -10,7 +10,7 @@ class Boolean_Primary
 {
 public:
   typedef boost::variant<Predicate, Search_Condition_Wrap,
-                         Value_Expression_Primary_Wrap> Variant;
+                         Value_Expression_Non_Bool_Wrap> Variant;
   Variant variant;
   bool empty () const;
 };

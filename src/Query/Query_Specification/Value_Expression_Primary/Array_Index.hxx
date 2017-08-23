@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Numeric_Value_Expression.hxx"
+#include "../Value_Expression_Wrap.hxx"
 
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -13,7 +13,7 @@ namespace ADQL
 class Array_Index
 {
 public:
-  Numeric_Value_Expression expression;
+  Value_Expression_Wrap expression;
 };
 
 inline std::ostream &operator<<(std::ostream &os,
@@ -24,4 +24,4 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Array_Index,
-                           (ADQL::Numeric_Value_Expression, expression))
+                           (ADQL::Value_Expression_Wrap, expression))

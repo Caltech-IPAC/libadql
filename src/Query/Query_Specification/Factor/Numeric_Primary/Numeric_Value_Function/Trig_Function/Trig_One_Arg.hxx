@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../../../Numeric_Value_Expression_Wrap.hxx"
+#include "../../../../Value_Expression_Wrap.hxx"
 
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -10,22 +10,22 @@
 
 namespace ADQL
 {
-class Math_One_Arg
+class Trig_One_Arg
 {
 public:
   std::string function;
-  Numeric_Value_Expression_Wrap arg;
+  Value_Expression_Wrap arg;
   bool empty () const { return function.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Math_One_Arg &math_one_arg)
+                                const ADQL::Trig_One_Arg &trig_one_arg)
 {
-  return os << math_one_arg.function << "(" << math_one_arg.arg << ")";
+  return os << trig_one_arg.function << "(" << trig_one_arg.arg << ")";
 }
 }
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Math_One_Arg,
+BOOST_FUSION_ADAPT_STRUCT (ADQL::Trig_One_Arg,
                            (std::string,
-                            function)(ADQL::Numeric_Value_Expression_Wrap,
+                            function)(ADQL::Value_Expression_Wrap,
                                       arg))

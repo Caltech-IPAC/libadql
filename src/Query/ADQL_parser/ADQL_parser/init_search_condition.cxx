@@ -25,7 +25,7 @@ void ADQL_parser::init_search_condition ()
 
   boolean_primary %= predicate
                      | hold[lit ('(') >> search_condition >> lit (')')]
-                     | value_expression_primary;
+                     | value_expression_non_bool;
 
   boolean_factor %= -lexeme[ascii::no_case[ascii::string ("NOT")]
                             >> &boost::spirit::qi::space] >> boolean_primary;
@@ -35,6 +35,7 @@ void ADQL_parser::init_search_condition ()
                              | ascii::no_case[ascii::string ("OR")])
                             >> &boost::spirit::qi::space] >> search_condition;
 
+  /// FIXME: Make this a list parser instead of recursive
   boolean_value_expression %= boolean_term | boolean_factor;
   search_condition %= boolean_value_expression;
 }

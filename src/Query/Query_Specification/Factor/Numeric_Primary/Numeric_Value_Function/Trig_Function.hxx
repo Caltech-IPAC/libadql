@@ -2,7 +2,7 @@
 
 #include "Trig_Function/Trig_One_Arg.hxx"
 #include "Trig_Function/Trig_Two_Arg.hxx"
-#include "../../../../../../empty_variant.hxx"
+#include "../../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 

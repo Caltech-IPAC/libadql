@@ -74,7 +74,7 @@ struct ADQL_parser
       math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
       user_defined_function_name, unsigned_literal,
       unsigned_value_specification, general_literal, null_literal,
-      boolean_literal, qualifier_star;
+      boolean_literal, qualifier_star, binary_operators;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
@@ -121,22 +121,6 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Non_As (),
                           boost::spirit::ascii::space_type> non_as;
 
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Numeric_Value_Expression (),
-                          boost::spirit::ascii::space_type>
-      numeric_value_expression;
-
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Operator_Numeric_Value_Expression (),
-                          boost::spirit::ascii::space_type>
-      operator_numeric_value_expression;
-
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Term (),
-                          boost::spirit::ascii::space_type> term;
-
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Operator_Term (),
-                          boost::spirit::ascii::space_type> operator_term;
-
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Factor (),
                           boost::spirit::ascii::space_type> factor;
 
@@ -179,24 +163,19 @@ struct ADQL_parser
       user_defined_function;
 
   boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::String_Value_Expression (),
-                          boost::spirit::ascii::space_type>
-      string_value_expression, character_value_expression,
-      concatenation_expression, match_value, pattern;
-
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Character_Factor (),
-                          boost::spirit::ascii::space_type> character_factor;
-
-  boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression (),
                           boost::spirit::ascii::space_type> value_expression,
-      user_defined_function_param;
+      user_defined_function_param, pattern;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Value_Expression_Non_Bool_Term (),
+                          boost::spirit::ascii::space_type>
+      value_expression_non_bool_term;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression_Non_Bool (),
                           boost::spirit::ascii::space_type>
-      value_expression_non_bool;
+      value_expression_non_bool, match_value;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Value_Expression_Primary (),

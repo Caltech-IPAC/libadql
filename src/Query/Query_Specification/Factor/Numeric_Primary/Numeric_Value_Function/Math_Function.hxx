@@ -3,7 +3,7 @@
 #include "Math_Function/Math_Zero_Arg.hxx"
 #include "Math_Function/Math_One_Arg.hxx"
 #include "Math_Function/Math_Two_Arg.hxx"
-#include "../../../../../../empty_variant.hxx"
+#include "../../../../empty_variant.hxx"
 
 #include <boost/variant.hpp>
 

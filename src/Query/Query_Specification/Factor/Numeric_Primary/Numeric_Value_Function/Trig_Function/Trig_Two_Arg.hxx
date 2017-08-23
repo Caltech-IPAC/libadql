@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../../../Numeric_Value_Expression_Wrap.hxx"
+#include "../../../../Value_Expression_Wrap.hxx"
 
 #include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
@@ -14,7 +14,7 @@ class Trig_Two_Arg
 {
 public:
   std::string function;
-  Numeric_Value_Expression_Wrap arg0, arg1;
+  Value_Expression_Wrap arg0, arg1;
   bool empty () const { return function.empty (); }
 };
 
@@ -28,5 +28,5 @@ inline std::ostream &operator<<(std::ostream &os,
 
 BOOST_FUSION_ADAPT_STRUCT (
     ADQL::Trig_Two_Arg,
-    (std::string, function)(ADQL::Numeric_Value_Expression_Wrap,
-                            arg0)(ADQL::Numeric_Value_Expression_Wrap, arg1))
+    (std::string, function)(ADQL::Value_Expression_Wrap,
+                            arg0)(ADQL::Value_Expression_Wrap, arg1))

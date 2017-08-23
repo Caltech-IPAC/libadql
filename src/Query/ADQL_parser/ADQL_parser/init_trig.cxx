@@ -31,12 +31,12 @@ void ADQL_parser::init_trig ()
                         | ascii::no_case[ascii::string ("SIN")]
                         | ascii::no_case[ascii::string ("TAN")];
   trig_one_arg %= (hold[lexeme[trig_one_arg_names >> &nonidentifier_character]]
-                   > '(' > numeric_value_expression > ')');
+                   > '(' > value_expression > ')');
 
   trig_two_arg
       %= (hold[lexeme[ascii::no_case[ascii::string ("ATAN2")]
                       >> &nonidentifier_character]] > '('
-          > numeric_value_expression > ',' > numeric_value_expression > ')');
+          > value_expression > ',' > value_expression > ')');
 
   trig_function %= trig_one_arg | trig_two_arg;
   trig_function.name ("trig_function");

@@ -2,7 +2,7 @@
 #include "../Boolean_Primary.hxx"
 #include "../../../Search_Condition.hxx"
 #include "../../../Joined_Table.hxx"
-#include "../../../Value_Expression_Primary.hxx"
+#include "../../../Value_Expression_Non_Bool.hxx"
 
 namespace
 {
@@ -21,7 +21,7 @@ public:
     return os << "(" << s << ")";
   }
 
-  std::ostream &operator()(const ADQL::Value_Expression_Primary_Wrap &s) const
+  std::ostream &operator()(const ADQL::Value_Expression_Non_Bool_Wrap &s) const
   {
     return os << s;
   }

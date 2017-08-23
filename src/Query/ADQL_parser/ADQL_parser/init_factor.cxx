@@ -105,7 +105,7 @@ void ADQL_parser::init_factor ()
   value_subexpression %= hold['(' >> value_expression >> ')'];
   value_subexpression.name ("value_subexpression");
 
-  array_index %= hold['[' >> numeric_value_expression >> ']'];
+  array_index %= hold['[' >> value_expression >> ']'];
   array_index.name ("array_index");
 
   value_expression_primary
@@ -126,7 +126,6 @@ void ADQL_parser::init_factor ()
   /// Add a bunch of functions that are normally reserved words, but
   /// also really useful string functions (at least in Postgres)
   user_defined_function_name %= regular_identifier
-                                | ascii::no_case[ascii::string ("ANY")]
                                 | ascii::no_case[ascii::string ("RIGHT")]
                                 | ascii::no_case[ascii::string ("LEFT")]
                                 | ascii::no_case[ascii::string ("UPPER")]

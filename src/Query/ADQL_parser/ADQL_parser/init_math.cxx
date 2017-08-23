@@ -43,7 +43,7 @@ void ADQL_parser::init_math ()
                         | ascii::no_case[ascii::string ("ROUND")]
                         | ascii::no_case[ascii::string ("TRUNCATE")];
 
-  math_one_arg %= math_one_arg_names >> '(' >> numeric_value_expression >> ')';
+  math_one_arg %= math_one_arg_names >> '(' >> value_expression >> ')';
 
   /// Include names that optionally have two args.
   math_two_arg_names %= ascii::no_case[ascii::string ("MOD")]
@@ -51,8 +51,8 @@ void ADQL_parser::init_math ()
                         | ascii::no_case[ascii::string ("ROUND")]
                         | ascii::no_case[ascii::string ("TRUNCATE")];
 
-  math_two_arg %= math_two_arg_names >> '(' >> numeric_value_expression >> ','
-                  >> numeric_value_expression >> ')';
+  math_two_arg %= math_two_arg_names >> '(' >> value_expression >> ','
+                  >> value_expression >> ')';
 
   math_function %= math_zero_arg | math_one_arg | math_two_arg;
   math_function.name ("math_function");

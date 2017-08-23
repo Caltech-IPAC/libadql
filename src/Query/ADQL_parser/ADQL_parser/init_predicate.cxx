@@ -60,8 +60,8 @@ void ADQL_parser::init_predicate ()
                                > &boost::spirit::qi::space]
                     >> ascii::no_case["NULL"];
 
-  match_value %= character_value_expression;
-  pattern %= character_value_expression;
+  match_value %= value_expression_non_bool;
+  pattern %= value_expression_non_bool;
 
   like_predicate
       %= match_value >> -lexeme[ascii::no_case[ascii::string ("NOT")]
