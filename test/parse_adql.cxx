@@ -385,7 +385,7 @@ int main (int argc, char *argv[])
                 + ADQL::to_string (parsed_query));
 
           if (query.query_specification.top
-              != std::numeric_limits<unsigned long long>::max ()
+              != std::numeric_limits<size_t>::max ()
               && query.query_specification.top != 14223)
             throw std::runtime_error (
                 "Wrong value for TOP: "
