@@ -317,7 +317,8 @@ int main (int argc, char *argv[])
     "ST_Project(ST_Project(ST_Point(TAP_UPLOAD.pos.ra,TAP_UPLOAD.pos.dec), 111194.68229846345*0.5,radians(-180.0)),111194.68229846345*0.5,radians(90.0)),"
     "ST_Project(ST_Project(ST_Point(TAP_UPLOAD.pos.ra,TAP_UPLOAD.pos.dec), 111194.68229846345*0.5,radians(0.0)),111194.68229846345*0.5,radians(-90.0))])),ST_Point(wise.wise_allwise_p3am_cdd.ra4,wise.wise_allwise_p3am_cdd.dec4))"
     ") "
-    "ORDER BY in_row_id ASC"
+    "ORDER BY in_row_id ASC",
+    "select * from mytable where a not like b",
   };
 
   std::vector<std::string> fail = {
