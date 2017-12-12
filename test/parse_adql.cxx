@@ -319,6 +319,8 @@ int main (int argc, char *argv[])
     ") "
     "ORDER BY in_row_id ASC",
     "select * from mytable where a not like b",
+    "Select * From mytable Where "
+    "INTERSECTs(coalesce(pt,poly),Circle('J2000',+10 , -20,-1))",
   };
 
   std::vector<std::string> fail = {
