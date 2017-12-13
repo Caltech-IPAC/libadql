@@ -86,7 +86,7 @@ void ADQL_parser::init_factor ()
             >> value_expression >> ')';
   nullif.name ("nullif");
   coalesce %= ascii::no_case["COALESCE"] >> '('
-              >> (value_expression % '.' >> *(',' >> value_expression)) >> ')';
+              >> (value_expression % ',') >> ')';
   coalesce.name ("coalesce");
   case_abbreviation %= nullif | coalesce;
   case_abbreviation.name ("case_abbreviation");
