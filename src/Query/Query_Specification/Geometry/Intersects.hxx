@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Value_Expression_Wrap.hxx"
 #include "../Column_Reference.hxx"
 #include "Shape.hxx"
 
