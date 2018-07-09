@@ -57,10 +57,8 @@ def configure(ctx):
                   rpath=[ctx.options.boost_libdir],
                   lib=boost_libs)
 
-
-    if ctx.options.debug:
-        ctx.env.append_value('CXXFLAGS', '-g')
-    else:
+    ctx.env.append_value('CXXFLAGS', '-g')
+    if not ctx.options.debug:
         ctx.env.append_value('CXXFLAGS', '-Ofast')
         ctx.env.append_value('CXXFLAGS', '-DNDEBUG')
 
