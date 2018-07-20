@@ -1,5 +1,4 @@
 #pragma once
-
 #include <sstream>
 
 #define BOOST_SPIRIT_THREADSAFE
@@ -38,11 +37,13 @@ struct ADQL_parser
   void init_point_or_column ();
   void init_geometry ();
   void init_non_predicate_geometry_function ();
+  void init_correlation_specification ();
   void init_literals ();
   void init_math ();
   void init_trig ();
   void init_factor ();
   void init_columns ();
+  void init_value_expression ();
   void init_predicate ();
   void init_search_condition ();
   void init_query ();
@@ -70,7 +71,7 @@ struct ADQL_parser
       SQL_reserved_word_23, SQL_reserved_word_30, SQL_reserved_word_31,
       SQL_reserved_word_32, keyword, all_identifiers, regular_identifier,
       identifier, set_quantifier, character_string_literal, separator,
-      column_name, sort_key, ordering_specification, set_function_type,
+      column_name, ordering_specification, set_function_type,
       table_name, tap_upload, tap_upload_identifier, unqualified_schema_name,
       catalog_name, correlation_name, qualifier, trig_one_arg_names,
       math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
@@ -101,6 +102,7 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Qualifier_Column (),
                           boost::spirit::ascii::space_type> qualifier_column;
+
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Column_Reference (),
                           boost::spirit::ascii::space_type> column_reference;
@@ -108,10 +110,10 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification::Column_Variant (),
                           boost::spirit::ascii::space_type> select_item;
-  boost::spirit::qi::
-      rule<std::string::const_iterator,
-           std::vector<ADQL::Query_Specification::Column_Variant>(),
-           boost::spirit::ascii::space_type> select_list;
+
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          std::vector<ADQL::Query_Specification::Column_Variant>(),
+                          boost::spirit::ascii::space_type> select_list;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification::Columns (),
@@ -349,6 +351,10 @@ struct ADQL_parser
                           ADQL::Sort_Specification (),
                           boost::spirit::ascii::space_type> sort_specification;
 
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Sort_Key (),
+                          boost::spirit::ascii::space_type> sort_key;
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where (),
                           boost::spirit::ascii::space_type> where,
       where_no_geometry;
@@ -395,12 +401,12 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type>
       derived_correlation;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Subquery (),
+                          boost::spirit::ascii::space_type> subquery;
+
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification (),
                           boost::spirit::ascii::space_type> query_no_geometry;
-
-  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Subquery (),
-                          boost::spirit::ascii::space_type> subquery;
 
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Query_Specification (),

@@ -6,12 +6,15 @@
 #include <iostream>
 #include <string>
 
+#include "Sort_Key.hxx"
+
 namespace ADQL
 {
 class Sort_Specification
 {
 public:
-  std::string key, ordering;
+  ADQL::Sort_Key key;
+  std::string ordering;
 };
 
 inline std::ostream &
@@ -28,4 +31,4 @@ operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Sort_Specification,
-                           (std::string, key)(std::string, ordering))
+                           (ADQL::Sort_Key, key)(std::string, ordering))

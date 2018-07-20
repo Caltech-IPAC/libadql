@@ -33,11 +33,13 @@ ADQL_parser::ADQL_parser (
   init_point_or_column ();
   init_geometry ();
   init_non_predicate_geometry_function ();
+  init_correlation_specification ();
   init_literals ();
   init_math ();
   init_trig ();
   init_factor ();
   init_columns ();
+  init_value_expression();
   init_predicate ();
   init_search_condition ();
   init_query ();

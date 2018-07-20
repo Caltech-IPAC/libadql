@@ -4,8 +4,11 @@
 #include <iostream>
 #include "../src/Query.hxx"
 
+// #define INVESTIGATE
+
 int main (int argc, char *argv[])
 {
+
   bool quiet (argc > 1 && argv[1] == std::string ("-q"));
   std::vector<std::string> pass = {
     "Select ra1,dec2,flux From mytable Where "
@@ -128,6 +131,15 @@ int main (int argc, char *argv[])
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
     "CIRCLE('J2000',+10 , -20,-1)) ",
+
+    // IRSA-2005
+    "SELECT * FROM TAP_UPLOAD.mytable WHERE "
+    "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
+    "CIRCLE('J2000',+10 , -20,-1)) ORDER BY TAP_UPLOAD.mytable.ra",
+    "SELECT TAP_UPLOAD.mytable.ra as myra FROM TAP_UPLOAD.mytable WHERE "
+    "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
+    "CIRCLE('J2000',+10 , -20,-1)) ORDER BY myra",
+
     "SELECT * FROM my_table1 WHERE "
     "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
     "CIRCLE('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,-1)) ",
@@ -368,13 +380,23 @@ int main (int argc, char *argv[])
     "SELECT TAP_UPLOAD.wrong_table.ra from TAP_UPLOAD.mytable",
     "select CASE foo WHENever THEN 'c' END from b",
     "select alligator from (table1)",
+
+    // IRSA-2005
+    "SELECT column_name,description,unit,ucd,utype,datatype,principal,indexed "
+    "from TAP_SCHEMA.columns where table_name='ztf.ztf_current_meta_sci' "
+    "order by column_index'A=0"
+
   };
 
   int result (0);
+
   std::map<std::string, std::string> table_mapping
       = { { "mytable", "xyzzy" }, { "pos", "T18cbfcb3b9100bef4036ed" } };
   for (auto &i : pass)
     {
+#ifdef INVESTIGATE
+        std::cout << "testing, top of pass loop, i: " << i << std::endl << std::flush;
+#endif
       try
         {
           size_t initial_size (std::count (i.begin (), i.end (), '*'));
@@ -415,6 +437,9 @@ int main (int argc, char *argv[])
     {
       try
         {
+#ifdef INVESTIGATE
+            std::cout << "testing, top of fail loop, i: " << i << std::endl << std::flush;
+#endif
           ADQL::Query query (i, table_mapping);
           std::string formatted_query = ADQL::to_string (query);
           ADQL::Query parsed_query (formatted_query);

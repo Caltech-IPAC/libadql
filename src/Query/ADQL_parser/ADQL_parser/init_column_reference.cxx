@@ -15,11 +15,6 @@ std::string checked_mapping (const std::map<std::string, std::string> &mapping,
 }
 }
 
-inline void write_tap_upload (const std::string &s)
-{
-  std::cout << "val: " << s << "\n";
-}
-
 void ADQL_parser::init_column_reference ()
 {
   using boost::phoenix::at_c;
@@ -46,12 +41,6 @@ void ADQL_parser::init_column_reference ()
   period %= char_ ('.');
 
   unqualified_schema_name %= identifier;
-
-  correlation_name %= identifier;
-  correlation_specification
-      %= -lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
-         >> correlation_name;
-  correlation_specification.name ("correlation_specification");
 
   /// The spec says to have correlation_name as an alternate, but
   /// table_name matches everything that correlation name matches,

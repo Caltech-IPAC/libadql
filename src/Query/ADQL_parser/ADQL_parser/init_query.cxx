@@ -47,7 +47,8 @@ void ADQL_parser::init_query ()
             > search_condition;
   having.name ("having");
 
-  sort_key %= column_name | unsigned_integer;
+  sort_key %= column_reference | unsigned_integer;
+
   ordering_specification %= ascii::no_case[ascii::string ("ASC")]
                             | ascii::no_case[ascii::string ("DESC")];
   /// I have the vague feeling that there are cases where there are
@@ -83,7 +84,7 @@ void ADQL_parser::init_query ()
         >> -where_no_geometry[at_c<4>(_val) = _1]
         >> -group_by[at_c<5>(_val) = _1] >> -having[at_c<6>(_val) = _1]
         >> -order_by[at_c<7>(_val) = _1];
-  query.name ("select");
+  query_no_geometry.name ("select");
 
   subquery %= lit ('(') >> (query_no_geometry | joined_table) >> lit (')');
 
