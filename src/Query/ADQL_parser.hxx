@@ -34,8 +34,10 @@ struct ADQL_parser
   void init_reserved_words ();
   void init_identifier ();
   void init_join ();
-  void init_geometry ();
   void init_column_reference ();
+  void init_point_or_column ();
+  void init_geometry ();
+  void init_non_predicate_geometry_function ();
   void init_literals ();
   void init_math ();
   void init_trig ();
@@ -74,7 +76,7 @@ struct ADQL_parser
       math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
       user_defined_function_name, unsigned_literal,
       unsigned_value_specification, general_literal, null_literal,
-      boolean_literal, qualifier_star, binary_operators;
+      boolean_literal, qualifier_star, binary_operators, geo_one_arg_names;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
@@ -289,6 +291,8 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Shape (),
                           boost::spirit::ascii::space_type> shape;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Non_Predicate_Geometry_Function (),
+                          boost::spirit::ascii::space_type> non_predicate_geometry_function;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Geometry (),
                           boost::spirit::ascii::space_type> geometry;
 

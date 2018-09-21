@@ -321,6 +321,10 @@ int main (int argc, char *argv[])
     "select * from mytable where a not like b",
     "Select * From mytable Where "
     "INTERSECTs(coalesce(pt,poly),Circle('J2000',+10 , -20,-1))",
+
+    // IRSA-2131
+    "SELECT distinct o.instrument_name, coord1(p.pt) AS ra FROM caom.observation_sofia o, caom.plane_sofia p WHERE o.obsid = p.obsid",
+    "SELECT distinct o.instrument_name, coord2(p.pt) AS two FROM caom.observation_sofia o, caom.plane_sofia p WHERE o.obsid = p.obsid",
   };
 
   std::vector<std::string> fail = {

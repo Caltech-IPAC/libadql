@@ -28,14 +28,16 @@ ADQL_parser::ADQL_parser (
 
   init_reserved_words ();
   init_identifier ();
-  init_geometry ();
+  init_join ();
   init_column_reference ();
+  init_point_or_column ();
+  init_geometry ();
+  init_non_predicate_geometry_function ();
   init_literals ();
-  init_trig ();
   init_math ();
+  init_trig ();
   init_factor ();
   init_columns ();
-  init_join ();
   init_predicate ();
   init_search_condition ();
   init_query ();

@@ -156,7 +156,7 @@ void ADQL_parser::init_factor ()
   // FIXME: numeric_value_function should have
   // numeric_geometry_function
   numeric_value_function %= trig_function | math_function | cast_function
-                            | user_defined_function;
+                            | non_predicate_geometry_function | user_defined_function;
   numeric_value_function.name ("numeric_value_function");
   /// Flipped the order here, because a value_expression can match a
   /// function name.
