@@ -27,5 +27,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Contains,
-                           (ADQL::Contains::Point_or_Column,
-                            point_or_column)(ADQL::Shape, shape))
+                           (ADQL::Contains::Point_or_Column, point_or_column)
+                           (ADQL::Shape, shape))
