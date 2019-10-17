@@ -341,6 +341,9 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Having (),
                           boost::spirit::ascii::space_type> having;
 
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Group_By_Term (),
+                          boost::spirit::ascii::space_type> group_by_term;
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Group_By (),
                           boost::spirit::ascii::space_type> group_by;
 

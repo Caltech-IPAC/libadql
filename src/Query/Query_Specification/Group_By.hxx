@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Column_Reference.hxx"
+#include "Group_By_Term.hxx"
 
 #include <vector>
 
@@ -9,18 +9,18 @@ namespace ADQL
 class Group_By
 {
 public:
-  std::vector<Column_Reference> references;
-  bool empty () const { return references.empty (); }
+  std::vector<Group_By_Term> terms;
+  bool empty () const { return terms.empty (); }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Group_By &group_by)
 {
-  for (auto r=group_by.references.begin (); r!=group_by.references.end ();)
+  for (auto r=group_by.terms.begin (); r!=group_by.terms.end ();)
     {
       os << *r;
       ++r;
-      if (r!=group_by.references.end ())
+      if (r!=group_by.terms.end ())
         {
           os << ",";
         }
@@ -30,4 +30,4 @@ inline std::ostream &operator<<(std::ostream &os,
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Group_By,
-                           (std::vector<ADQL::Column_Reference>, references))
+                           (std::vector<ADQL::Group_By_Term>, terms))
