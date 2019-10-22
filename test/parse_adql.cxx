@@ -106,6 +106,7 @@ int main (int argc, char *argv[])
     "select sum(DISTINCT a) from a", "select sum(DISTINCTa) from a",
     "select single from a", "select a,b from a group by a",
     "select a,b from a group by a having x>2",
+    "select f(a, b, c), max(d), max(e) from t group by f(a,b,c)",
     "SELECT * FROM my_table1 order by x",
     "SELECT * FROM my_table1 order by x asc",
     "SELECT * FROM my_table1 order by x desc",

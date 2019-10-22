@@ -121,12 +121,14 @@ def build(ctx):
                  'src/Query/Query_Specification/Factor/Numeric_Primary/empty.cxx',
                  'src/Query/Query_Specification/Factor/Numeric_Primary/Numeric_Value_Function/empty.cxx',
                  'src/Query/Query_Specification/Factor/Numeric_Primary/Numeric_Value_Function/ostream.cxx',
+                 'src/Query/Query_Specification/Group_By_Term/empty.cxx',
+                 'src/Query/Query_Specification/Group_By_Term/ostream.cxx',
                  'src/Query/Subquery/ostream.cxx',
                  'src/Query/Subquery/empty.cxx',
                  'src/Query/Subquery_Wrap/ostream.cxx',
                  'src/Query/Subquery_Wrap/empty.cxx',
                  ]
-    
+
     ctx.stlib(
         source=cxx_sources,
         includes='',
