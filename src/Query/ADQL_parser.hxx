@@ -55,7 +55,7 @@ struct ADQL_parser
   boost::spirit::qi::rule<std::string::const_iterator, char()>
       simple_Latin_letter, identifier_character, nonidentifier_character,
       nondoublequote_character, quote, space, newline, tab, minus_sign,
-      nonquote_character, sign, period;
+      nonquote_character, sign, period, arithmetic_operator;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string ()>
       unsigned_integer, exact_numeric_literal, signed_integer, mantissa,
@@ -87,10 +87,13 @@ struct ADQL_parser
                           boost::spirit::ascii::space_type> coord_sys;
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coordinate (),
                           boost::spirit::ascii::space_type> coord;
-  boost::spirit::qi::rule<std::string::const_iterator,
-                          ADQL::Column_or_Number (),
-                          boost::spirit::ascii::space_type> column_or_number;
 
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Binary_Arithmetic_Expression (),
+                          boost::spirit::ascii::space_type> binary_arithmetic_expression;
+  boost::spirit::qi::rule<std::string::const_iterator,
+                          ADQL::Column_or_Simple_Arithmetic_Expression (),
+                          boost::spirit::ascii::space_type> column_or_simple_arithmetic_expression;
   boost::spirit::qi::rule<std::string::const_iterator,
                           ADQL::Catalog_Schema_Qualifier_Column (),
                           boost::spirit::ascii::space_type>
@@ -415,4 +418,5 @@ struct ADQL_parser
                           ADQL::Query_Specification (),
                           boost::spirit::qi::locals<std::string>,
                           boost::spirit::ascii::space_type> query;
+
 };

@@ -23,36 +23,49 @@ void ADQL_parser::init_geometry ()
   using boost::spirit::qi::no_skip;
   namespace ascii = boost::spirit::ascii;
 
-  column_or_number %= column_reference | boost::spirit::qi::double_;
-  column_or_number.name ("column or number");
+  arithmetic_operator %= char_ ('+') | char_ ('-') | char_ ('*') | char_ ('/');
+  arithmetic_operator.name ("arithmetic operator");
 
-  coord %= column_or_number >> ',' > column_or_number;
+  binary_arithmetic_expression %= boost::spirit::qi::double_ >> arithmetic_operator >> boost::spirit::qi::double_;
+  binary_arithmetic_expression.name ("binary arithmetic expression");
+
+  column_or_simple_arithmetic_expression %= hold[binary_arithmetic_expression] | column_reference | boost::spirit::qi::double_;
+  column_or_simple_arithmetic_expression.name ("column or simple arithmetic expression");
+
+  coord %= column_or_simple_arithmetic_expression >> ',' > column_or_simple_arithmetic_expression;
   coord.name ("coordinate");
 
-  // FIXME: In theory, the radius should be an expression, not a
-  // number.  In practice, we can only handle numbers.
+  // FIXME: In theory, the radius should be an expression.  In
+  // practice, we can only handle column references, numbers, and
+  // results of binary arithmetic operations.
 
   circle %= ascii::no_case["CIRCLE"] >> '(' >> -(coord_sys > ',') > coord > ','
-            > column_or_number > ')';
+            > column_or_simple_arithmetic_expression > ')';
   circle.name ("circle");
+
   ellipse %= ascii::no_case["ELLIPSE"] >> '(' >> -(coord_sys > ',') > coord
-             > ',' > column_or_number > ',' > column_or_number > ','
-             > column_or_number > ')';
+             > ',' > column_or_simple_arithmetic_expression > ',' > column_or_simple_arithmetic_expression > ','
+             > column_or_simple_arithmetic_expression > ')';
   ellipse.name ("ellipse");
+
   box %= ascii::no_case["BOX"] >> '(' >> -(coord_sys > ',') > coord > ','
-         > column_or_number > ',' > column_or_number > ')';
+         > column_or_simple_arithmetic_expression > ',' > column_or_simple_arithmetic_expression > ')';
   box.name ("box");
+
   coord_list %= coord % ',';
   coord_list.name ("coordinate list");
+
   polygon %= ascii::no_case["POLYGON"] >> '(' >> -(coord_sys > ',')
              > coord_list > ')';
   polygon.name ("polygon");
 
   shape %= point | circle | box | ellipse | polygon;
   shape.name ("shape");
+
   contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' > shape
               > ')';
   contains.name ("contains");
+
   intersects %= ascii::no_case["INTERSECTS"] >> '(' > value_expression > ','
                 > shape > ')';
   intersects.name ("intersects");
