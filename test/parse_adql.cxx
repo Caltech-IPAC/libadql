@@ -8,7 +8,6 @@
 
 int main (int argc, char *argv[])
 {
-
   bool quiet (argc > 1 && argv[1] == std::string ("-q"));
   std::vector<std::string> pass = {
     "Select ra1,dec2,flux From mytable Where "
@@ -338,7 +337,27 @@ int main (int argc, char *argv[])
     // IRSA-2131
     "SELECT distinct o.instrument_name, coord1(p.pt) AS ra FROM caom.observation_sofia o, caom.plane_sofia p WHERE o.obsid = p.obsid",
     "SELECT distinct o.instrument_name, coord2(p.pt) AS two FROM caom.observation_sofia o, caom.plane_sofia p WHERE o.obsid = p.obsid",
+
+    // IRSA-4175
+    "SELECT fp_psc.* from fp_psc, TAP_UPLOAD.mytable where "
+    "1=CONTAINS(POINT('J2000',fp_psc.ra, fp.psc.dec), "
+    "CIRCLE('J2000',TAP_UPLOAD.mytable.ra, TAP_UPLOAD.mytable.dec,"
+    "12.8/2.34))",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),ELLIPSE(+10 , -20,1,2,3 * 4.5))",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "CONTAINS(POINT('J2000 Geocenter',ra,dec),BOX('J2000',+10 , -20,1,2+3.33))= 1",
+
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "1=CONTAINS(POINT('J2000',fp_psc.ra, fp.psc.dec), "
+    "CIRCLE('J2000', 0.12 + 34.1, 4.545 - 2.9,"
+    "12.8/2.34))",
+    "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+    "1=CONTAINS(POINT('J2000',fp_psc.ra, fp.psc.dec), "
+    "CIRCLE('J2000', 0.12 + 34.1, 4.545 - 2.9,"
+    "12.8/0))",
   };
+
 
   std::vector<std::string> fail = {
     "POINT('foo',10 20)", "POINT('foo',1.0, 20)", "POINT('foo',10 ,-2.0)",
@@ -401,9 +420,16 @@ int main (int argc, char *argv[])
       try
         {
           size_t initial_size (std::count (i.begin (), i.end (), '*'));
+
           ADQL::Query query (i, table_mapping);
+#ifdef INVESTIGATE
+          std::cout << "before to_string()" << std::endl;
+#endif
           std::string formatted_query = ADQL::to_string (query);
-          size_t formatted_size (std::count (formatted_query.begin (),
+#ifdef INVESTIGATE
+          std::cout << "formatted_query: " << formatted_query << std::endl;
+#endif
+      size_t formatted_size (std::count (formatted_query.begin (),
                                              formatted_query.end (), '*'));
           ADQL::Query parsed_query (formatted_query);
           if (initial_size != formatted_size
@@ -420,11 +446,12 @@ int main (int argc, char *argv[])
             throw std::runtime_error (
                 "Wrong value for TOP: "
                 + std::to_string (query.query_specification.top));
+
+          std::cout << "PASS: " << i << "\n";
           if (!quiet)
-            {
-              std::cout << "PASS: " << i << "\n";
+          {
               std::cout << "      " << formatted_query << "\n";
-            }
+          }
         }
       catch (std::runtime_error &e)
         {
@@ -452,10 +479,12 @@ int main (int argc, char *argv[])
         }
       catch (std::runtime_error &e)
         {
-          std::cout << "Query: " << i << "\n";
-          std::cout << "error: " << e.what () << "\n";
-          if (!quiet)
-            std::cout << "PASS: " << i << "\n";
+            std::cout << "PASS (malformed query detected): " << i << "\n";
+            if (!quiet)
+            {
+                std::cout << "Fail Query: " << i << "\n";
+                std::cout << "error: " << e.what () << "\n";
+            }
         }
     }
 
