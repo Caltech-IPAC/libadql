@@ -1,26 +1,29 @@
 #pragma once
 #include "Geometry/Contains.hxx"
+#include "Non_Predicate_Geometry_Function_One_Arg.hxx"
+#include "Non_Predicate_Geometry_Function_Two_Arg.hxx"
+
+#include <boost/variant.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+
 namespace ADQL
 {
     class Non_Predicate_Geometry_Function
 {
 public:
-    std::string function;
-    ADQL::Contains::Point_or_Column arg;
-  bool empty () const { return function.empty (); }
+  typedef boost::variant<Non_Predicate_Geometry_Function_One_Arg, Non_Predicate_Geometry_Function_Two_Arg> Variant;
+  Variant variant;
+  bool empty () const { return empty_variant (variant); }
+
 };
 
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Non_Predicate_Geometry_Function &non_predicate_geometry_function)
 {
-  if (!non_predicate_geometry_function.empty ())
-      return os << non_predicate_geometry_function.function << "(" << non_predicate_geometry_function.arg << ")";
-  return os;
+  return os << non_predicate_geometry_function.variant;
 }
 }
 
 BOOST_FUSION_ADAPT_STRUCT (ADQL::Non_Predicate_Geometry_Function,
-                           (std::string, function)
-                           (ADQL::Contains::Point_or_Column, arg))
-
+                           (ADQL::Non_Predicate_Geometry_Function::Variant, variant))

@@ -77,7 +77,8 @@ struct ADQL_parser
       math_zero_arg_names, math_one_arg_names, math_two_arg_names, cast_as,
       user_defined_function_name, unsigned_literal,
       unsigned_value_specification, general_literal, null_literal,
-      boolean_literal, qualifier_star, binary_operators, geo_one_arg_names;
+      boolean_literal, qualifier_star, binary_operators, geo_one_arg_names,
+      geo_two_arg_names;
 
   boost::spirit::qi::rule<std::string::const_iterator, std::string (),
                           boost::spirit::ascii::space_type>
@@ -298,6 +299,12 @@ struct ADQL_parser
 
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Non_Predicate_Geometry_Function (),
                           boost::spirit::ascii::space_type> non_predicate_geometry_function;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Non_Predicate_Geometry_Function_One_Arg (),
+                          boost::spirit::ascii::space_type> non_predicate_geometry_function_one_arg;
+  boost::spirit::qi::rule<std::string::const_iterator, ADQL::Non_Predicate_Geometry_Function_Two_Arg (),
+                          boost::spirit::ascii::space_type> non_predicate_geometry_function_two_arg;
+
+
   boost::spirit::qi::rule<std::string::const_iterator, ADQL::Geometry (),
                           boost::spirit::ascii::space_type> geometry;
 
