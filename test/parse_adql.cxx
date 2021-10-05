@@ -356,6 +356,18 @@ int main (int argc, char *argv[])
     "1=CONTAINS(POINT('J2000',fp_psc.ra, fp.psc.dec), "
     "CIRCLE('J2000', 0.12 + 34.1, 4.545 - 2.9,"
     "12.8/0))",
+    "SELECT TOP 14223 b.unwise_objid as unwise_id, "
+    "DISTANCE(POINT('ICRS', b.ra, b.dec), POINT('ICRS', mytable.ra, mytable.dec)) as unwise_dist "
+    "from unwise_2019 b, TAP_UPLOAD.mytable mytable",
+
+    "SELECT TAP_UPLOAD.pos.cntr as in_row_id, "
+    "DISTANCE(POINT('ICRS', dbtable.ra, dbtable.dec), POINT('ICRS', mytable.ra, mytable.dec)) as unwise_dist "
+    "FROM wise.wise_allwise_p3am_cdd dbtable, "
+    "TAP_UPLOAD.pos WHERE "
+    "(ST_Intersects(TAP_UPLOAD.pos.poly,dbtable.poly)) ",
+
+    "SELECT props.proposal_id FROM (SELECT DISTINCT proposal_id FROM sofia.observation) middle, sofia.proposals props WHERE middle.proposal_id = props.proposal_id",
+
   };
 
 
