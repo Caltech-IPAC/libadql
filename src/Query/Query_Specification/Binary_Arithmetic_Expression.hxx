@@ -39,7 +39,7 @@ inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Binary_Arithmetic_Expression &bae) {
     return os << bae.arg0 << bae.operation << bae.arg1;
 }
-}
+}  // namespace ADQL
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Binary_Arithmetic_Expression,
                           (double, arg0)(char, operation)(double, arg1))

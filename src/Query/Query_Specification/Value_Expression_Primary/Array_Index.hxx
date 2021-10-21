@@ -2,26 +2,22 @@
 
 #include "../Value_Expression_Wrap.hxx"
 
-#include <boost/fusion/include/io.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/fusion/include/io.hpp>
 
 #include <iostream>
 #include <string>
 
-namespace ADQL
-{
-class Array_Index
-{
+namespace ADQL {
+class Array_Index {
 public:
-  Value_Expression_Wrap expression;
+    Value_Expression_Wrap expression;
 };
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Array_Index &array_index)
-{
-  return os << '[' << array_index.expression << ']';
+                                const ADQL::Array_Index &array_index) {
+    return os << '[' << array_index.expression << ']';
 }
-}
+}  // namespace ADQL
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Array_Index,
-                           (ADQL::Value_Expression_Wrap, expression))
+BOOST_FUSION_ADAPT_STRUCT(ADQL::Array_Index, (ADQL::Value_Expression_Wrap, expression))

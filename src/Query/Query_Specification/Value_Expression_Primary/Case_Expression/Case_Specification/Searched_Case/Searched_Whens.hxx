@@ -4,17 +4,14 @@
 
 #include <vector>
 
-namespace ADQL
-{
+namespace ADQL {
 using Searched_Whens = std::vector<Searched_When>;
 
 inline std::ostream &operator<<(std::ostream &os,
-                                const ADQL::Searched_Whens &searched_whens)
-{
-  for (auto &when : searched_whens)
-    {
-      os << when << " ";
+                                const ADQL::Searched_Whens &searched_whens) {
+    for (auto &when : searched_whens) {
+        os << when << " ";
     }
-  return os;
+    return os;
 }
-}
+}  // namespace ADQL

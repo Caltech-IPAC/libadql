@@ -1,21 +1,17 @@
 #pragma once
 
-namespace ADQL
-{
-class Outer_Join
-{
+namespace ADQL {
+class Outer_Join {
 public:
-  std::string type;
-  bool outer = false;
+    std::string type;
+    bool outer = false;
 };
 
-inline std::ostream &operator<<(std::ostream &os, const Outer_Join &j)
-{
-  os << j.type;
-  if (j.outer)
-    os << " OUTER";
-  return os;
+inline std::ostream &operator<<(std::ostream &os, const Outer_Join &j) {
+    os << j.type;
+    if (j.outer) os << " OUTER";
+    return os;
 }
-}
+}  // namespace ADQL
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Outer_Join, (std::string, type)(bool, outer))
+BOOST_FUSION_ADAPT_STRUCT(ADQL::Outer_Join, (std::string, type)(bool, outer))

@@ -2,18 +2,15 @@
 
 #include "../../../Result.hxx"
 
-namespace ADQL
-{
-class Simple_When
-{
+namespace ADQL {
+class Simple_When {
 public:
-  Value_Expression_Wrap wrap;
-  Result result;
+    Value_Expression_Wrap wrap;
+    Result result;
 };
 
-std::ostream &operator<<(std::ostream &os,
-                         const ADQL::Simple_When &simple_when);
-}
+std::ostream &operator<<(std::ostream &os, const ADQL::Simple_When &simple_when);
+}  // namespace ADQL
 
-BOOST_FUSION_ADAPT_STRUCT (ADQL::Simple_When, (ADQL::Value_Expression_Wrap,
-                                               wrap)(ADQL::Result, result))
+BOOST_FUSION_ADAPT_STRUCT(ADQL::Simple_When,
+                          (ADQL::Value_Expression_Wrap, wrap)(ADQL::Result, result))

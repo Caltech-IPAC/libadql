@@ -2,15 +2,14 @@
 
 #include "../../ADQL_parser.hxx"
 
-void ADQL_parser::init_correlation_specification ()
-{
-  using boost::spirit::qi::lexeme;
-  namespace ascii = boost::spirit::ascii;
+void ADQL_parser::init_correlation_specification() {
+    using boost::spirit::qi::lexeme;
+    namespace ascii = boost::spirit::ascii;
 
-  correlation_name %= identifier;
+    correlation_name %= identifier;
 
-  correlation_specification
-      %= -lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space]
-         >> correlation_name;
-  correlation_specification.name ("correlation_specification");
+    correlation_specification %=
+            -lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space] >>
+            correlation_name;
+    correlation_specification.name("correlation_specification");
 }
