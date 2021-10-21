@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Point.hxx"
+#include "Box.hxx"
 #include "Circle.hxx"
 #include "Ellipse.hxx"
-#include "Box.hxx"
+#include "Point.hxx"
 #include "Polygon.hxx"
 
-namespace ADQL
-{
+namespace ADQL {
 typedef boost::variant<Point, Circle, Box, Ellipse, Polygon> Shape;
 }
