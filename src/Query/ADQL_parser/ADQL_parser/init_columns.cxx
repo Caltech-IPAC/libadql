@@ -38,4 +38,11 @@ void ADQL_parser::init_columns() {
     select_list %= select_item % ',';
     columns %= ascii::string("*") | select_list;
     columns.name("columns");
+
+#ifdef DEBUG_COL
+    BOOST_SPIRIT_DEBUG_NODE(column_name);
+    BOOST_SPIRIT_DEBUG_NODE(as);
+    BOOST_SPIRIT_DEBUG_NODE(non_as);
+    BOOST_SPIRIT_DEBUG_NODE(columns);
+#endif
 }

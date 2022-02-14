@@ -83,4 +83,15 @@ void ADQL_parser::init_column_reference() {
     column_reference %= catalog_schema_qualifier_column | schema_qualifier_column |
                         qualifier_column | identifier;
     column_reference.name("column reference");
+
+#ifdef DEBUG_COL
+    BOOST_SPIRIT_DEBUG_NODE(tap_upload_identifier);
+    BOOST_SPIRIT_DEBUG_NODE(tap_upload);
+    BOOST_SPIRIT_DEBUG_NODE(table_name);
+    BOOST_SPIRIT_DEBUG_NODE(catalog_name);
+    BOOST_SPIRIT_DEBUG_NODE(catalog_schema_qualifier_column);
+    BOOST_SPIRIT_DEBUG_NODE(schema_qualifier_column);
+    BOOST_SPIRIT_DEBUG_NODE(qualifier_column);
+    BOOST_SPIRIT_DEBUG_NODE(column_reference);
+#endif
 }

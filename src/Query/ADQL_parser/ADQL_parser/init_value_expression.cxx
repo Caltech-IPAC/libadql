@@ -17,4 +17,9 @@ void ADQL_parser::init_value_expression() {
 
     value_expression %= value_expression_non_bool | boolean_value_expression;
     value_expression.name("value_expression");
+
+#ifdef DEBUG_VAL
+    BOOST_SPIRIT_DEBUG_NODE(value_expression_non_bool);
+    BOOST_SPIRIT_DEBUG_NODE(value_expression);
+#endif
 }

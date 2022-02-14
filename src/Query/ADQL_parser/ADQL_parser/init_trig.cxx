@@ -38,4 +38,8 @@ void ADQL_parser::init_trig() {
 
     trig_function %= trig_one_arg | trig_two_arg;
     trig_function.name("trig_function");
+
+#ifdef DEBUG_TRIG
+    BOOST_SPIRIT_DEBUG_NODE(trig_function);
+#endif
 }

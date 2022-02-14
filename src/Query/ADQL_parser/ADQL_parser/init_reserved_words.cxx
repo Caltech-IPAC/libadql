@@ -187,4 +187,9 @@ void ADQL_parser::init_reserved_words() {
 
     SQL_reserved_word %= SQL_reserved_word_0 | SQL_reserved_word_1 |
                          SQL_reserved_word_2 | SQL_reserved_word_3;
+
+#ifdef DEBUG_RES
+    BOOST_SPIRIT_DEBUG_NODE(ADQL_reserved_word);
+    BOOST_SPIRIT_DEBUG_NODE(SQL_reserved_word);
+#endif
 }

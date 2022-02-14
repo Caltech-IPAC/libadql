@@ -25,13 +25,11 @@ void ADQL_parser::init_geometry() {
     arithmetic_operator %= char_('+') | char_('-') | char_('*') | char_('/');
     arithmetic_operator.name("arithmetic operator");
 
-    binary_arithmetic_expression %= boost::spirit::qi::double_ >> arithmetic_operator >>
-                                    boost::spirit::qi::double_;
+    binary_arithmetic_expression %= double_ >> arithmetic_operator >> double_;
     binary_arithmetic_expression.name("binary arithmetic expression");
 
-    column_or_simple_arithmetic_expression %= hold[binary_arithmetic_expression] |
-                                              column_reference |
-                                              boost::spirit::qi::double_;
+    column_or_simple_arithmetic_expression %=
+            hold[binary_arithmetic_expression] | column_reference | double_;
     column_or_simple_arithmetic_expression.name(
             "column or simple arithmetic expression");
 
@@ -78,4 +76,22 @@ void ADQL_parser::init_geometry() {
     geometry %= ((contains | intersects) >> -(lit('=') >> '1')) |
                 (lit('1') >> '=' >> (contains | intersects));
     geometry.name("geometry");
+
+#ifdef DEBUG_WHERE
+    BOOST_SPIRIT_DEBUG_NODE(arithmetic_operator);
+    BOOST_SPIRIT_DEBUG_NODE(binary_arithmetic_expression);
+    BOOST_SPIRIT_DEBUG_NODE(column_or_simple_arithmetic_expression);
+    BOOST_SPIRIT_DEBUG_NODE(coord);
+    BOOST_SPIRIT_DEBUG_NODE(circle);
+
+    BOOST_SPIRIT_DEBUG_NODE(ellipse);
+    BOOST_SPIRIT_DEBUG_NODE(box);
+
+    BOOST_SPIRIT_DEBUG_NODE(coord_list);
+    BOOST_SPIRIT_DEBUG_NODE(polygon);
+    BOOST_SPIRIT_DEBUG_NODE(shape);
+    BOOST_SPIRIT_DEBUG_NODE(contains);
+    BOOST_SPIRIT_DEBUG_NODE(intersects);
+    BOOST_SPIRIT_DEBUG_NODE(geometry);
+#endif
 }

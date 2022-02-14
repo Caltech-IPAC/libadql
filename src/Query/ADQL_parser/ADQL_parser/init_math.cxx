@@ -55,4 +55,8 @@ void ADQL_parser::init_math() {
 
     math_function %= math_zero_arg | math_one_arg | math_two_arg;
     math_function.name("math_function");
+
+#ifdef DEBUG_MATH
+    BOOST_SPIRIT_DEBUG_NODE(math_function);
+#endif
 }

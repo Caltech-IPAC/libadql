@@ -16,7 +16,7 @@ public:
     Query_Specification query_specification;
 
     Query(const std::string &input,
-          const std::map<std::string, std::string> &table_mapping);
+          const std::map<std::string, std::string> &table_mapping_for_columns);
     Query(const std::string &input) : Query(input, {{}}) {}
     Query() = default;
     Query(const Query &) = default;
