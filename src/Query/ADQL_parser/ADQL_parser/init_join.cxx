@@ -61,6 +61,7 @@ void ADQL_parser::init_join() {
                   lexeme[ascii::no_case["JOIN"] >> &boost::spirit::qi::space] >
                   (table_reference[at_c<2>(_val) = _1] >>
                    -join_specification[at_c<3>(_val) = _1]);
+    join_suffix.name("join suffix");
 
     qualified_join %= ((lit('(') >> joined_table >> lit(')')) | table_correlation) >>
                       +join_suffix;
@@ -68,4 +69,18 @@ void ADQL_parser::init_join() {
 
     joined_table %= (qualified_join | (lit('(') >> joined_table >> lit(')')));
     joined_table.name("joined table");
+
+#ifdef INIT_JOIN
+    BOOST_SPIRIT_DEBUG_NODE(join_specification);
+    BOOST_SPIRIT_DEBUG_NODE(join_condition);
+    BOOST_SPIRIT_DEBUG_NODE(named_columns_join);
+    BOOST_SPIRIT_DEBUG_NODE(join_column_list);
+    BOOST_SPIRIT_DEBUG_NODE(column_name_list);
+    BOOST_SPIRIT_DEBUG_NODE(table_correlation);
+    BOOST_SPIRIT_DEBUG_NODE(outer_join);
+    BOOST_SPIRIT_DEBUG_NODE(join_type);
+    BOOST_SPIRIT_DEBUG_NODE(join_suffix);
+    BOOST_SPIRIT_DEBUG_NODE(qualified_join);
+    BOOST_SPIRIT_DEBUG_NODE(joined_table);
+#endif
 }

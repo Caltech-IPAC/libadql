@@ -1,7 +1,14 @@
 #pragma once
 #include <sstream>
 
+#if 0
+#define BOOST_SPIRIT_DEBUG
+#define BOOST_SPIRIT_DEBUG_OUT std::cout
+#define DEBUG_WHERE
+#endif
+
 #define BOOST_SPIRIT_THREADSAFE
+
 #include <boost/bind.hpp>
 #include <boost/fusion/include/io.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
@@ -15,11 +22,11 @@
 
 #include "../Query.hxx"
 
-/// This parser does not have a separate lexer.  That makes things a
-/// little more complicated because I have to be sure to check for
-/// things like LOG10 before LOG or my_identifier() before
-/// my_identifier.  I think it all works, but I have a feeling that
-/// there are some corner cases errors because of that.
+// This parser does not have a separate lexer.  That makes things a
+// little more complicated because I have to be sure to check for
+// things like LOG10 before LOG or my_identifier() before
+// my_identifier.  I think it all works, but I have a feeling that
+// there are some corner cases errors because of that.
 
 struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                                                 ADQL::Query_Specification(),
@@ -49,11 +56,18 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
 
     std::map<std::string, std::string> table_mapping;
 
+    // symbols for enum classes
+    boost::spirit::qi::symbols<char, ADQL::Coord_Sys::Reference_Frame> reference_frames;
+    boost::spirit::qi::symbols<char, ADQL::Coord_Sys::Reference_Position>
+            reference_positions;
+
+    // no-skipper rules for char
     boost::spirit::qi::rule<std::string::const_iterator, char()> simple_Latin_letter,
             identifier_character, nonidentifier_character, nondoublequote_character,
             quote, space, newline, tab, minus_sign, nonquote_character, sign, period,
             arithmetic_operator;
 
+    // no-skipper rules for std::string
     boost::spirit::qi::rule<std::string::const_iterator, std::string()>
             unsigned_integer, exact_numeric_literal, signed_integer, mantissa, exponent,
             approximate_numeric_literal, unsigned_numeric_literal, comment,
@@ -76,6 +90,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
             null_literal, boolean_literal, qualifier_star, binary_operators,
             geo_one_arg_names, geo_two_arg_names;
 
+    // rules with skipper
     boost::spirit::qi::rule<std::string::const_iterator, std::string(),
                             boost::spirit::ascii::space_type>
             correlation_specification, count_star;
@@ -83,6 +98,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coord_Sys(),
                             boost::spirit::ascii::space_type>
             coord_sys;
+
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Coordinate(),
                             boost::spirit::ascii::space_type>
             coord;
@@ -474,4 +490,14 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             boost::spirit::qi::locals<std::string>,
                             boost::spirit::ascii::space_type>
             query;
+
+    boost::spirit::qi::rule<std::string::const_iterator,
+                            ADQL::Coord_Sys::Reference_Frame(),
+                            boost::spirit::ascii::space_type>
+            reference_frame;
+
+    boost::spirit::qi::rule<std::string::const_iterator,
+                            ADQL::Coord_Sys::Reference_Position(),
+                            boost::spirit::ascii::space_type>
+            reference_position;
 };

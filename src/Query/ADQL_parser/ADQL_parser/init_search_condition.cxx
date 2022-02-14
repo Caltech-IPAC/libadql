@@ -37,4 +37,12 @@ void ADQL_parser::init_search_condition() {
     /// FIXME: Make this a list parser instead of recursive
     boolean_value_expression %= boolean_term | boolean_factor;
     search_condition %= boolean_value_expression;
+
+#ifdef DEBUG_WHERE
+    BOOST_SPIRIT_DEBUG_NODE(boolean_primary);
+    BOOST_SPIRIT_DEBUG_NODE(boolean_factor);
+    BOOST_SPIRIT_DEBUG_NODE(boolean_term);
+    BOOST_SPIRIT_DEBUG_NODE(boolean_value_expression);
+    BOOST_SPIRIT_DEBUG_NODE(search_condition);
+#endif
 }

@@ -43,4 +43,9 @@ void ADQL_parser::init_identifier() {
 
     identifier %= regular_identifier | delimited_identifier;
     identifier.name("identifier");
+
+#ifdef DEBUG_IDENT
+    BOOST_SPIRIT_DEBUG_NODE(nonidentifier_character);
+    BOOST_SPIRIT_DEBUG_NODE(identifier);
+#endif
 }

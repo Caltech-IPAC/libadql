@@ -12,4 +12,8 @@ void ADQL_parser::init_correlation_specification() {
             -lexeme[ascii::no_case["AS"] >> &boost::spirit::qi::space] >>
             correlation_name;
     correlation_specification.name("correlation_specification");
+
+#ifdef DEBUG_CORR
+    BOOST_SPIRIT_DEBUG_NODE(correlation_specification);
+#endif
 }

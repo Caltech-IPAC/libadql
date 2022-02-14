@@ -154,11 +154,43 @@ void ADQL_parser::init_factor() {
     numeric_value_function %= trig_function | math_function | cast_function |
                               non_predicate_geometry_function | user_defined_function;
     numeric_value_function.name("numeric_value_function");
-    /// Flipped the order here, because a value_expression can match a
-    /// function name.
+    // Flipped the order here, because a value_expression can match a
+    // function name.
     numeric_primary %= numeric_value_function | value_expression_primary;
     numeric_primary.name("numeric_primary");
 
     factor %= -sign >> numeric_primary;
     factor.name("factor");
+
+#ifdef DEBUG_FAC
+    BOOST_SPIRIT_DEBUG_NODE(set_function_type);
+    BOOST_SPIRIT_DEBUG_NODE(set_quantifier);
+    BOOST_SPIRIT_DEBUG_NODE(general_set_function);
+    BOOST_SPIRIT_DEBUG_NODE(set_function_specification);
+    BOOST_SPIRIT_DEBUG_NODE(result);
+    BOOST_SPIRIT_DEBUG_NODE(simple_when);
+    BOOST_SPIRIT_DEBUG_NODE(simple_whens);
+    BOOST_SPIRIT_DEBUG_NODE(else_clause);
+    BOOST_SPIRIT_DEBUG_NODE(simple_case);
+    BOOST_SPIRIT_DEBUG_NODE(searched_when);
+    BOOST_SPIRIT_DEBUG_NODE(searched_whens);
+    BOOST_SPIRIT_DEBUG_NODE(searched_case);
+    BOOST_SPIRIT_DEBUG_NODE(case_specification);
+    BOOST_SPIRIT_DEBUG_NODE(nullif);
+    BOOST_SPIRIT_DEBUG_NODE(coalesce);
+    BOOST_SPIRIT_DEBUG_NODE(case_abbreviation);
+    BOOST_SPIRIT_DEBUG_NODE(case_expression);
+    BOOST_SPIRIT_DEBUG_NODE(any_expression);
+    BOOST_SPIRIT_DEBUG_NODE(value_subexpression);
+    BOOST_SPIRIT_DEBUG_NODE(array_index);
+    BOOST_SPIRIT_DEBUG_NODE(value_expression_primary);
+    BOOST_SPIRIT_DEBUG_NODE(array_constructor);
+    BOOST_SPIRIT_DEBUG_NODE(user_defined_function_name);
+    BOOST_SPIRIT_DEBUG_NODE(user_defined_function_param);
+    BOOST_SPIRIT_DEBUG_NODE(user_defined_function);
+    BOOST_SPIRIT_DEBUG_NODE(cast_function);
+    BOOST_SPIRIT_DEBUG_NODE(numeric_value_function);
+    BOOST_SPIRIT_DEBUG_NODE(numeric_primary);
+    BOOST_SPIRIT_DEBUG_NODE(factor);
+#endif
 }

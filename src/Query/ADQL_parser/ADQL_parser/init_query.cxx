@@ -92,4 +92,15 @@ void ADQL_parser::init_query() {
                            << boost::phoenix::val(" here: \"")
                            << boost::phoenix::construct<std::string>(_3, _2)
                            << boost::phoenix::val("\"") << std::endl);
+
+#ifdef DEBUG_Q
+    BOOST_SPIRIT_DEBUG_NODE(where);
+    BOOST_SPIRIT_DEBUG_NODE(where_no_geometry);
+    BOOST_SPIRIT_DEBUG_NODE(group_by_term);
+    BOOST_SPIRIT_DEBUG_NODE(group_by);
+    BOOST_SPIRIT_DEBUG_NODE(having);
+    BOOST_SPIRIT_DEBUG_NODE(order_by);
+    BOOST_SPIRIT_DEBUG_NODE(query);
+    BOOST_SPIRIT_DEBUG_NODE(query_no_geometry);
+#endif
 }

@@ -31,6 +31,8 @@ void ADQL_parser::init_predicate() {
                    (table_reference % ",");
     from_clause.name("from");
 
+    //============================================================
+
     comparison_predicate %=
             value_expression_non_bool >>
             (ascii::string("=") | ascii::string("!=") | ascii::string("<>") |
@@ -71,4 +73,10 @@ void ADQL_parser::init_predicate() {
 
     predicate %= comparison_predicate | between_predicate | in_predicate |
                  null_predicate | like_predicate | exists_predicate;
+
+#ifdef DEBUG_PRED
+    BOOST_SPIRIT_DEBUG_NODE(table_reference);
+    BOOST_SPIRIT_DEBUG_NODE(from_clause);
+    BOOST_SPIRIT_DEBUG_NODE(predicate);
+#endif
 }

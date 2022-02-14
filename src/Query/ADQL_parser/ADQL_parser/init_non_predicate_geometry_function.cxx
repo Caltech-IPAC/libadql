@@ -22,4 +22,8 @@ void ADQL_parser::init_non_predicate_geometry_function() {
                                        non_predicate_geometry_function_two_arg;
 
     non_predicate_geometry_function.name("non_predicate_geometry_function");
+
+#ifdef DEBUG_NON_PRED
+    BOOST_SPIRIT_DEBUG_NODE(non_predicate_geometry_function);
+#endif
 }
