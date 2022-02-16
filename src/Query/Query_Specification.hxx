@@ -27,7 +27,7 @@ public:
     Having having;
 
     bool empty() const {
-        /// I think that it is an error for a query to be empty.
+        // I think that it is an error for a query to be empty.
         return tables.empty();
     }
 };

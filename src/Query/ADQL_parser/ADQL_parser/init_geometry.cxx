@@ -5,6 +5,7 @@ void ADQL_parser::init_geometry() {
     using boost::phoenix::push_back;
     using boost::spirit::qi::alnum;
     using boost::spirit::qi::alpha;
+    using boost::spirit::qi::attr;
     using boost::spirit::qi::char_;
     using boost::spirit::qi::digit;
     using boost::spirit::qi::double_;
@@ -20,6 +21,7 @@ void ADQL_parser::init_geometry() {
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
     using boost::spirit::qi::ulong_long;
+
     namespace ascii = boost::spirit::ascii;
 
     arithmetic_operator %= char_('+') | char_('-') | char_('*') | char_('/');
@@ -33,7 +35,7 @@ void ADQL_parser::init_geometry() {
     column_or_simple_arithmetic_expression.name(
             "column or simple arithmetic expression");
 
-    coord %= column_or_simple_arithmetic_expression >> ',' >
+    coord %= column_or_simple_arithmetic_expression >> ',' >>
              column_or_simple_arithmetic_expression;
     coord.name("coordinate");
 
@@ -73,8 +75,15 @@ void ADQL_parser::init_geometry() {
             ascii::no_case["INTERSECTS"] >> '(' > value_expression > ',' > shape > ')';
     intersects.name("intersects");
 
-    geometry %= ((contains | intersects) >> -(lit('=') >> '1')) |
-                (lit('1') >> '=' >> (contains | intersects));
+    char_flag %= char_('0') | char_('1');
+
+    geometry_left %= char_flag >> lit('=') >> (contains | intersects);
+    geometry_right %= (contains | intersects) >> ((lit('=') > char_flag) | attr('1'));
+
+    geometry %= geometry_left | geometry_right;
+
+    geometry_left.name("geometry_left");
+    geometry_right.name("geometry_right");
     geometry.name("geometry");
 
 #ifdef DEBUG_WHERE
@@ -92,6 +101,10 @@ void ADQL_parser::init_geometry() {
     BOOST_SPIRIT_DEBUG_NODE(shape);
     BOOST_SPIRIT_DEBUG_NODE(contains);
     BOOST_SPIRIT_DEBUG_NODE(intersects);
+
+    BOOST_SPIRIT_DEBUG_NODE(char_flag);
+    BOOST_SPIRIT_DEBUG_NODE(geometry_left);
+    BOOST_SPIRIT_DEBUG_NODE(geometry_right);
     BOOST_SPIRIT_DEBUG_NODE(geometry);
 #endif
 }
