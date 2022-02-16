@@ -65,7 +65,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     boost::spirit::qi::rule<std::string::const_iterator, char()> simple_Latin_letter,
             identifier_character, nonidentifier_character, nondoublequote_character,
             quote, space, newline, tab, minus_sign, nonquote_character, sign, period,
-            arithmetic_operator;
+            arithmetic_operator, char_flag;
 
     // no-skipper rules for std::string
     boost::spirit::qi::rule<std::string::const_iterator, std::string()>
@@ -107,18 +107,22 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             ADQL::Binary_Arithmetic_Expression(),
                             boost::spirit::ascii::space_type>
             binary_arithmetic_expression;
+
     boost::spirit::qi::rule<std::string::const_iterator,
                             ADQL::Column_or_Simple_Arithmetic_Expression(),
                             boost::spirit::ascii::space_type>
             column_or_simple_arithmetic_expression;
+
     boost::spirit::qi::rule<std::string::const_iterator,
                             ADQL::Catalog_Schema_Qualifier_Column(),
                             boost::spirit::ascii::space_type>
             catalog_schema_qualifier_column;
+
     boost::spirit::qi::rule<std::string::const_iterator,
                             ADQL::Schema_Qualifier_Column(),
                             boost::spirit::ascii::space_type>
             schema_qualifier_column;
+
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Qualifier_Column(),
                             boost::spirit::ascii::space_type>
             qualifier_column;
@@ -357,6 +361,16 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             ADQL::Non_Predicate_Geometry_Function_Two_Arg(),
                             boost::spirit::ascii::space_type>
             non_predicate_geometry_function_two_arg;
+
+    boost::spirit::qi::rule<std::string::const_iterator,
+                            ADQL::Geometry::Geometry_Left(),
+                            boost::spirit::ascii::space_type>
+            geometry_left;
+
+    boost::spirit::qi::rule<std::string::const_iterator,
+                            ADQL::Geometry::Geometry_Right(),
+                            boost::spirit::ascii::space_type>
+            geometry_right;
 
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Geometry(),
                             boost::spirit::ascii::space_type>

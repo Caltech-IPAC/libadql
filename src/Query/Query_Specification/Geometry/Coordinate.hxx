@@ -6,15 +6,8 @@
 
 namespace ADQL {
 struct Coordinate {
-public:
     Column_or_Simple_Arithmetic_Expression ra, dec;
-
-    /// We can not use ADQL::empty_variant because double does not have
-    /// an empty() method.
-    bool empty() const {
-        Column_or_Simple_Arithmetic_Expression_empty_Visitor visitor;
-        return boost::apply_visitor(visitor, ra);
-    }
+    bool empty() const { return ra.empty(); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Coordinate &coordinate) {

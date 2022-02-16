@@ -16,7 +16,7 @@ public:
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Contains &contains) {
-    os << "CONTAINS(" << contains.point_or_column << "," << contains.shape << ")=1";
+    os << "CONTAINS(" << contains.point_or_column << "," << contains.shape << ")";
     return os;
 }
 }  // namespace ADQL
