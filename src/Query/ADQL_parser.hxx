@@ -14,7 +14,7 @@
 
 #define BOOST_SPIRIT_THREADSAFE
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/fusion/include/io.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>
@@ -26,6 +26,8 @@
 #include "boost/variant.hpp"
 
 #include "../Query.hxx"
+
+using namespace boost::placeholders;
 
 // This parser does not have a separate lexer.  That makes things a
 // little more complicated because I have to be sure to check for
