@@ -426,6 +426,14 @@ int main(int argc, char *argv[]) {
             "sofia.observation) middle, sofia.proposals props WHERE middle.proposal_id "
             "= props.proposal_id",
 
+            // IRSA-4528
+            "select NULL as null_col from foo",
+            "select NULL::char as null_col from foo",
+            "select ra,NULL::char as null_col from foo",
+            "select ra,NULL::char,dec as null_col from foo",
+            "select NULL::char from foo",
+            "select NULL::int as null_col from foo",
+            "select NULL::float as null_col from foo",
     };
 
     std::vector<std::string> fail = {

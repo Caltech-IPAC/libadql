@@ -44,6 +44,7 @@ void ADQL_parser::init_factor() {
     set_function_specification.name("set_function_specification");
 
     null_literal %= ascii::no_case[ascii::string("NULL")];
+
     result %= value_expression | null_literal;
     result.name("result");
     simple_when %= ascii::no_case["WHEN"] >> &no_skip[boost::spirit::qi::space] >
@@ -104,10 +105,15 @@ void ADQL_parser::init_factor() {
     array_index %= hold['[' >> value_expression >> ']'];
     array_index.name("array_index");
 
+    null_cast %= ascii::no_case[ascii::string("NULL::char")] |
+                 ascii::no_case[ascii::string("NULL::int")] |
+                 ascii::no_case[ascii::string("NULL::float")];
+    null_cast.name("null_cast");
+
     value_expression_primary %=
             (array_constructor | unsigned_value_specification | column_reference |
-             set_function_specification | case_expression | any_expression |
-             value_subexpression) >>
+             set_function_specification | case_expression | any_expression | null_cast |
+             null_literal | value_subexpression) >>
             *array_index;
     value_expression_primary.name("value_expression_primary");
 
