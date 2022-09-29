@@ -87,7 +87,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
             correlation_name, qualifier, trig_one_arg_names, math_zero_arg_names,
             math_one_arg_names, math_two_arg_names, cast_as, user_defined_function_name,
             unsigned_literal, unsigned_value_specification, general_literal,
-            null_literal, boolean_literal, qualifier_star, binary_operators,
+            null_literal, null_cast, boolean_literal, qualifier_star, binary_operators,
             geo_one_arg_names, geo_two_arg_names;
 
     // rules with skipper
