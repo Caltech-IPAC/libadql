@@ -6,6 +6,8 @@
 
 // #define INVESTIGATE
 
+// Warning: Tests will fail if "TOP" is specified with any value other than "14223".
+
 int main(int argc, char *argv[]) {
     bool quiet(argc > 1 && argv[1] == std::string("-q"));
     std::vector<std::string> pass = {
@@ -434,6 +436,24 @@ int main(int argc, char *argv[]) {
             "select NULL::char from foo",
             "select NULL::int as null_col from foo",
             "select NULL::float as null_col from foo",
+
+			// limited support for CAST to text/char
+            "SELECT to_date(the_date,'J') AS real_date FROM fp_psc",
+            "SELECT TOP 14223 jdate, to_char(to_date(floor(jdate), 'J')) AS real_date "
+            "FROM fp_psc",
+            "SELECT time_bounds_lower, cast(time_bounds_lower AS varchar) AS "
+            "cast_lower FROM caom.plane",
+            "SELECT time_bounds_lower, cast(time_bounds_lower AS text) AS cast_lower "
+            "FROM caom.plane",
+            "SELECT time_bounds_lower, cast(time_bounds_lower AS char) AS cast_lower "
+            "FROM caom.plane",
+            "SELECT time_bounds_lower, cast(time_bounds_lower AS varchar2) AS "
+            "cast_lower FROM caom.plane",
+            "SELECT  time_bounds_lower as mjd, time_bounds_lower+2400000.5 AS "
+            "julian_date, "
+            "to_date(cast(time_bounds_lower + 2400000.5 AS varchar),'J') AS real_date "
+            "FROM caom.plane",
+
     };
 
     std::vector<std::string> fail = {
