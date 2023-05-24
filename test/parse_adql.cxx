@@ -437,7 +437,7 @@ int main(int argc, char *argv[]) {
             "select NULL::int as null_col from foo",
             "select NULL::float as null_col from foo",
 
-			// limited support for CAST to text/char
+			// limited support for CAST
             "SELECT to_date(the_date,'J') AS real_date FROM fp_psc",
             "SELECT TOP 14223 jdate, to_char(to_date(floor(jdate), 'J')) AS real_date "
             "FROM fp_psc",
@@ -453,6 +453,7 @@ int main(int argc, char *argv[]) {
             "julian_date, "
             "to_date(cast(time_bounds_lower + 2400000.5 AS varchar),'J') AS real_date "
             "FROM caom.plane",
+            "select cast('1' as bigint) AS my_col FROM caom.observation",
 
     };
 

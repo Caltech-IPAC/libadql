@@ -148,6 +148,8 @@ void ADQL_parser::init_factor() {
 
     cast_as %= ascii::no_case[ascii::string("NUMERIC")] |
                ascii::no_case[ascii::string("FLOAT4")] |
+               ascii::no_case[ascii::string("INTEGER")] |
+               ascii::no_case[ascii::string("BIGINT")] |
                ascii::no_case[ascii::string("FLOAT8")] |
                ascii::no_case[ascii::string("VARCHAR2")] |
                ascii::no_case[ascii::string("VARCHAR")] |
