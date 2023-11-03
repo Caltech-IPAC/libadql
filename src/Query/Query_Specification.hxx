@@ -10,6 +10,7 @@
 #include "Query_Specification/User_Defined_Function.hxx"
 #include "Query_Specification/Value_Expression_Primary.hxx"
 #include "Query_Specification/Where.hxx"
+#include "Query_Specification/With.hxx"
 
 namespace ADQL {
 class Query_Specification {
@@ -18,6 +19,7 @@ public:
     typedef boost::variant<std::string, std::vector<Column_Variant> > Columns;
 
     Columns columns;
+    With with;
     std::string all_or_distinct;
     size_t top = std::numeric_limits<size_t>::max();
     std::vector<Table_Reference> tables;
@@ -77,6 +79,9 @@ inline std::ostream &operator<<(std::ostream &os,
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Query_Specification &query) {
+    if (!query.with.empty()) {
+        os << query.with << " ";
+    }
     os << "SELECT " << query.all_or_distinct
        << (query.all_or_distinct.empty() ? "" : " ")
        << (query.top != std::numeric_limits<unsigned long long>::max()
@@ -92,7 +97,7 @@ inline std::ostream &operator<<(std::ostream &os,
 }  // namespace ADQL
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Query_Specification,
-                          (std::string, all_or_distinct)(size_t, top)(
+                          (ADQL::With, with)(std::string, all_or_distinct)(size_t, top)(
                                   ADQL::Query_Specification::Columns,
                                   columns)(std::vector<ADQL::Table_Reference>,
                                            tables)(ADQL::Where, where)(ADQL::Group_By,

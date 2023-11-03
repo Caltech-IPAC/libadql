@@ -22,6 +22,18 @@ void ADQL_parser::init_query() {
     using boost::spirit::qi::ulong_long;
     namespace ascii = boost::spirit::ascii;
 
+    with %= lexeme[ascii::no_case["WITH"] > &boost::spirit::qi::space] >
+            with_table_name > -(lit('(') >> with_column_name % ',' > lit(')')) >>
+            -(lexeme[ascii::no_case["AS"] > &boost::spirit::qi::space]) > subquery;
+
+    with.name("with");
+
+    with_table_name %= identifier;
+    with_table_name.name("with_table_name");
+
+    with_column_name %= identifier;
+    with_column_name.name("with_column_name");
+
     where = lexeme[ascii::no_case["WHERE"] > &boost::spirit::qi::space] >
             ((geometry[at_c<0>(_val) = _1] >
               -(ascii::no_case["AND"] >> '(' > search_condition[at_c<1>(_val) = _1] >>
@@ -52,38 +64,41 @@ void ADQL_parser::init_query() {
 
     ordering_specification %= ascii::no_case[ascii::string("ASC")] |
                               ascii::no_case[ascii::string("DESC")];
-    /// I have the vague feeling that there are cases where there are
-    /// no spaces between the sort_key and ordering_specification, but
-    /// I can not think of any.
+    // I have the vague feeling that there are cases where there are
+    // no spaces between the sort_key and ordering_specification, but
+    // I can not think of any.
     sort_specification %= sort_key >> -ordering_specification;
     order_by %= lexeme[ascii::no_case["ORDER"] > &boost::spirit::qi::space] >>
                 lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space] >>
                 (sort_specification % ',');
     order_by.name("order by");
 
-    /// The expectation operator messes up the automatic calculation of
-    /// semantic actions.  So instead of %=, we have to do it manually
-    /// with [at_c<>(_val)=_1]
-    query = (lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space] >>
-             -set_quantifier[at_c<0>(_val) = _1] >>
+    // The expectation operator messes up the automatic calculation of
+    // semantic actions.  So instead of %=, we have to do it manually
+    // with [at_c<>(_val)=_1]
+    query = -with[at_c<0>(_val) = _1] >>
+            (lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space] >>
+             -set_quantifier[at_c<1>(_val) = _1] >>
              -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]] >
-               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val) = _1] >
-             columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1]) >>
-            -where[at_c<4>(_val) = _1] >> -group_by[at_c<5>(_val) = _1] >>
-            -having[at_c<6>(_val) = _1] >> -order_by[at_c<7>(_val) = _1];
-    query.name("select");
+               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<2>(_val) = _1] >
+             columns[at_c<3>(_val) = _1] > from_clause[at_c<4>(_val) = _1]) >>
+            -where[at_c<5>(_val) = _1] >> -group_by[at_c<6>(_val) = _1] >>
+            -having[at_c<7>(_val) = _1] >> -order_by[at_c<8>(_val) = _1];
+    query.name("query");
 
     query_no_geometry =
+            -with[at_c<0>(_val) = _1] >>
             (lexeme[ascii::no_case["SELECT"] >> &boost::spirit::qi::space] >>
-             -set_quantifier[at_c<0>(_val) = _1] >>
+             -set_quantifier[at_c<1>(_val) = _1] >>
              -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]] >
-               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val) = _1] >
-             columns[at_c<2>(_val) = _1] > from_clause[at_c<3>(_val) = _1]) >>
-            -where_no_geometry[at_c<4>(_val) = _1] >> -group_by[at_c<5>(_val) = _1] >>
-            -having[at_c<6>(_val) = _1] >> -order_by[at_c<7>(_val) = _1];
-    query_no_geometry.name("select");
+               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<2>(_val) = _1] >
+             columns[at_c<3>(_val) = _1] > from_clause[at_c<4>(_val) = _1]) >>
+            -where_no_geometry[at_c<5>(_val) = _1] >> -group_by[at_c<6>(_val) = _1] >>
+            -having[at_c<7>(_val) = _1] >> -order_by[at_c<8>(_val) = _1];
+    query_no_geometry.name("query_no_geometry");
 
     subquery %= lit('(') >> (query_no_geometry | joined_table) >> lit(')');
+    subquery.name("subquery");
 
     boost::spirit::qi::on_error<boost::spirit::qi::fail>(
             query, boost::phoenix::ref((std::ostream &)error_stream)
@@ -102,5 +117,9 @@ void ADQL_parser::init_query() {
     BOOST_SPIRIT_DEBUG_NODE(order_by);
     BOOST_SPIRIT_DEBUG_NODE(query);
     BOOST_SPIRIT_DEBUG_NODE(query_no_geometry);
+    BOOST_SPIRIT_DEBUG_NODE(subquery);
+    BOOST_SPIRIT_DEBUG_NODE(with);
+    BOOST_SPIRIT_DEBUG_NODE(with_table_name);
+    BOOST_SPIRIT_DEBUG_NODE(with_column_name);
 #endif
 }

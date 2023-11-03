@@ -5,6 +5,11 @@
 #define BOOST_SPIRIT_DEBUG
 #define BOOST_SPIRIT_DEBUG_OUT std::cout
 #define DEBUG_WHERE
+#define DEBUG_Q
+#define DEBUG_MATH
+#define DEBUG_TRIG
+#define DEBUG_COL
+#define DEBUG_PRED
 #endif
 
 #define BOOST_SPIRIT_THREADSAFE
@@ -88,7 +93,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
             math_one_arg_names, math_two_arg_names, cast_as, user_defined_function_name,
             unsigned_literal, unsigned_value_specification, general_literal,
             null_literal, null_cast, boolean_literal, qualifier_star, binary_operators,
-            geo_one_arg_names, geo_two_arg_names;
+            geo_one_arg_names, geo_two_arg_names, with_table_name, with_column_name;
 
     // rules with skipper
     boost::spirit::qi::rule<std::string::const_iterator, std::string(),
@@ -443,6 +448,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Sort_Key(),
                             boost::spirit::ascii::space_type>
             sort_key;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::With(),
+                            boost::spirit::ascii::space_type>
+            with;
 
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Where(),
                             boost::spirit::ascii::space_type>
