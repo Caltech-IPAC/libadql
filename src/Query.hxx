@@ -26,6 +26,7 @@ public:
     bool simple_query() const {
         return (query_specification.all_or_distinct.empty() ||
                 query_specification.all_or_distinct == "ALL") &&
+               query_specification.with.empty() &&
                query_specification.where.search_condition.empty() &&
                query_specification.group_by.empty() &&
                query_specification.order_by.empty() &&

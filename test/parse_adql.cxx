@@ -437,7 +437,7 @@ int main(int argc, char *argv[]) {
             "select NULL::int as null_col from foo",
             "select NULL::float as null_col from foo",
 
-			// limited support for CAST
+            // limited support for CAST
             "SELECT to_date(the_date,'J') AS real_date FROM fp_psc",
             "SELECT TOP 14223 jdate, to_char(to_date(floor(jdate), 'J')) AS real_date "
             "FROM fp_psc",
@@ -455,6 +455,20 @@ int main(int argc, char *argv[]) {
             "FROM caom.plane",
             "select cast('1' as bigint) AS my_col FROM caom.observation",
 
+            // support for WITH
+            "WITH tempTable (avgDist) (SELECT avg(dist) FROM distTable) "
+            "SELECT table_name, dist FROM distTable, tempTable WHERE distTable.dist > "
+            "tempTable.avgDist",
+
+            "WITH alpha_subset (SELECT * FROM alpha_source WHERE mod(id,10) = 0) "
+            "SELECT ra, dec FROM alpha_subset WHERE ra > 10 and ra < 20",
+
+            "WITH tempTable (avgDist) AS (SELECT avg(dist) FROM distTable) "
+            "SELECT table_name, dist FROM distTable, tempTable WHERE distTable.dist > "
+            "tempTable.avgDist",
+
+            "WITH alpha_subset AS (SELECT * FROM alpha_source WHERE mod(id,10) = 0) "
+            "SELECT ra, dec FROM alpha_subset WHERE ra > 10 and ra < 20",
     };
 
     std::vector<std::string> fail = {
@@ -519,7 +533,7 @@ int main(int argc, char *argv[]) {
 
             ADQL::Query query(i, table_mapping);
 #ifdef INVESTIGATE
-            std::cout << "before to_string()" << std::endl;
+            std::cout << "test, before to_string()" << std::endl;
 #endif
             std::string formatted_query = ADQL::to_string(query);
 #ifdef INVESTIGATE
