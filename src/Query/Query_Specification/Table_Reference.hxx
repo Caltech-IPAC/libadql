@@ -8,11 +8,13 @@
 #include "Derived_Correlation.hxx"
 #include "Joined_Table_Wrap.hxx"
 #include "Table_Reference/Correlation_Join.hxx"
+#include "Table_Valued_Function.hxx"
 
 namespace ADQL {
 class Table_Reference {
 public:
-    typedef boost::variant<Table_Correlation, Joined_Table_Wrap, Derived_Correlation>
+    typedef boost::variant<Table_Correlation, Joined_Table_Wrap, Derived_Correlation,
+                           Table_Valued_Function>
             Variant;
     Variant variant;
     bool empty() const;
