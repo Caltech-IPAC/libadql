@@ -69,8 +69,9 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     // no-skipper rules for char
     boost::spirit::qi::rule<std::string::const_iterator, char()> simple_Latin_letter,
             identifier_character, nonidentifier_character, nondoublequote_character,
-            quote, space, newline, tab, minus_sign, nonquote_character, sign, period,
-            arithmetic_operator, char_flag;
+            possibly_qualified_identifier_character, quote, space, newline, tab,
+            minus_sign, nonquote_character, sign, period, arithmetic_operator,
+            char_flag;
 
     // no-skipper rules for std::string
     boost::spirit::qi::rule<std::string::const_iterator, std::string()>
@@ -93,7 +94,9 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
             math_one_arg_names, math_two_arg_names, cast_as, user_defined_function_name,
             unsigned_literal, unsigned_value_specification, general_literal,
             null_literal, null_cast, boolean_literal, qualifier_star, binary_operators,
-            geo_one_arg_names, geo_two_arg_names, with_table_name, with_column_name;
+            geo_one_arg_names, geo_two_arg_names, with_table_name, with_column_name,
+            possibly_qualified_identifier, table_valued_function_name,
+            table_valued_function_param;
 
     // rules with skipper
     boost::spirit::qi::rule<std::string::const_iterator, std::string(),
@@ -314,6 +317,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Reference(),
                             boost::spirit::ascii::space_type>
             table_reference;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Valued_Function(),
+                            boost::spirit::ascii::space_type>
+            table_valued_function;
 
     boost::spirit::qi::rule<std::string::const_iterator,
                             std::vector<ADQL::Table_Reference>(),

@@ -27,16 +27,20 @@ void ADQL_parser::init_identifier() {
 
     simple_Latin_letter %= char_("a-zA-Z");
     identifier_character %= digit | simple_Latin_letter | char_("_");
-    /// nonidentifier_character is to signal that, for example, in an
-    /// AND, clause, AND is followed by something that is not an
-    /// identifier (e.g. a space or parentheses).
+    // nonidentifier_character is to signal that, for example, in an
+    // AND, clause, AND is followed by something that is not an
+    // identifier (e.g. a space or parentheses).
     nonidentifier_character %= char_ - identifier_character;
     nonidentifier_character.name("nonidentifier character");
     all_identifiers %= simple_Latin_letter >> *(identifier_character);
     regular_identifier %= all_identifiers - keyword;
 
+    possibly_qualified_identifier_character %= identifier_character | char_(".");
+    possibly_qualified_identifier %=
+            simple_Latin_letter >> *(possibly_qualified_identifier_character);
+
     nondoublequote_character %= char_ - char_('"');
-    /// Note that all of these delimited_identifier* rules do not skip spaces
+    // Note that all of these delimited_identifier* rules do not skip spaces
     delimited_identifier_part %= nondoublequote_character | ascii::string("\"\"");
     delimited_identifier_body %= +delimited_identifier_part;
     delimited_identifier %= char_('"') >> delimited_identifier_body >> char_('"');

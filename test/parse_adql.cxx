@@ -469,6 +469,23 @@ int main(int argc, char *argv[]) {
 
             "WITH alpha_subset AS (SELECT * FROM alpha_source WHERE mod(id,10) = 0) "
             "SELECT ra, dec FROM alpha_subset WHERE ra > 10 and ra < 20",
+
+            // support for table() function
+            "WITH temp (collection, multi_type) AS (SELECT collection,mytype "
+            "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) "
+            "SELECT DISTINCT projectshort AS facility_name,description,"
+            "irsa_directory.collection AS obs_collection FROM irsa_directory,temp "
+            "WHERE irsa_directory.collection=temp.collection",
+
+            "SELECT DISTINCT projectshort AS "
+           "facility_name,description,irsa_directory.collection AS obs_collection,"
+            "instrument AS instrument_name,coverage,band,info_url,temp.multi_type AS "
+            "dataproduct_type "
+            "FROM irsa_directory, (SELECT collection,mytype as multi_type "
+            "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) as temp "
+            "WHERE semantics like '%primary%' AND "
+            "irsa_directory.collection=temp.collection "
+            "ORDER BY facility_name,irsa_directory.collection,instrument_name"
     };
 
     std::vector<std::string> fail = {

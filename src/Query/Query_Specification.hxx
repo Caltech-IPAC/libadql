@@ -7,6 +7,7 @@
 #include "Query_Specification/Non_As.hxx"
 #include "Query_Specification/Order_By.hxx"
 #include "Query_Specification/Table_Reference.hxx"
+#include "Query_Specification/Table_Valued_Function.hxx"
 #include "Query_Specification/User_Defined_Function.hxx"
 #include "Query_Specification/Value_Expression_Primary.hxx"
 #include "Query_Specification/Where.hxx"
