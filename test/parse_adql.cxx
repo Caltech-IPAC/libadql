@@ -478,14 +478,31 @@ int main(int argc, char *argv[]) {
             "WHERE irsa_directory.collection=temp.collection",
 
             "SELECT DISTINCT projectshort AS "
-           "facility_name,description,irsa_directory.collection AS obs_collection,"
+            "facility_name,description,irsa_directory.collection AS obs_collection,"
             "instrument AS instrument_name,coverage,band,info_url,temp.multi_type AS "
             "dataproduct_type "
             "FROM irsa_directory, (SELECT collection,mytype as multi_type "
             "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) as temp "
             "WHERE semantics like '%primary%' AND "
             "irsa_directory.collection=temp.collection "
-            "ORDER BY facility_name,irsa_directory.collection,instrument_name"
+            "ORDER BY facility_name,irsa_directory.collection,instrument_name",
+
+            // IRSA-5856
+
+            "Select * From mytable JOIN dbtable WHERE "
+            "INTERSECTs(mytable.mycol1,dbtable.col2)",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "1=CONTAINS(POINT('J2000',fp_psc.ra, fp.psc.dec), "
+            "s_region)",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly)",
+
+            "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
+            "CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 ORDER BY "
+            "dataproduct_type,obs_id,obs_collection",
     };
 
     std::vector<std::string> fail = {

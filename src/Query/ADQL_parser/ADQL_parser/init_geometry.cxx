@@ -65,7 +65,7 @@ void ADQL_parser::init_geometry() {
             ascii::no_case["POLYGON"] >> '(' >> -(coord_sys > ',') > coord_list > ')';
     polygon.name("polygon");
 
-    shape %= point | circle | box | ellipse | polygon;
+    shape %= point | circle | box | ellipse | polygon | column_reference;
     shape.name("shape");
 
     contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' > shape > ')';
