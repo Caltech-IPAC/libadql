@@ -133,6 +133,7 @@ void ADQL_parser::init_factor() {
                                   ascii::no_case[ascii::string("LEFT")] |
                                   ascii::no_case[ascii::string("UPPER")] |
                                   ascii::no_case[ascii::string("LOWER")] |
+                                  ascii::no_case[ascii::string("DISTINCT")] |
                                   ascii::no_case[ascii::string("TRIM")];
     user_defined_function_name.name("user_defined_function_name");
     user_defined_function_param %= value_expression;

@@ -503,6 +503,10 @@ int main(int argc, char *argv[]) {
             "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
             "CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 ORDER BY "
             "dataproduct_type,obs_id,obs_collection",
+
+            // IRSA-5880
+            "select string_agg(fname, ',') from spitzer.deepdrill_images",
+            "select string_agg(distinct(instrument_name), ',') from ivoa.obscore",
     };
 
     std::vector<std::string> fail = {
