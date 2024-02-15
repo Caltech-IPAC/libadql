@@ -55,6 +55,19 @@ int main(int argc, char *argv[]) {
             "SELECT * FROM my_table1 WHERE (x!=3) and "
             "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
             "-20,-1))",
+
+            "SELECT * FROM my_table1 WHERE (x!=3) and "
+            "1=CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1))",
+
+            "SELECT * FROM my_table1 WHERE (x!=3) and "
+            "1 = CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1))",
+
+            "SELECT * FROM my_table1 WHERE (x!=3) and "
+            "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 1",
+
             "SELECT * FROM my_table1 WHERE x!=3",
             "SELECT * FROM my_table1",
             "SELECT * FROM my_table1 where x>2",
@@ -65,9 +78,18 @@ int main(int argc, char *argv[]) {
             "SELECT * FROM my_table1 WHERE "
             "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
             "-20,-1)) "
-            "And (x<1 And x>2)",
+            "And ((x<1 Or x>2))",
+            "SELECT * FROM my_table1 WHERE "
+            "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) "
+            "And (((x<1 Or x>2)))",
+            "SELECT * FROM my_table1 WHERE "
+            "1= CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) "
+            "And (x<1 And y>2)",
             "SELECT * FROM my_table1 where (x AND x)",
             "SELECT * FROM my_table1 where (x>2 AND x<4) Or (x>6 and x<10)",
+            "SELECT * FROM my_table1 where ((x>2 AND x<4) Or (x>6 and x<10))",
             "SELECT * FROM my_table1 where (x Between 2 AND 4) Or (x>6 and x<10)",
             "SELECT * FROM my_table1 where x is null",
             "SELECT * FROM my_table1 where x is not null",
@@ -148,6 +170,7 @@ int main(int argc, char *argv[]) {
             "SELECT * FROM TAP_UPLOAD.mytable WHERE "
             "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
             "CIRCLE('J2000',+10 , -20,-1)) ORDER BY TAP_UPLOAD.mytable.ra",
+
             "SELECT TAP_UPLOAD.mytable.ra as myra FROM TAP_UPLOAD.mytable WHERE "
             "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
             "CIRCLE('J2000',+10 , -20,-1)) ORDER BY myra",
@@ -504,16 +527,158 @@ int main(int argc, char *argv[]) {
             "CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 ORDER BY "
             "dataproduct_type,obs_id,obs_collection",
 
+            // IRSA-5885
+
+            "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
+            "y> 3 AND CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 AND x<1 "
+            "ORDER "
+            "BY "
+            "dataproduct_type,obs_id,obs_collection",
+
+            "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
+            "(y> 3 AND CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 AND x<1) "
+            "ORDER BY "
+            "dataproduct_type,obs_id,obs_collection",
+
+            "SELECT * FROM my_table1 WHERE "
+            "y=3 AND 1 = CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-3))",
+
+            "SELECT * FROM my_table1 WHERE "
+            "y=3 AND 1=CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-3))",
+
+            "SELECT * FROM my_table1 WHERE "
+            "y=3 AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-3))= 1 ",
+
+            "SELECT * FROM my_table1 WHERE "
+            "y=3 AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And (x<1)",
+
+            "SELECT * FROM my_table1 WHERE "
+            "y=3 AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And x<1",
+
+            "SELECT * FROM my_table1 WHERE "
+            "y=3 AND name='Smith' AND "
+            "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And x<1",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y=3 AND name='Smith') AND "
+            "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And x<1",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y=3 AND name='Smith') AND "
+            "1 = CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And x<1",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And (x<1)",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And (x<1) OR y>5",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) And ((x<1) OR y>5) AND name = 'Smith'",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND 0 = CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 "
+            ", "
+            "-20,-1)) And ((x<1) OR y>5) AND name = 'Smith'",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 And ((x<1) OR y>5) AND name = 'Smith'",
+
+            "Select ra1,dec2,flux From mytable Where "
+            "1 = Intersects(pos,Circle('J2000',+10 , -20,-1))",
+
+            "Select * From mytable Where y>3 and "
+            "INTERSECTS(coalesce(pt,poly),Circle('J2000',+10 , -20,-1))",
+
+            "Select * From mytable Where y>3 and (name='Jones' or city='Topeka') and "
+            "INTERSECTS(coalesce(pt,poly),Circle('J2000',+10 , -20,-1))",
+
+            "Select * From mytable Where y>3 and (name='Jones' or city='Topeka') and "
+            "INTERSECTS(coalesce(pt,poly),Circle('J2000',+10 , -20,-1)) = 0",
+
+            "Select * From mytable Where y>3 and "
+            "INTERSECTS(coalesce(pt,poly),Circle('J2000',+10 , -20,-1)) and "
+            "(name='Jones' "
+            "or city='Topeka')",
+
+            "Select * From mytable Where (y>3 and "
+            "INTERSECTS(coalesce(pt,poly),Circle('J2000',+10 , -20,-1)) and "
+            "(name='Jones' "
+            "or city='Topeka'))",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 And ((x<1) OR y>5)",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(y>3 AND 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly))",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(y>3 AND 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly)) AND (x=2)",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(y>3 AND 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly)) AND x=2",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly))",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly) AND x=2",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 And (x<1) AND y>5",
+
+            "SELECT * FROM my_table1 WHERE "
+            "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 And x<1 AND (y>5 OR (z>12))",
+
+
+            "SELECT * FROM my_table1 WHERE "
+            "y>3 AND (x Between 2 AND 4) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 And x<1 OR (y>5 AND (z>12))",
+
+            "SELECT * FROM my_table1 WHERE "
+            "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 AND y>3 AND (x Between 2 AND 4) AND  x<1 AND (y>5 OR (z>12))",
+
+            "SELECT * FROM my_table1 WHERE "
+            "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "-20,-1)) = 0 AND y>3 AND x Between 2 AND 4 AND  x<1 AND (y>5 OR (z>12))",
+
+
             // IRSA-5880
             "select string_agg(fname, ',') from spitzer.deepdrill_images",
             "select string_agg(distinct(instrument_name), ',') from ivoa.obscore",
     };
 
     std::vector<std::string> fail = {
-            "POINT('foo',10 20)", "POINT('foo',1.0, 20)", "POINT('foo',10 ,-2.0)",
-            "SELECTTOP 100 * FROM my_table1", "SELECT TOP100 * FROM my_table1",
-            "SELECT TOP 100* FROM my_table1", "SELECT TOP hundred * FROM my_table1",
-            "SELECT DISTINCT sin FROM my_table1", "SELECT TOP 100 FROM my_table1",
+            "POINT('foo',10 20)",
+            "POINT('foo',1.0, 20)",
+            "POINT('foo',10 ,-2.0)",
+            "SELECTTOP 100 * FROM my_table1",
+            "SELECT TOP100 * FROM my_table1",
+            "SELECT TOP 100* FROM my_table1",
+            "SELECT TOP hundred * FROM my_table1",
+            "SELECT DISTINCT sin FROM my_table1",
+            "SELECT TOP 100 FROM my_table1",
             "SELECT * FROM my_table1 where x in(10,20,30)",
             "SELECT * FROM my_table1 where x not in(10,20,30)",
             "SELECT FROM my_table1 WHERE CONTAINS(POINT('J2000',10 , "
@@ -525,18 +690,32 @@ int main(int argc, char *argv[]) {
             "-20,-1)) "
             "And x<1 And x>2 Or y < 3 Or y >5"
             "SELECT *,ra FROM my_table1",
-            "SELECT my_tablel1.* as ra_dec FROM my_table1", "select sum(a,b) from a",
-            "select sum from a", "select sum( from a", "select abs(a,b) from a",
-            "select sin from a", "select sin() from a", "select sin( from a",
-            "select atan2 from a", "select atan2() from a", "select atan2(a) from a",
-            "select atan2(a,) from a", "select atan2(a,b from a", "select round from a",
-            "select round() from a", "select round(a,) from a",
-            "select round(a,b from a", "select round(a,10 from a",
-            "select count(* from a", "select b from a where x<1 groupby a",
+            "SELECT my_tablel1.* as ra_dec FROM my_table1",
+            "select sum(a,b) from a",
+            "select sum from a",
+            "select sum( from a",
+            "select abs(a,b) from a",
+            "select sin from a",
+            "select sin() from a",
+            "select sin( from a",
+            "select atan2 from a",
+            "select atan2() from a",
+            "select atan2(a) from a",
+            "select atan2(a,) from a",
+            "select atan2(a,b from a",
+            "select round from a",
+            "select round() from a",
+            "select round(a,) from a",
+            "select round(a,b from a",
+            "select round(a,10 from a",
+            "select count(* from a",
+            "select b from a where x<1 groupby a",
             "select b from a where x<1 group bya",
             "select b from a where x<1 orderby a",
-            "select b from a where x<1 order bya", "select b from a where x<1 havinga",
-            "select a asb from a group by a", "Select fromage ast from fromming",
+            "select b from a where x<1 order bya",
+            "select b from a where x<1 havinga",
+            "select a asb from a group by a",
+            "Select fromage ast from fromming",
             "SELECT * FROM my_table1 where (x notBetween 2 AND 4)",
             "SELECT * FROM my_table1 where x notin (10,20,30)",
             "SELECT * FROM mytable WHERECONTAINS(POINT('J2000',mytable.ra,dec),"
@@ -551,10 +730,41 @@ int main(int argc, char *argv[]) {
             "select CASE foo WHENever THEN 'c' END from b",
             "select alligator from (table1)",
 
-            // IRSA-2005
             "SELECT column_name,description,unit,ucd,utype,datatype,principal,indexed "
             "from TAP_SCHEMA.columns where table_name='ztf.ztf_current_meta_sci' "
-            "order by column_index'A=0"
+            "order by column_index'A=0",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(y>3 AND 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly)) OR x=2",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(y>3 OR 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly))",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "y>3 OR 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly)",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly) OR x=2",
+
+            "SELECT ra1 As rara, dec2, flux FROM mytable WHERE "
+            "(y>3 AND 1=CONTAINS(POINT(fp_psc.ra, fp.psc.dec), "
+            "poly)) AND x=2)",
+
+            "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
+            "y>3 OR CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 AND x<1 "
+            "ORDER "
+            "BY "
+            "dataproduct_type,obs_id,obs_collection",
+
+            "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
+            "(y>3 AND CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1) OR x<1 "
+            "ORDER "
+            "BY "
+            "dataproduct_type,obs_id,obs_collection",
 
     };
 

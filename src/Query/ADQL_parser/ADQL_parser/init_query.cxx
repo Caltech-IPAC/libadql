@@ -35,13 +35,15 @@ void ADQL_parser::init_query() {
     with_column_name.name("with_column_name");
 
     where = lexeme[ascii::no_case["WHERE"] > &boost::spirit::qi::space] >
-            ((geometry[at_c<0>(_val) = _1] >
-              -(ascii::no_case["AND"] >> '(' > search_condition[at_c<1>(_val) = _1] >>
-                ')')) |
-             (lit('(') >> search_condition[at_c<1>(_val) = _1] >> ')' >>
-              (lexeme[ascii::no_case["AND"] > &boost::spirit::qi::space] >>
-               geometry[at_c<0>(_val) = _1])) |
+
+			 ((geometry[at_c<0>(_val) = _1] >>
+              -(ascii::no_case["AND"]  > search_condition[at_c<1>(_val) = _1]
+                )) |
+
+             ('(' >> geometry[at_c<0>(_val) = _1] > ')') |
+
              (search_condition[at_c<1>(_val) = _1]));
+
     where.name("where");
 
     where_no_geometry = lexeme[ascii::no_case["WHERE"] >> &boost::spirit::qi::space] >>

@@ -4,6 +4,7 @@
 #include "Search_Condition.hxx"
 
 namespace ADQL {
+
 class Where {
 public:
     Search_Condition search_condition;
@@ -15,7 +16,7 @@ inline std::ostream &operator<<(std::ostream &os, const ADQL::Where &where) {
     if (!where.geometry.empty()) {
         os << where.geometry;
         if (!where.search_condition.empty())
-            os << " AND (" << where.search_condition << ")";
+		  os << " AND " << where.search_condition;
     } else if (!where.search_condition.empty())
         os << where.search_condition;
     return os;
