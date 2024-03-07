@@ -361,6 +361,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             boost::spirit::ascii::space_type>
             shape;
 
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Shape_or_Column(),
+                            boost::spirit::ascii::space_type>
+            shape_or_column;
+
     boost::spirit::qi::rule<std::string::const_iterator,
                             ADQL::Non_Predicate_Geometry_Function(),
                             boost::spirit::ascii::space_type>

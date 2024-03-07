@@ -65,14 +65,18 @@ void ADQL_parser::init_geometry() {
             ascii::no_case["POLYGON"] >> '(' >> -(coord_sys > ',') > coord_list > ')';
     polygon.name("polygon");
 
-    shape %= point | circle | box | ellipse | polygon | column_reference;
+    shape %= point | circle | box | ellipse | polygon;
     shape.name("shape");
 
-    contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' > shape > ')';
+    shape_or_column %= shape | column_reference;
+    shape_or_column.name("shape_or_column");
+
+    contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' >
+                shape_or_column > ')';
     contains.name("contains");
 
-    intersects %=
-            ascii::no_case["INTERSECTS"] >> '(' > value_expression > ',' > shape > ')';
+    intersects %= ascii::no_case["INTERSECTS"] >> '(' > value_expression > ',' >
+                  shape_or_column > ')';
     intersects.name("intersects");
 
     char_flag %= char_('0') | char_('1');
@@ -99,6 +103,7 @@ void ADQL_parser::init_geometry() {
     BOOST_SPIRIT_DEBUG_NODE(coord_list);
     BOOST_SPIRIT_DEBUG_NODE(polygon);
     BOOST_SPIRIT_DEBUG_NODE(shape);
+    BOOST_SPIRIT_DEBUG_NODE(shape_or_column);
     BOOST_SPIRIT_DEBUG_NODE(contains);
     BOOST_SPIRIT_DEBUG_NODE(intersects);
 
