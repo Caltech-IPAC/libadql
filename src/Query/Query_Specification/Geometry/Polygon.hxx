@@ -9,6 +9,8 @@ class Polygon {
 public:
     Coord_Sys coord_sys;
     std::vector<Coordinate> coordinates;
+
+    bool empty() const { return coordinates.empty(); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Polygon &polygon) {

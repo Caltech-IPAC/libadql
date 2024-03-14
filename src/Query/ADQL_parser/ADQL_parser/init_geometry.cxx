@@ -71,7 +71,7 @@ void ADQL_parser::init_geometry() {
     shape_or_column %= shape | column_reference;
     shape_or_column.name("shape_or_column");
 
-    contains %= ascii::no_case["CONTAINS"] >> '(' > point_or_column > ',' >
+    contains %= ascii::no_case["CONTAINS"] >> '(' > shape_or_column > ',' >
                 shape_or_column > ')';
     contains.name("contains");
 
@@ -96,17 +96,15 @@ void ADQL_parser::init_geometry() {
     BOOST_SPIRIT_DEBUG_NODE(column_or_simple_arithmetic_expression);
     BOOST_SPIRIT_DEBUG_NODE(coord);
     BOOST_SPIRIT_DEBUG_NODE(circle);
-
     BOOST_SPIRIT_DEBUG_NODE(ellipse);
     BOOST_SPIRIT_DEBUG_NODE(box);
-
     BOOST_SPIRIT_DEBUG_NODE(coord_list);
+    BOOST_SPIRIT_DEBUG_NODE(point);
     BOOST_SPIRIT_DEBUG_NODE(polygon);
     BOOST_SPIRIT_DEBUG_NODE(shape);
     BOOST_SPIRIT_DEBUG_NODE(shape_or_column);
     BOOST_SPIRIT_DEBUG_NODE(contains);
     BOOST_SPIRIT_DEBUG_NODE(intersects);
-
     BOOST_SPIRIT_DEBUG_NODE(char_flag);
     BOOST_SPIRIT_DEBUG_NODE(geometry_left);
     BOOST_SPIRIT_DEBUG_NODE(geometry_right);

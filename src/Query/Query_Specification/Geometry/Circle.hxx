@@ -10,6 +10,8 @@ public:
     Coord_Sys coord_sys;
     Coordinate center;
     Column_or_Simple_Arithmetic_Expression radius;
+
+    bool empty() const { return center.empty(); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Circle &circle) {

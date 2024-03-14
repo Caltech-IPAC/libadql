@@ -650,9 +650,9 @@ int main(int argc, char *argv[]) {
             "(y>3) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
             "-20,-1)) = 0 And x<1 AND (y>5 OR (z>12))",
 
-
             "SELECT * FROM my_table1 WHERE "
-            "y>3 AND (x Between 2 AND 4) AND CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
+            "y>3 AND (x Between 2 AND 4) AND "
+            "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
             "-20,-1)) = 0 And x<1 OR (y>5 AND (z>12))",
 
             "SELECT * FROM my_table1 WHERE "
@@ -663,10 +663,21 @@ int main(int argc, char *argv[]) {
             "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
             "-20,-1)) = 0 AND y>3 AND x Between 2 AND 4 AND  x<1 AND (y>5 OR (z>12))",
 
-
             // IRSA-5880
             "select string_agg(fname, ',') from spitzer.deepdrill_images",
             "select string_agg(distinct(instrument_name), ',') from ivoa.obscore",
+
+            // Flexible Contains
+            "Select ra1,dec2,flux From mytable Where "
+            "Contains(Circle('J2000',ra1, dec2, "
+            "0.32),POLYGON('J2000',0,1,2,3,4,5,6,7,8,9,10,11,12,13))= 1",
+
+            "Select ra1,dec2,flux From mytable Where "
+            "Contains(Circle('J2000',ra1, dec2, 0.32), s_region)= 1",
+
+            "Select ra,dec,flux From mytable Where "
+            "Contains(BOX('J2000',ra , "
+            "dec,1,2),POLYGON('J2000',0,1,2,3,4,5,6,7,8,9,10,11,12,13))= 1",
     };
 
     std::vector<std::string> fail = {
