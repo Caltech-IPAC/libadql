@@ -10,6 +10,8 @@ public:
     Coord_Sys coord_sys;
     Coordinate center;
     Column_or_Simple_Arithmetic_Expression width, height;
+
+    bool empty() const { return center.empty(); }
 };
 
 inline std::ostream &operator<<(std::ostream &os, const ADQL::Box &box) {
