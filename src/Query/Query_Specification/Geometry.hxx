@@ -2,6 +2,7 @@
 
 #include "Geometry/Contains.hxx"
 #include "Geometry/Intersects.hxx"
+#include "Geometry/XXX_or_Column.hxx"
 
 namespace ADQL {
 
