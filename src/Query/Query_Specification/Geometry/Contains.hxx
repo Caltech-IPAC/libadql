@@ -3,13 +3,11 @@
 #include "../../empty_variant.hxx"
 #include "../Column_Reference.hxx"
 #include "Shape.hxx"
+#include "XXX_or_Column.hxx"
 
 namespace ADQL {
 class Contains {
 public:
-    // JTODO move this
-    typedef boost::variant<Point, Column_Reference> Point_or_Column;
-
     Shape_or_Column shape_or_column_left;
     Shape_or_Column shape_or_column_right;
 

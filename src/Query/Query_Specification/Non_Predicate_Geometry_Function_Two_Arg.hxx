@@ -1,11 +1,12 @@
 #pragma once
-#include "Geometry/Contains.hxx"
+#include "Geometry/XXX_or_Column.hxx"
+
 namespace ADQL {
 class Non_Predicate_Geometry_Function_Two_Arg {
 public:
     std::string function;
-    ADQL::Contains::Point_or_Column arg0;
-    ADQL::Contains::Point_or_Column arg1;
+    ADQL::Point_or_Column arg0;
+    ADQL::Point_or_Column arg1;
     bool empty() const { return function.empty(); }
 };
 
@@ -21,6 +22,5 @@ inline std::ostream &operator<<(std::ostream &os,
 }  // namespace ADQL
 
 BOOST_FUSION_ADAPT_STRUCT(ADQL::Non_Predicate_Geometry_Function_Two_Arg,
-                          (std::string, function)(ADQL::Contains::Point_or_Column,
-                                                  arg0)(ADQL::Contains::Point_or_Column,
-                                                        arg1))
+                          (std::string, function)(ADQL::Point_or_Column,
+                                                  arg0)(ADQL::Point_or_Column, arg1))
