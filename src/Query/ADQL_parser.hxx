@@ -139,20 +139,31 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             boost::spirit::ascii::space_type>
             column_reference;
 
-    boost::spirit::qi::rule<std::string::const_iterator,
-                            ADQL::Query_Specification::Column_Variant(),
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Select::Column_Variant(),
                             boost::spirit::ascii::space_type>
             select_item;
 
     boost::spirit::qi::rule<std::string::const_iterator,
-                            std::vector<ADQL::Query_Specification::Column_Variant>(),
+                            std::vector<ADQL::Select::Column_Variant>(),
                             boost::spirit::ascii::space_type>
             select_list;
 
-    boost::spirit::qi::rule<std::string::const_iterator,
-                            ADQL::Query_Specification::Columns(),
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Select::Columns(),
                             boost::spirit::ascii::space_type>
             columns;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Select(),
+                            boost::spirit::ascii::space_type>
+            select;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Select_From_Where(),
+                            boost::spirit::ascii::space_type>
+            select_from_where, select_from_where_no_geometry;
+
+    boost::spirit::qi::rule<std::string::const_iterator,
+                            ADQL::Query_Specification::Select_From_Where_List(),
+                            boost::spirit::ascii::space_type>
+            select_from_where_list, select_from_where_no_geometry_list;
 
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::As(),
                             boost::spirit::ascii::space_type>

@@ -22,18 +22,18 @@ public:
 
     void operator()(const std::string &s) { v.emplace_back(s, ""); }
 
-    void operator()(
-            const std::vector<ADQL::Query_Specification::Column_Variant> &columns) {
+    void operator()(const std::vector<ADQL::Select::Column_Variant> &columns) {
         Column_Visitor visitor;
         for (auto &c : columns) v.push_back(boost::apply_visitor(visitor, c));
     }
 };
 }  // namespace
 
-std::vector<std::pair<std::string, std::string> > ADQL::Query::simplified_columns()
-        const {
+std::vector<std::pair<std::string, std::string> > ADQL::Query::simplified_columns(
+        uint idx) const {
     std::vector<std::pair<std::string, std::string> > result;
     Columns_Visitor visitor(result);
-    boost::apply_visitor(visitor, query_specification.columns);
+    boost::apply_visitor(
+            visitor, query_specification.select_from_where_list.at(idx).select.columns);
     return result;
 }

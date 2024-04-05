@@ -36,9 +36,8 @@ void ADQL_parser::init_query() {
 
     where = lexeme[ascii::no_case["WHERE"] > &boost::spirit::qi::space] >
 
-			 ((geometry[at_c<0>(_val) = _1] >>
-              -(ascii::no_case["AND"]  > search_condition[at_c<1>(_val) = _1]
-                )) |
+            ((geometry[at_c<0>(_val) = _1] >>
+              -(ascii::no_case["AND"] > search_condition[at_c<1>(_val) = _1])) |
 
              ('(' >> geometry[at_c<0>(_val) = _1] > ')') |
 
@@ -78,25 +77,42 @@ void ADQL_parser::init_query() {
     // The expectation operator messes up the automatic calculation of
     // semantic actions.  So instead of %=, we have to do it manually
     // with [at_c<>(_val)=_1]
-    query = -with[at_c<0>(_val) = _1] >>
-            (lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space] >>
-             -set_quantifier[at_c<1>(_val) = _1] >>
+
+    select = lexeme[ascii::no_case["SELECT"] > &boost::spirit::qi::space] >>
+             -set_quantifier[at_c<0>(_val) = _1] >>
              -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]] >
-               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<2>(_val) = _1] >
-             columns[at_c<3>(_val) = _1] > from_clause[at_c<4>(_val) = _1]) >>
-            -where[at_c<5>(_val) = _1] >> -group_by[at_c<6>(_val) = _1] >>
-            -having[at_c<7>(_val) = _1] >> -order_by[at_c<8>(_val) = _1];
+               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<1>(_val) = _1] >
+             columns[at_c<2>(_val) = _1];
+    select.name("select");
+
+    select_from_where = select[at_c<0>(_val) = _1] > from_clause[at_c<1>(_val) = _1] >>
+                        -where[at_c<2>(_val) = _1];
+
+    select_from_where.name("select_from_where");
+
+    // JTODO UNION ALL
+    select_from_where_list = select_from_where % ascii::no_case[ascii::string("UNION")];
+    select_from_where_list.name("select_from_where_list");
+
+    select_from_where_no_geometry = select[at_c<0>(_val) = _1] >
+                                    from_clause[at_c<1>(_val) = _1] >>
+                                    -where_no_geometry[at_c<2>(_val) = _1];
+
+    select_from_where_no_geometry.name("select_from_where_no_geometry");
+
+    // Allow only a single element in the list (used to define subquery).
+    select_from_where_no_geometry_list = select_from_where_no_geometry;
+    select_from_where_no_geometry_list.name("select_from_where_no_geometry_list");
+
+    query = -with[at_c<0>(_val) = _1] >> select_from_where_list[at_c<1>(_val) = _1] >>
+            -group_by[at_c<2>(_val) = _1] >> -having[at_c<3>(_val) = _1] >>
+            -order_by[at_c<4>(_val) = _1];
     query.name("query");
 
-    query_no_geometry =
-            -with[at_c<0>(_val) = _1] >>
-            (lexeme[ascii::no_case["SELECT"] >> &boost::spirit::qi::space] >>
-             -set_quantifier[at_c<1>(_val) = _1] >>
-             -(hold[lexeme[ascii::no_case["TOP"] >> &boost::spirit::qi::space]] >
-               lexeme[ulong_long > &boost::spirit::qi::space])[at_c<2>(_val) = _1] >
-             columns[at_c<3>(_val) = _1] > from_clause[at_c<4>(_val) = _1]) >>
-            -where_no_geometry[at_c<5>(_val) = _1] >> -group_by[at_c<6>(_val) = _1] >>
-            -having[at_c<7>(_val) = _1] >> -order_by[at_c<8>(_val) = _1];
+    query_no_geometry = -with[at_c<0>(_val) = _1] >>
+                        select_from_where_no_geometry_list[at_c<1>(_val) = _1] >>
+                        -group_by[at_c<2>(_val) = _1] >> -having[at_c<3>(_val) = _1] >>
+                        -order_by[at_c<4>(_val) = _1];
     query_no_geometry.name("query_no_geometry");
 
     subquery %= lit('(') >> (query_no_geometry | joined_table) >> lit(')');
@@ -116,6 +132,9 @@ void ADQL_parser::init_query() {
     BOOST_SPIRIT_DEBUG_NODE(group_by_term);
     BOOST_SPIRIT_DEBUG_NODE(group_by);
     BOOST_SPIRIT_DEBUG_NODE(having);
+    BOOST_SPIRIT_DEBUG_NODE(select);
+    BOOST_SPIRIT_DEBUG_NODE(select_from_where);
+    BOOST_SPIRIT_DEBUG_NODE(select_from_where_list);
     BOOST_SPIRIT_DEBUG_NODE(order_by);
     BOOST_SPIRIT_DEBUG_NODE(query);
     BOOST_SPIRIT_DEBUG_NODE(query_no_geometry);

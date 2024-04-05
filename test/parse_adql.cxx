@@ -7,6 +7,7 @@
 // #define INVESTIGATE
 
 // Warning: Tests will fail if "TOP" is specified with any value other than "14223".
+//          Tests will fail if TAP_UPLOAD table is named anything but "mytable".
 
 int main(int argc, char *argv[]) {
     bool quiet(argc > 1 && argv[1] == std::string("-q"));
@@ -510,7 +511,7 @@ int main(int argc, char *argv[]) {
             "irsa_directory.collection=temp.collection "
             "ORDER BY facility_name,irsa_directory.collection,instrument_name",
 
-            // IRSA-5856
+            // IRSA-5856: column values as Shape arguments
 
             "Select * From mytable JOIN dbtable WHERE "
             "INTERSECTs(mytable.mycol1,dbtable.col2)",
@@ -527,8 +528,6 @@ int main(int argc, char *argv[]) {
             "CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 ORDER BY "
             "dataproduct_type,obs_id,obs_collection",
 
-            // IRSA-5885
-
             "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
             "y> 3 AND CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 AND x<1 "
             "ORDER "
@@ -539,6 +538,8 @@ int main(int argc, char *argv[]) {
             "(y> 3 AND CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 AND x<1) "
             "ORDER BY "
             "dataproduct_type,obs_id,obs_collection",
+
+            // IRSA-5885: flexible where
 
             "SELECT * FROM my_table1 WHERE "
             "y=3 AND 1 = CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
@@ -678,6 +679,29 @@ int main(int argc, char *argv[]) {
             "Select ra,dec,flux From mytable Where "
             "Contains(BOX('J2000',ra , "
             "dec,1,2),POLYGON('J2000',0,1,2,3,4,5,6,7,8,9,10,11,12,13))= 1",
+
+            // IRSA-5915: UNION
+
+            "SELECT ra FROM table1 UNION SELECT ra FROM table2 ",
+            "SELECT ra FROM table1 UNION SELECT ra FROM table2 ORDER BY ra",
+
+            "SELECT ra,dec from mytable1 WHERE ra< 30.0 UNION SELECT ra, dec from "
+            "mytable2 WHERE dec > 45.0 ORDER BY ra,dec",
+
+            "SELECT observationID FROM caom.observation WHERE collection='iras_eiga'"
+            "UNION SELECT observationID FROM caom.observation WHERE "
+            "collection='iras_iris' ORDER BY observationID",
+
+            "select ra,dec from fp_psc where 10.5 < ra AND ra < 10.7  "
+            "union select ra,dec  from fp_psc where 10.7 < ra and ra < 10.9 ORDER BY "
+            "ra,dec",
+
+            "SELECT fp_psc.ra,fp_psc.ra, fp_psc.dec FROM fp_psc WHERE fp_psc.ra = "
+            "10.684737 "
+            "UNION SELECT TAP_UPLOAD.mytable.ra,fp_psc.ra, fp_psc.dec FROM "
+            "fp_psc,TAP_UPLOAD.mytable WHERE "
+            "CONTAINS(POINT('J2000',ra,dec), CIRCLE('J2000',TAP_UPLOAD.mytable.ra, "
+            "TAP_UPLOAD.mytable.dec, 0.01)) =1 ORDER BY fp_psc.ra, fp_psc.dec",
     };
 
     std::vector<std::string> fail = {
@@ -809,11 +833,13 @@ int main(int argc, char *argv[]) {
                         i + "\n" + "  Formatted:   " + formatted_query + "\n" +
                         "  Reformatted: " + ADQL::to_string(parsed_query));
 
-            if (query.query_specification.top != std::numeric_limits<size_t>::max() &&
-                query.query_specification.top != 14223)
+            const auto &initial_sfw =
+                    query.query_specification.select_from_where_list.at(0);
+            if (initial_sfw.select.top != std::numeric_limits<size_t>::max() &&
+                initial_sfw.select.top != 14223) {
                 throw std::runtime_error("Wrong value for TOP: " +
-                                         std::to_string(query.query_specification.top));
-
+                                         std::to_string(initial_sfw.select.top));
+            }
             std::cout << "PASS: " << i << "\n";
             if (!quiet) {
                 std::cout << "      " << formatted_query << "\n";

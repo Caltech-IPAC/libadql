@@ -21,13 +21,22 @@ public:
     Query() = default;
     Query(const Query &) = default;
 
-    std::vector<std::pair<std::string, std::string> > simplified_columns() const;
+    std::vector<std::pair<std::string, std::string> > simplified_columns(
+            uint idx = 0) const;
+    std::vector<std::vector<std::pair<std::string, std::string> > >
+    simplified_columns_list() const;
 
+    // Called from query_server's planck-support code, this function
+    // allows for a (single) spatial/geometric constraint.
     bool simple_query() const {
-        return (query_specification.all_or_distinct.empty() ||
-                query_specification.all_or_distinct == "ALL") &&
+        return (query_specification.select_from_where_list.size() == 1 &&
+                (query_specification.select_from_where_list.at(0)
+                         .select.all_or_distinct.empty() ||
+                 query_specification.select_from_where_list.at(0)
+                                 .select.all_or_distinct == "ALL") &&
+                query_specification.select_from_where_list.at(0)
+                        .where.search_condition.empty()) &&
                query_specification.with.empty() &&
-               query_specification.where.search_condition.empty() &&
                query_specification.group_by.empty() &&
                query_specification.order_by.empty() &&
                query_specification.having.empty();
