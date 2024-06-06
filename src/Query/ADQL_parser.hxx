@@ -4,12 +4,16 @@
 #if 0
 #define BOOST_SPIRIT_DEBUG
 #define BOOST_SPIRIT_DEBUG_OUT std::cout
-#define DEBUG_WHERE
-#define DEBUG_Q
-#define DEBUG_MATH
-#define DEBUG_TRIG
+
 #define DEBUG_COL
+#define DEBUG_FAC
+#define DEBUG_LIT
+#define DEBUG_MATH
 #define DEBUG_PRED
+#define DEBUG_Q
+#define DEBUG_TRIG
+#define DEBUG_VAL
+#define DEBUG_WHERE
 #endif
 
 #define BOOST_SPIRIT_THREADSAFE
@@ -96,7 +100,7 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
             null_literal, null_cast, boolean_literal, qualifier_star, binary_operators,
             geo_one_arg_names, geo_two_arg_names, with_table_name, with_column_name,
             possibly_qualified_identifier, table_valued_function_name,
-            table_valued_function_param;
+            table_valued_function_param, sql_no_arg_function;
 
     // rules with skipper
     boost::spirit::qi::rule<std::string::const_iterator, std::string(),

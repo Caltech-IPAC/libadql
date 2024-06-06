@@ -29,6 +29,7 @@ void ADQL_parser::init_literals() {
     sign %= char_('+') | char_('-');
     signed_integer %= -sign >> unsigned_integer;
     signed_integer.name("signed_integer");
+
     mantissa %= exact_numeric_literal;
     exponent %= signed_integer;
     approximate_numeric_literal %= hold[mantissa >> char_("Ee") >> exponent];
@@ -60,6 +61,16 @@ void ADQL_parser::init_literals() {
     /// has datetime_literal's etc., but for now we are only adding
     /// boolean_literal.
     general_literal %= character_string_literal | boolean_literal;
+
     unsigned_literal %= unsigned_numeric_literal | general_literal;
+
     unsigned_value_specification %= unsigned_literal;
+
+#ifdef DEBUG_LIT
+    BOOST_SPIRIT_DEBUG_NODE(unsigned_numeric_literal);
+    BOOST_SPIRIT_DEBUG_NODE(boolean_literal);
+    BOOST_SPIRIT_DEBUG_NODE(general_literal);
+    BOOST_SPIRIT_DEBUG_NODE(unsigned_literal);
+    BOOST_SPIRIT_DEBUG_NODE(unsigned_value_specification);
+#endif
 }

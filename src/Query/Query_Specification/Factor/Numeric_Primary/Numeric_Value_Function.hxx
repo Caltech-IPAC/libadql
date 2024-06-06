@@ -12,7 +12,8 @@ namespace ADQL {
 class Numeric_Value_Function {
 public:
     typedef boost::variant<Trig_Function, Math_Function, Cast_Function,
-                           Non_Predicate_Geometry_Function, User_Defined_Function_Wrap>
+                           Non_Predicate_Geometry_Function, User_Defined_Function_Wrap,
+                           std::string>
             Variant;
     Variant variant;
     bool empty() const;
