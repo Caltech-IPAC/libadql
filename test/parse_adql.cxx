@@ -702,6 +702,11 @@ int main(int argc, char *argv[]) {
             "fp_psc,TAP_UPLOAD.mytable WHERE "
             "CONTAINS(POINT('J2000',ra,dec), CIRCLE('J2000',TAP_UPLOAD.mytable.ra, "
             "TAP_UPLOAD.mytable.dec, 0.01)) =1 ORDER BY fp_psc.ra, fp_psc.dec",
+
+            // IRSA-6116: CURRENT_TIMESTAMP
+            "select case when getdate() > foo.the_time then c  else f end from foo",
+            "SELECT CASE WHEN current_timestamp > foo.the_time THEN c ELSE f END FROM "
+            "foo",
     };
 
     std::vector<std::string> fail = {
