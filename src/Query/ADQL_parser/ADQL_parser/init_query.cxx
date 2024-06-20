@@ -89,19 +89,35 @@ void ADQL_parser::init_query() {
                         -where[at_c<2>(_val) = _1];
 
     select_from_where.name("select_from_where");
-
-    // JTODO UNION ALL
-    select_from_where_list = select_from_where % ascii::no_case[ascii::string("UNION")];
-    select_from_where_list.name("select_from_where_list");
+    select_from_where_initial = select_from_where;
 
     select_from_where_no_geometry = select[at_c<0>(_val) = _1] >
                                     from_clause[at_c<1>(_val) = _1] >>
                                     -where_no_geometry[at_c<2>(_val) = _1];
 
     select_from_where_no_geometry.name("select_from_where_no_geometry");
+    select_from_where_initial_no_geometry = select_from_where_no_geometry;
 
-    // Allow only a single element in the list (used to define subquery).
-    select_from_where_no_geometry_list = select_from_where_no_geometry;
+    select_from_where_addon %= lexeme[(ascii::no_case[ascii::string("UNION DISTINCT")] |
+                                       ascii::no_case[ascii::string("UNION ALL")] |
+                                       ascii::no_case[ascii::string("UNION")]) >>
+                                      &boost::spirit::qi::space] >>
+                               select_from_where;
+
+    select_from_where_list %= select_from_where_initial >> *(select_from_where_addon);
+
+    select_from_where_list.name("select_from_where_list");
+
+    select_from_where_addon_no_geometry %=
+            lexeme[(ascii::no_case[ascii::string("UNION DISTINCT")] |
+                    ascii::no_case[ascii::string("UNION ALL")] |
+                    ascii::no_case[ascii::string("UNION")]) >>
+                   &boost::spirit::qi::space] >>
+            select_from_where_no_geometry;
+
+    select_from_where_no_geometry_list %= select_from_where_initial_no_geometry >>
+                                          *(select_from_where_addon_no_geometry);
+
     select_from_where_no_geometry_list.name("select_from_where_no_geometry_list");
 
     query = -with[at_c<0>(_val) = _1] >> select_from_where_list[at_c<1>(_val) = _1] >>
@@ -134,7 +150,11 @@ void ADQL_parser::init_query() {
     BOOST_SPIRIT_DEBUG_NODE(having);
     BOOST_SPIRIT_DEBUG_NODE(select);
     BOOST_SPIRIT_DEBUG_NODE(select_from_where);
+    BOOST_SPIRIT_DEBUG_NODE(select_from_where_no_geometry);
+    BOOST_SPIRIT_DEBUG_NODE(select_from_where_addon);
+    BOOST_SPIRIT_DEBUG_NODE(select_from_where_addon_no_geometry);
     BOOST_SPIRIT_DEBUG_NODE(select_from_where_list);
+    BOOST_SPIRIT_DEBUG_NODE(select_from_where_no_geometry_list);
     BOOST_SPIRIT_DEBUG_NODE(order_by);
     BOOST_SPIRIT_DEBUG_NODE(query);
     BOOST_SPIRIT_DEBUG_NODE(query_no_geometry);

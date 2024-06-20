@@ -162,10 +162,19 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
 
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Select_From_Where(),
                             boost::spirit::ascii::space_type>
-            select_from_where, select_from_where_no_geometry;
+            select_from_where, select_from_where_initial, select_from_where_no_geometry,
+            select_from_where_initial_no_geometry;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::SFW_Addon(),
+                            boost::spirit::ascii::space_type>
+            select_from_where_addon, select_from_where_addon_no_geometry;
 
     boost::spirit::qi::rule<std::string::const_iterator,
-                            ADQL::Query_Specification::Select_From_Where_List(),
+                            ADQL::Select_From_Where_List::SFW_Addon_List(),
+                            boost::spirit::ascii::space_type>
+            select_from_where_addon_list, select_from_where_addon_no_geometry_list;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Select_From_Where_List(),
                             boost::spirit::ascii::space_type>
             select_from_where_list, select_from_where_no_geometry_list;
 
