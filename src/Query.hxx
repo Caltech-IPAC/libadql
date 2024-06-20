@@ -28,18 +28,16 @@ public:
 
     // Called from query_server's planck-support code, this function
     // allows for a (single) spatial/geometric constraint.
-    bool simple_query() const {
-        return (query_specification.select_from_where_list.size() == 1 &&
-                (query_specification.select_from_where_list.at(0)
-                         .select.all_or_distinct.empty() ||
-                 query_specification.select_from_where_list.at(0)
-                                 .select.all_or_distinct == "ALL") &&
-                query_specification.select_from_where_list.at(0)
-                        .where.search_condition.empty()) &&
-               query_specification.with.empty() &&
-               query_specification.group_by.empty() &&
-               query_specification.order_by.empty() &&
-               query_specification.having.empty();
+    bool simple_spatial_query() const {
+        return (query_specification.get_num_union_components() == 1 &&
+                (query_specification.get_initial_sfw().select.all_or_distinct.empty() ||
+                 query_specification.get_initial_sfw().select.all_or_distinct ==
+                         "ALL") &&
+                query_specification.get_initial_sfw().where.search_condition.empty() &&
+                query_specification.with.empty() &&
+                query_specification.group_by.empty() &&
+                query_specification.order_by.empty() &&
+                query_specification.having.empty());
     }
 };
 

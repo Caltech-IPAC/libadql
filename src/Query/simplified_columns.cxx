@@ -33,7 +33,6 @@ std::vector<std::pair<std::string, std::string> > ADQL::Query::simplified_column
         uint idx) const {
     std::vector<std::pair<std::string, std::string> > result;
     Columns_Visitor visitor(result);
-    boost::apply_visitor(
-            visitor, query_specification.select_from_where_list.at(idx).select.columns);
+    boost::apply_visitor(visitor, query_specification.get_sfw(idx).select.columns);
     return result;
 }

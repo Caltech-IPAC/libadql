@@ -5,6 +5,7 @@
 #include "../src/Query.hxx"
 
 // #define INVESTIGATE
+#define RUN_ALL
 
 // Warning: Tests will fail if "TOP" is specified with any value other than "14223".
 //          Tests will fail if TAP_UPLOAD table is named anything but "mytable".
@@ -12,6 +13,7 @@
 int main(int argc, char *argv[]) {
     bool quiet(argc > 1 && argv[1] == std::string("-q"));
     std::vector<std::string> pass = {
+#ifdef RUN_ALL
             "Select ra1,dec2,flux From mytable Where "
             "Contains(Point('j2000',ra,dec),Circle('J2000',+10 , -20,-1))= 1",
             "Select ra1,dec2,flux From mytable Where "
@@ -69,8 +71,7 @@ int main(int argc, char *argv[]) {
             "CONTAINS(POINT('J2000',my_table1.ra,dec),CIRCLE('J2000',+10 , "
             "-20,-1)) = 1",
 
-            "SELECT * FROM my_table1 WHERE x!=3",
-            "SELECT * FROM my_table1",
+            "SELECT * FROM my_table1 WHERE x!=3", "SELECT * FROM my_table1",
             "SELECT * FROM my_table1 where x>2",
             "SELECT * FROM my_table1 where x>2 AND x<4",
             "SELECT * FROM my_table1 WHERE "
@@ -102,12 +103,10 @@ int main(int argc, char *argv[]) {
             "SELECT * FROM my_table1 where x or z",
             "SELECT * FROM my_table1 where x in (10,20,30)",
             "SELECT * FROM my_table1 where x not in (10,20,30)",
-            "SELECT All * FROM my_table1",
-            "SELECT Distinct * FROM my_table1",
+            "SELECT All * FROM my_table1", "SELECT Distinct * FROM my_table1",
             "SELECT Top 14223 * FROM my_table1",
             "SELECT * FROM my_table1 where 38*(x+1-3)>2/4",
-            "SELECT ra+dec as ra_dec FROM my_table1",
-            "SELECT ra+dec FROM my_table1",
+            "SELECT ra+dec as ra_dec FROM my_table1", "SELECT ra+dec FROM my_table1",
             "SELECT my_tablel1.* FROM my_table1",
             "SELECT sin(dec),cos(dec),tan(dec),cot(dec),asin(dec),acos(dec),"
             "atan(dec),atan2(ra,dec) FROM my_table1",
@@ -120,24 +119,17 @@ int main(int argc, char *argv[]) {
             "SELECT my_modern_function(ra,dec) FROM my_table1",
             "SELECT my_modern_function(ra,dec), modern() FROM my_table1",
             "SELECT my_modern_function(ra,dec) || modern() FROM my_table1",
-            "select 'a b c','a','a ''bv' from b",
-            "select \"a b\",\"a \"\" b\" from b",
+            "select 'a b c','a','a ''bv' from b", "select \"a b\",\"a \"\" b\" from b",
             "select 'a' 'b' from b",
             "select 'a' --This is a useful comment\n 'b' from b",
             "select (a), sum(a), max(all a), min(distinct a), count(a), avg ( a ) ,"
             "min(a) from a",
-            "select max(all a) from a",
-            "select count ( * ) from a",
-            "select count(*) from a",
-            "select count(a) from a",
-            "select count(all a) from a",
-            "select count(distinct a) from a",
-            "select sum(a) from a",
-            "select sum(all a) from a",
-            "select sum(DISTINCT a) from a",
-            "select sum(DISTINCTa) from a",
-            "select single from a",
-            "select a,b from a group by a",
+            "select max(all a) from a", "select count ( * ) from a",
+            "select count(*) from a", "select count(a) from a",
+            "select count(all a) from a", "select count(distinct a) from a",
+            "select sum(a) from a", "select sum(all a) from a",
+            "select sum(DISTINCT a) from a", "select sum(DISTINCTa) from a",
+            "select single from a", "select a,b from a group by a",
             "select a,b from a group by a having x>2",
             "select f(a, b, c), max(d), max(e) from t group by f(a,b,c)",
             "SELECT * FROM my_table1 order by x",
@@ -158,8 +150,7 @@ int main(int argc, char *argv[]) {
             "SELECT * from myschema.mytable as mine",
             "SELECT * from myschema.mytable mine",
             "SELECT * from myschema.mytable, yourscheme.yourtable mine",
-            "SELECT * from TAP_UPLOAD.mytable",
-            "SELECT * from tapmod.mytable",
+            "SELECT * from TAP_UPLOAD.mytable", "SELECT * from tapmod.mytable",
             "SELECT TAP_UPLOAD.mytable.b from TAP_UPLOAD.mytable",
             "SELECT TAP_UPLOAD.mytable.* from TAP_UPLOAD.mytable",
             "SELECT TAP_UPLOAD.mytable.*, fp_psc.* from TAP_UPLOAD.mytable, fp_psc",
@@ -179,12 +170,9 @@ int main(int argc, char *argv[]) {
             "SELECT * FROM my_table1 WHERE "
             "1= CONTAINS(POINT('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec),"
             "CIRCLE('J2000',TAP_UPLOAD.mytable.ra,TAP_UPLOAD.mytable.dec,-1)) ",
-            "SELECT alligator from a",
-            "SELECT tophat from a",
-            "SELECT max(alligator) from a",
-            "SELECT maximus from a",
-            "SELECT ast from a",
-            "Select fromage from fromming",
+            "SELECT alligator from a", "SELECT tophat from a",
+            "SELECT max(alligator) from a", "SELECT maximus from a",
+            "SELECT ast from a", "Select fromage from fromming",
             "Select fromage from fromming ast",
             "select alligator from table1 join table2",
             "select alligator from table1 natural join table2",
@@ -253,10 +241,8 @@ int main(int argc, char *argv[]) {
             " from herschel.observations where ST_Covers(poly,ST_Point(10,10))='t' "
             "or ST_Distance(poly,ST_Point(10,10)) <= 0.0",
             "select * from a where (1=0) AND (2=1) ORDER BY cntr ASC",
-            "select '{a,b}' from c",
-            "select ARRAY[10,20] from c",
-            "select ARRAYNOT from c",
-            "select a[b] from c",
+            "select '{a,b}' from c", "select ARRAY[10,20] from c",
+            "select ARRAYNOT from c", "select a[b] from c",
             "select ((ARRAY[10,20])[1]) from c",
             "select ARRAY[10,20][1], "
             "(ARRAY[10,20])[1],(ARRAY[10,20])["
@@ -278,8 +264,7 @@ int main(int argc, char *argv[]) {
             "TAP_UPLOAD.pos WHERE "
             "(ST_Intersects(TAP_UPLOAD.pos.poly,wise.wise_allwise_p3am_cdd.poly)) "
             "ORDER BY in_row_id ASC, dist_to_bounds ASC",
-            "select CASEFULL from b",
-            "select CASE foo WHEN a THEN 'c' END from b",
+            "select CASEFULL from b", "select CASE foo WHEN a THEN 'c' END from b",
             "select CASE a WHEN 'b' THEN 'c' ELSE 'd' END from b",
             "select CASE a WHEN 'b' THEN 'c' ELSE NULL END from b",
             "select CASE a WHEN 'b' THEN 'c' when 'd' then 'e' ELSE 'f' END from b",
@@ -457,8 +442,7 @@ int main(int argc, char *argv[]) {
             "select NULL::char as null_col from foo",
             "select ra,NULL::char as null_col from foo",
             "select ra,NULL::char,dec as null_col from foo",
-            "select NULL::char from foo",
-            "select NULL::int as null_col from foo",
+            "select NULL::char from foo", "select NULL::int as null_col from foo",
             "select NULL::float as null_col from foo",
 
             // limited support for CAST
@@ -688,7 +672,7 @@ int main(int argc, char *argv[]) {
             "SELECT ra,dec from mytable1 WHERE ra< 30.0 UNION SELECT ra, dec from "
             "mytable2 WHERE dec > 45.0 ORDER BY ra,dec",
 
-            "SELECT observationID FROM caom.observation WHERE collection='iras_eiga'"
+            "SELECT observationID FROM caom.observation WHERE collection='iras_eiga' "
             "UNION SELECT observationID FROM caom.observation WHERE "
             "collection='iras_iris' ORDER BY observationID",
 
@@ -707,6 +691,33 @@ int main(int argc, char *argv[]) {
             "select case when getdate() > foo.the_time then c  else f end from foo",
             "SELECT CASE WHEN current_timestamp > foo.the_time THEN c ELSE f END FROM "
             "foo",
+
+            // IRSA-6116: UNION ALL and UNION DISTINCT
+            "select ra,dec from fp_psc where 10.5 < ra AND ra < 10.7  "
+            "union all "
+            "select ra,dec  from fp_psc where 10.7 < ra and ra < 10.9 ORDER BY "
+            "ra,dec",
+
+            "select ra,dec from fp_psc where 10.5 < ra AND ra < 10.7  "
+            "union distinct "
+            "select ra,dec  from fp_psc where 10.7 < ra and ra < 10.9 ORDER BY "
+            "ra,dec",
+
+            "select ra,dec from fp_psc where 10.5 < ra AND ra < 10.7  "
+            "union distinct "
+            "select ra,dec  from fp_psc where 10.7 < ra and ra < 10.9 "
+            "union distinct "
+            "select ra,dec  from fp_psc where 10.9 < ra and ra < 11.1 "
+            " ORDER BY  ra,dec",
+
+            "select ra,dec from fp_psc where 10.5 < ra AND ra < 10.7  "
+            "union distinct "
+            "select ra,dec  from fp_psc where 10.7 < ra and ra < 10.9 "
+            "union all "
+            "select ra,dec  from fp_psc where 10.9 < ra and ra < 11.1 "
+            " ORDER BY  ra,dec"
+
+#endif  // RUN_ALL
     };
 
     std::vector<std::string> fail = {
@@ -838,8 +849,7 @@ int main(int argc, char *argv[]) {
                         i + "\n" + "  Formatted:   " + formatted_query + "\n" +
                         "  Reformatted: " + ADQL::to_string(parsed_query));
 
-            const auto &initial_sfw =
-                    query.query_specification.select_from_where_list.at(0);
+            const auto &initial_sfw = query.query_specification.get_initial_sfw();
             if (initial_sfw.select.top != std::numeric_limits<size_t>::max() &&
                 initial_sfw.select.top != 14223) {
                 throw std::runtime_error("Wrong value for TOP: " +
@@ -855,7 +865,7 @@ int main(int argc, char *argv[]) {
             result = 1;
         }
     }
-
+#ifdef RUN_ALL
     for (auto &i : fail) {
         try {
 #ifdef INVESTIGATE
@@ -878,6 +888,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-
+#endif
     return result;
 }
