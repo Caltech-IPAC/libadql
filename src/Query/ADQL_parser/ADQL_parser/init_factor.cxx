@@ -169,7 +169,8 @@ void ADQL_parser::init_factor() {
 
     cast_function %= hold[ascii::no_case["CAST"] >> '(' >> value_expression >>
                           &no_skip[boost::spirit::qi::space] >> ascii::no_case["AS"] >>
-                          &no_skip[boost::spirit::qi::space] >> cast_as >> ')'];
+                          &no_skip[boost::spirit::qi::space] >> cast_as >>
+                          -('(' > unsigned_integer > ')') >> ')'];
     cast_function.name("cast_function");
 
     // FIXME: numeric_value_function should have

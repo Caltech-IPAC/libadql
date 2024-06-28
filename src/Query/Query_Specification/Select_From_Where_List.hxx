@@ -45,7 +45,17 @@ struct Select_From_Where_List {
         return select_from_where_initial;
     }
 
+    inline Select_From_Where &get_initial_sfw() { return select_from_where_initial; }
+
     inline const Select_From_Where &get_sfw(uint idx) const {
+        if (idx == 0) {
+            return select_from_where_initial;
+        }
+        validate_sfw_index(idx);
+        return select_from_where_addon_list.at(idx - 1).select_from_where;
+    }
+
+    inline Select_From_Where &get_sfw(uint idx) {
         if (idx == 0) {
             return select_from_where_initial;
         }
@@ -74,6 +84,11 @@ struct Select_From_Where_List {
     }
 
     const Select &get_select(uint sfw_index) const {
+        validate_sfw_index(sfw_index);
+        return get_sfw(sfw_index).select;
+    }
+
+    Select &get_select(uint sfw_index) {
         validate_sfw_index(sfw_index);
         return get_sfw(sfw_index).select;
     }
