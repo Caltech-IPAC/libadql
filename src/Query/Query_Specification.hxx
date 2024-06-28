@@ -53,6 +53,11 @@ public:
         return select_from_where_list.get_select(sfw_idx);
     }
 
+    Select &get_select(uint sfw_idx) {
+        validate_sfw_index(sfw_idx);
+        return select_from_where_list.get_select(sfw_idx);
+    }
+
     const Table_Reference &get_initial_table(uint sfw_idx) const {
         validate_sfw_index(sfw_idx);
         return select_from_where_list.get_initial_table(sfw_idx);
