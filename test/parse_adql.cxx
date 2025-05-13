@@ -737,6 +737,10 @@ int main(int argc, char *argv[]) {
 
             // IRSA-6157: CAST with length
             "SELECT CAST(object_id as varchar2(30)) as id from mer_test_catalog",
+
+            // IRSA-6916: ORDER BY LOWER()
+            "Select LOWER(collection) from irsa_directory order by collection",
+            "Select LOWER(collection) from irsa_directory order by LOWER(collection)",
 #endif  // RUN_ALL
     };
 
