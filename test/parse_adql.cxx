@@ -735,12 +735,28 @@ int main(int argc, char *argv[]) {
             "select ra,dec  from fp_psc where 10.9 < ra and ra < 11.1 "
             " ORDER BY  ra,dec",
 
+            "SELECT * from spherex.obscore WHERE "
+			"INTERSECTS(s_region, CIRCLE('ICRS',162.12766666, -38.924749999, 0.002777777))=1",
+
             // IRSA-6157: CAST with length
             "SELECT CAST(object_id as varchar2(30)) as id from mer_test_catalog",
 
             // IRSA-6916: ORDER BY LOWER()
             "Select LOWER(collection) from irsa_directory order by collection",
             "Select LOWER(collection) from irsa_directory order by LOWER(collection)",
+
+			// IRSA-7078 UNION in WITH clause
+            "WITH alpha_subset AS (SELECT * FROM alpha_source WHERE mod(id,10) = 0 "
+			"UNION ALL SELECT * FROM beta_source WHERE mod(id,10) = 5) "
+            "SELECT ra, dec FROM alpha_subset WHERE ra > 10 and ra < 20",
+
+			// IRSA-7078 CASE in ORDER BY clause
+			"SELECT DISTINCT collection FROM caom.observation ORDER BY CASE "
+			"WHEN collection LIKE 'spherex%' THEN 0 ELSE 1 END ASC, collection ASC",
+
+			"SELECT DISTINCT collection FROM caom.observation ORDER BY CASE collection "
+			"WHEN 'wise_allsky' THEN 'aaa' WHEN 'thrumms' THEN 'aab' ELSE collection END ASC"
+
 #endif  // RUN_ALL
     };
 
@@ -831,17 +847,16 @@ int main(int argc, char *argv[]) {
 
             "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
             "y>3 OR CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1 AND x<1 "
-            "ORDER "
-            "BY "
-            "dataproduct_type,obs_id,obs_collection",
+            "ORDER BY dataproduct_type,obs_id,obs_collection",
 
             "SELECT dataproduct_type,obs_id,obs_collection FROM ivoa.obscore WHERE "
             "(y>3 AND CONTAINS(POINT(148.8882208, 69.06529472), s_region)=1) OR x<1 "
-            "ORDER "
-            "BY "
-            "dataproduct_type,obs_id,obs_collection",
+            "ORDER BY dataproduct_type,obs_id,obs_collection",
 
             "SELECT CAST(object_id as varchar2(30f)) as id from mer_test_catalog",
+
+            "SELECT * from spherex.obscore WHERE "
+			"INTERSECTS(CIRCLE('ICRS',162.12766666, -38.924749999, 0.002777777), s_region)=1",
     };
 
     int result(0);
