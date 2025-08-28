@@ -154,9 +154,6 @@ void ADQL_parser::init_factor() {
 
     sql_no_arg_function %= ascii::no_case[ascii::string("CURRENT_TIMESTAMP")];
 
-    // Special case casting to numeric, since some functions
-    // (e.g. mod()) only take numeric arguments, not double precision.
-
     cast_as %= ascii::no_case[ascii::string("NUMERIC")] |
                ascii::no_case[ascii::string("FLOAT4")] |
                ascii::no_case[ascii::string("INTEGER")] |
@@ -165,7 +162,9 @@ void ADQL_parser::init_factor() {
                ascii::no_case[ascii::string("VARCHAR2")] |
                ascii::no_case[ascii::string("VARCHAR")] |
                ascii::no_case[ascii::string("CHAR")] |
-               ascii::no_case[ascii::string("TEXT")];
+               ascii::no_case[ascii::string("TEXT")] |
+               ascii::no_case[ascii::string("public.GEOGRAPHY")] |
+               ascii::no_case[ascii::string("public.GEOMETRY")];
 
     cast_function %= hold[ascii::no_case["CAST"] >> '(' >> value_expression >>
                           &no_skip[boost::spirit::qi::space] >> ascii::no_case["AS"] >>
