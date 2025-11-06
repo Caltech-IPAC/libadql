@@ -172,11 +172,17 @@ void ADQL_parser::init_factor() {
                           -('(' > unsigned_integer > ')') >> ')'];
     cast_function.name("cast_function");
 
+    position_function %=
+            hold[ascii::no_case["POSITION"] >> '(' >> character_string_literal >>
+                 &no_skip[boost::spirit::qi::space] >> ascii::no_case["IN"] >>
+                 &no_skip[boost::spirit::qi::space] >> column_reference >> ')'];
+    position_function.name("position_function");
+
     // FIXME: numeric_value_function should have
     // numeric_geometry_function
     numeric_value_function %= trig_function | math_function | cast_function |
-                              non_predicate_geometry_function | user_defined_function |
-                              sql_no_arg_function;
+                              position_function | non_predicate_geometry_function |
+                              user_defined_function | sql_no_arg_function;
     numeric_value_function.name("numeric_value_function");
     // Flipped the order here, because a value_expression can match a
     // function name.
@@ -214,6 +220,7 @@ void ADQL_parser::init_factor() {
     BOOST_SPIRIT_DEBUG_NODE(user_defined_function_param);
     BOOST_SPIRIT_DEBUG_NODE(user_defined_function);
     BOOST_SPIRIT_DEBUG_NODE(cast_function);
+    BOOST_SPIRIT_DEBUG_NODE(position_function);
     BOOST_SPIRIT_DEBUG_NODE(numeric_value_function);
     BOOST_SPIRIT_DEBUG_NODE(numeric_primary);
     BOOST_SPIRIT_DEBUG_NODE(factor);
