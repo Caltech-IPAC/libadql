@@ -230,6 +230,10 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             boost::spirit::ascii::space_type>
             cast_function;
 
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Position_Function(),
+                            boost::spirit::ascii::space_type>
+            position_function;
+
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::User_Defined_Function(),
                             boost::spirit::ascii::space_type>
             user_defined_function;

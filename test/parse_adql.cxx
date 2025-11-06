@@ -744,7 +744,17 @@ int main(int argc, char *argv[]) {
             // IRSA-5506 CAST as public.GEOGRAPHY
             "SELECT ST_Distance(CAST(ST_Point(22.81210,-16.78450) AS "
             "public.GEOGRAPHY), "
-            "COALESCE(p.poly, p.pt), 'f') as dist_to_point_meters FROM caom.plane p"
+            "COALESCE(p.poly, p.pt), 'f') as dist_to_point_meters FROM caom.plane p",
+
+            // IRSA-7432 POSITION(string IN column_value)
+            "SELECT CASE WHEN POSITION('s3.amazonaws.com' IN a.uri) > 0 THEN a.uri "
+            "ELSE 'https://bacchus1.ipac.caltech.edu/' || regexp_replace(a.uri, "
+            "'https.*edu/', '') END as access_url FROM caom.artifact a",
+
+            "SELECT POSITION('s3.amazonaws.com' IN a.uri) AS pos FROM caom.artifact a",
+
+            "SELECT artifactid FROM caom.artifact a WHERE POSITION('s3.amazonaws.com' "
+            "IN a.uri) > 0"
 
 #endif  // RUN_ALL
     };
