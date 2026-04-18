@@ -6,6 +6,12 @@
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/variant.hpp>
 
+// Non-predicate geometry function: a geometry function that doesn't
+// return a boolean predicate (like CONTAINS/INTERSECTS) but instead
+// returns either a numeric value (like DISTANCE, AREA) or a geometry
+// object (like POINT, CIRCLE).
+
+
 namespace ADQL {
 class Non_Predicate_Geometry_Function {
 public:

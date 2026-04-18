@@ -126,6 +126,12 @@ struct Select_From_Where_List {
         }
         return table_lists;
     }
+
+    void set_initial(const Select_From_Where &sfw) { select_from_where_initial = sfw; }
+
+    void add_addon(const std::string &union_op, const Select_From_Where &sfw) {
+        select_from_where_addon_list.push_back({union_op, sfw});
+    }
 };
 
 inline std::ostream &operator<<(std::ostream &os,
