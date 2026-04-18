@@ -1,154 +1,78 @@
 #include "../Query.hxx"
 
-#include <regex>
+#include <iostream>
 
 #include "ADQL_parser.hxx"
+#include "Query_Preprocessor.hxx"
+#include "Query_Preprocessor/Top_Level_Components.hxx"
+
+// The Query class's constructor takes as input a query_string and,
+// aided by the ADQL_parser, either populates the query_specification
+// and other class members with data about the parsed query or fails
+// with a message explaining why the query_string is not parseable.
+
+// In order to get around an unpopular requirement imposed by the
+// ADQL_parser, we intercept and preprocess the incoming query before
+// handing off to the parser.  This interception is the work of
+// Query_Preprocessor::preprocess(), which
+
+// o Calls Top_Level_Parser to parse the query into top-level components
+//   as described in Top_Level_Components.hxx
+
+// o Iterates through the <union_op, search_from_where> pairs
+//   constituting the Union_Op_And_SFW_Pairs element of
+//   Top_Level_Components, calling Where_Clause_Normalizer to rewrite
+//   the WHERE clauses in the form required by the ADQL_parser
+
+// Query::Query then calls ADQL_parser on the 3 components of the
+// (possibly modified) Top_Level_Components struct separately to
+// complete the construction or throw an error as appropriate.
 
 namespace {
 
 //=======================================================
-// Helper functions for preprocessing input query string
+// Call parser through various entry points.
 //=======================================================
 
-//=======================================================
-
-// Regex to determine whether WHERE clause of query_string
-// consists of <left-search-condition AND geometric-constraint>
-// optionally followed by < AND right-search-condition>.
-
-static std::regex search_condition_on_left_of_geometry_regex(
-        R"(WHERE ([^ ].+[^ ]) *AND *((?:(?:0|1) *= *)?(?:CONTAINS|INTERSECTS)(?:.*?(?= *(?:AND|HAVING|GROUP|ORDER|$))))(?: *AND *([^ ].+?(?= *(?:HAVING| GROUP| ORDER|$))))?(.*)$)",
-        std::regex::icase);
-
-//=======================================================
-
-// Determine whether a single outermost pair of parentheses encloses
-// both left_search_condition and geometric_constraint, e.g. "WHERE
-// (x>1 AND CONTAINS(...)=1)".  If such a set of outermost enclosing
-// parentheses is found, adjust the arguments to this function, which
-// are passed by non-const reference, to drop those parentheses
-// (leaving, in the same example, "WHERE x>1 AND CONTAINS(...)=1").
-// In addition, check for a premature right parenthesis and determine
-// whether geometric_constraint is contained in any pair of
-// parentheses other than an outermost pair as above, and throw errors
-// accordingly.
-
-void check_and_adjust_parens(std::string &left_sc_str, std::string &geom_str) {
-    assert(!left_sc_str.empty());
-    assert(!geom_str.empty());
-
-    ushort depth = 0;
-
-    // Examine left_search_condition
-    bool within_outermost = (left_sc_str[0] == '(');
-    for (const char &c : left_sc_str) {
-        if (c == '(') {
-            ++depth;
-        } else if (c == ')') {
-            if (depth == 0) {
-                throw std::runtime_error(
-                        "Error: premature right parenthesis in WHERE clause I.");
-            }
-            --depth;
-            if (depth == 0) {
-                within_outermost = false;
-            }
-        }
-    }
-
-    if (depth > 1 || (depth == 1 && !within_outermost)) {
-        throw std::runtime_error(
-                "Error: inappropriate parentheses in WHERE "
-                "clause I.");
-    }
-
-    // Examine geometric_constraint
-    bool outermost_is_closed_at_end_of_geom = false;
-    for (const char &c : geom_str) {
-        if (outermost_is_closed_at_end_of_geom) {
-            throw std::runtime_error(
-                    "Error: inappropriate parentheses in WHERE clause II.");
-        }
-
-        if (c == '(') {
-            ++depth;
-        } else if (c == ')') {
-            if (depth == 0) {
-                throw std::runtime_error(
-                        "Error: premature right parenthesis in WHERE clause II.");
-            }
-            --depth;
-            if (depth == 0 && within_outermost) {
-                // Assume we're at the end of geom_str; we'll throw an error in the next
-                // iteration if it turns out that we're not.
-                outermost_is_closed_at_end_of_geom = true;
-            }
-        }
-    }
-
-    if (outermost_is_closed_at_end_of_geom) {
-        // Strip outermost paren from beginning of left_sc_str and end of
-        // geom_str and let parser handle the rest.
-        left_sc_str = left_sc_str.substr(1);
-        geom_str = geom_str.substr(0, geom_str.size() - 1);
-    }
-}
-
-//=======================================================
-
-//=============================================================
-// Rewrite query_string by moving a search condition from the left of
-// a geometric constraint to its right, combining it using " AND "
-// with the search condition on its right, if such exists.  This
-// change simplifies the work of the parser.  For example,
-
-// (x>1) AND CONTAINS(...)=1 AND y<2
-
-// is rewritten as
-
-//  CONTAINS(...)=1 AND (x>1) AND y<2
-
-// =============================================================
-
-std::string tweak_input_string(const std::string &input, const std::smatch &match) {
-    assert(!left_sc_str.empty());
-    assert(!geom_str.empty());
-
-    std::stringstream replace_str_ss;
-
-    std::string left_sc_str = match.str(1);
-    std::string geom_str = match.str(2);
-    std::string right_sc_str = match.str(3);
-
-    check_and_adjust_parens(left_sc_str, geom_str);
-
-    replace_str_ss << "WHERE " << geom_str << " AND ";
-    replace_str_ss << left_sc_str;
-
-    if (!right_sc_str.empty()) {
-        replace_str_ss << " AND " << right_sc_str;
-    }
-
-    return std::regex_replace(input, search_condition_on_left_of_geometry_regex,
-                              replace_str_ss.str());
-}
-
-//=======================================================
-// Do the hard work.
-//=======================================================
-
-void parse_it(const ADQL_parser &parser, ADQL::Query_Specification &query_specification,
-              const std::string &input) {
+void parse_sfw(const ADQL_parser &parser, ADQL::Select_From_Where &sfw,
+               const std::string &input) {
     std::string::const_iterator begin(input.begin()), end(input.end());
-    bool valid(phrase_parse(begin, end, parser, boost::spirit::ascii::space,
-                            query_specification));
-    if (!valid) {
-        auto error = parser.error_stream.str();
-        if (error.empty()) error = "Error: Expecting <SELECT> here: \"" + input + "\"";
-        ;
-        throw std::runtime_error(error);
-    } else if (begin != end) {
-        throw std::runtime_error("Error: Unexpected terms at the end: " +
+    bool valid = phrase_parse(begin, end, parser.select_from_where,
+                              boost::spirit::ascii::space, sfw);
+    if (!valid || begin != end) {
+        throw std::runtime_error("Error parsing SELECT...FROM...WHERE component: " +
+                                 std::string(begin, end));
+    }
+}
+
+//=======================================================
+
+void parse_with(const ADQL_parser &parser, ADQL::With &with, const std::string &input) {
+    std::string::const_iterator begin(input.begin()), end(input.end());
+    bool valid =
+            phrase_parse(begin, end, parser.with, boost::spirit::ascii::space, with);
+    if (!valid || begin != end) {
+        throw std::runtime_error("Error parsing WITH clause: " +
+                                 std::string(begin, end));
+    }
+}
+
+//=======================================================
+
+void parse_trailing(const ADQL_parser &parser, ADQL::Query_Specification &query_spec,
+                    const std::string &input) {
+    std::string::const_iterator begin(input.begin()), end(input.end());
+    // Try GROUP BY
+    phrase_parse(begin, end, parser.group_by, boost::spirit::ascii::space,
+                 query_spec.group_by);
+    // Try HAVING
+    phrase_parse(begin, end, parser.having, boost::spirit::ascii::space,
+                 query_spec.having);
+    // Try ORDER BY
+    phrase_parse(begin, end, parser.order_by, boost::spirit::ascii::space,
+                 query_spec.order_by);
+    if (begin != end) {
+        throw std::runtime_error("Error parsing trailing clauses: " +
                                  std::string(begin, end));
     }
 }
@@ -162,14 +86,21 @@ ADQL::Query::Query(
         const std::string &input,
         const std::map<std::string, std::string> &table_mapping_for_columns) {
     ADQL_parser parser(table_mapping_for_columns);
-
-    std::smatch match;
-    bool is_match =
-            std::regex_search(input, match, search_condition_on_left_of_geometry_regex);
-
-    if (is_match) {
-        parse_it(parser, query_specification, tweak_input_string(input, match));
-    } else {
-        parse_it(parser, query_specification, input);
+    auto top_level_components = ADQL::Query_Preprocessor::preprocess(input);
+    if (!top_level_components.with_clause_.empty()) {
+        parse_with(parser, query_specification.with, top_level_components.with_clause_);
+    }
+    for (const auto &[op, sfw_str] : top_level_components.union_op_and_sfw_pairs_) {
+        ADQL::Select_From_Where sfw_elt;
+        parse_sfw(parser, sfw_elt, sfw_str);
+        if (op.empty()) {
+            query_specification.select_from_where_list.set_initial(sfw_elt);
+        } else {
+            query_specification.select_from_where_list.add_addon(op, sfw_elt);
+        }
+    }
+    if (!top_level_components.trailing_clauses_.empty()) {
+        parse_trailing(parser, query_specification,
+                       top_level_components.trailing_clauses_);
     }
 }

@@ -20,6 +20,7 @@
 
 #include <boost/bind/bind.hpp>
 #include <boost/fusion/include/io.hpp>
+#include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_fusion.hpp>
 #include <boost/spirit/include/phoenix_object.hpp>
@@ -40,8 +41,7 @@ using namespace boost::placeholders;
 // there are some corner cases errors because of that.
 
 struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
-                                                ADQL::Query_Specification(),
-                                                boost::spirit::qi::locals<std::string>,
+                                                ADQL::Select_From_Where(),
                                                 boost::spirit::ascii::space_type> {
     ADQL_parser(const std::map<std::string, std::string> &Table_mapping);
 
@@ -548,11 +548,6 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query_Specification(),
                             boost::spirit::ascii::space_type>
             query_no_geometry;
-
-    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Query_Specification(),
-                            boost::spirit::qi::locals<std::string>,
-                            boost::spirit::ascii::space_type>
-            query;
 
     boost::spirit::qi::rule<std::string::const_iterator,
                             ADQL::Coord_Sys::Reference_Frame(),

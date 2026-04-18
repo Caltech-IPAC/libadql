@@ -9,10 +9,6 @@ void ADQL_parser::init_query() {
     using boost::spirit::qi::digit;
     using boost::spirit::qi::double_;
     using boost::spirit::qi::hold;
-    using boost::spirit::qi::labels::_1;
-    using boost::spirit::qi::labels::_2;
-    using boost::spirit::qi::labels::_3;
-    using boost::spirit::qi::labels::_val;
     using boost::spirit::qi::lexeme;
     using boost::spirit::qi::lit;
     using boost::spirit::qi::lower;
@@ -20,12 +16,15 @@ void ADQL_parser::init_query() {
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
     using boost::spirit::qi::ulong_long;
+    using boost::spirit::qi::labels::_1;
+    using boost::spirit::qi::labels::_2;
+    using boost::spirit::qi::labels::_3;
+    using boost::spirit::qi::labels::_val;
     namespace ascii = boost::spirit::ascii;
 
     with %= lexeme[ascii::no_case["WITH"] > &boost::spirit::qi::space] >
             with_table_name > -(lit('(') >> with_column_name % ',' > lit(')')) >>
             -(lexeme[ascii::no_case["AS"] > &boost::spirit::qi::space]) > subquery;
-
     with.name("with");
 
     with_table_name %= identifier;
@@ -35,14 +34,10 @@ void ADQL_parser::init_query() {
     with_column_name.name("with_column_name");
 
     where = lexeme[ascii::no_case["WHERE"] > &boost::spirit::qi::space] >
-
             ((geometry[at_c<0>(_val) = _1] >>
               -(ascii::no_case["AND"] > search_condition[at_c<1>(_val) = _1])) |
-
              ('(' >> geometry[at_c<0>(_val) = _1] > ')') |
-
              (search_condition[at_c<1>(_val) = _1]));
-
     where.name("where");
 
     where_no_geometry = lexeme[ascii::no_case["WHERE"] >> &boost::spirit::qi::space] >>
@@ -61,13 +56,15 @@ void ADQL_parser::init_query() {
               search_condition;
     having.name("having");
 
-    sort_key %= case_expression | user_defined_function | column_reference | unsigned_integer;
+    sort_key %= case_expression | user_defined_function | column_reference |
+                unsigned_integer;
 
     ordering_specification %= ascii::no_case[ascii::string("ASC")] |
                               ascii::no_case[ascii::string("DESC")];
+
     // I have the vague feeling that there are cases where there are
     // no spaces between the sort_key and ordering_specification, but
-    // I can not think of any.
+    // I cannot think of any.
     sort_specification %= sort_key >> -ordering_specification;
     order_by %= lexeme[ascii::no_case["ORDER"] > &boost::spirit::qi::space] >>
                 lexeme[ascii::no_case["BY"] > &boost::spirit::qi::space] >>
@@ -87,15 +84,15 @@ void ADQL_parser::init_query() {
 
     select_from_where = select[at_c<0>(_val) = _1] > from_clause[at_c<1>(_val) = _1] >>
                         -where[at_c<2>(_val) = _1];
-
     select_from_where.name("select_from_where");
+
     select_from_where_initial = select_from_where;
 
     select_from_where_no_geometry = select[at_c<0>(_val) = _1] >
                                     from_clause[at_c<1>(_val) = _1] >>
                                     -where_no_geometry[at_c<2>(_val) = _1];
-
     select_from_where_no_geometry.name("select_from_where_no_geometry");
+
     select_from_where_initial_no_geometry = select_from_where_no_geometry;
 
     select_from_where_addon %= lexeme[(ascii::no_case[ascii::string("UNION DISTINCT")] |
@@ -120,27 +117,25 @@ void ADQL_parser::init_query() {
 
     select_from_where_no_geometry_list.name("select_from_where_no_geometry_list");
 
-    query = -with[at_c<0>(_val) = _1] >> select_from_where_list[at_c<1>(_val) = _1] >>
-            -group_by[at_c<2>(_val) = _1] >> -having[at_c<3>(_val) = _1] >>
-            -order_by[at_c<4>(_val) = _1];
-    query.name("query");
+    query_no_geometry =
+            select_from_where_no_geometry_list[boost::phoenix::at_c<1>(_val) = _1] >>
+            -group_by[boost::phoenix::at_c<2>(_val) = _1] >>
+            -having[boost::phoenix::at_c<3>(_val) = _1] >>
+            -order_by[boost::phoenix::at_c<4>(_val) = _1];
+    query_no_geometry.name("query_no_geometry");
 
-    query_no_geometry = -with[at_c<0>(_val) = _1] >>
-                        select_from_where_no_geometry_list[at_c<1>(_val) = _1] >>
-                        -group_by[at_c<2>(_val) = _1] >> -having[at_c<3>(_val) = _1] >>
-                        -order_by[at_c<4>(_val) = _1];
     query_no_geometry.name("query_no_geometry");
 
     subquery %= lit('(') >> (query_no_geometry | joined_table) >> lit(')');
     subquery.name("subquery");
 
     boost::spirit::qi::on_error<boost::spirit::qi::fail>(
-            query, boost::phoenix::ref((std::ostream &)error_stream)
-                           << boost::phoenix::val("Error: Expecting ")
-                           << boost::spirit::qi::labels::_4
-                           << boost::phoenix::val(" here: \"")
-                           << boost::phoenix::construct<std::string>(_3, _2)
-                           << boost::phoenix::val("\"") << std::endl);
+            select_from_where, boost::phoenix::ref((std::ostream &)error_stream)
+                                       << boost::phoenix::val("Error: Expecting ")
+                                       << boost::spirit::qi::labels::_4
+                                       << boost::phoenix::val(" here: \"")
+                                       << boost::phoenix::construct<std::string>(_3, _2)
+                                       << boost::phoenix::val("\"") << std::endl);
 
 #ifdef DEBUG_Q
     BOOST_SPIRIT_DEBUG_NODE(where);
@@ -156,7 +151,6 @@ void ADQL_parser::init_query() {
     BOOST_SPIRIT_DEBUG_NODE(select_from_where_list);
     BOOST_SPIRIT_DEBUG_NODE(select_from_where_no_geometry_list);
     BOOST_SPIRIT_DEBUG_NODE(order_by);
-    BOOST_SPIRIT_DEBUG_NODE(query);
     BOOST_SPIRIT_DEBUG_NODE(query_no_geometry);
     BOOST_SPIRIT_DEBUG_NODE(subquery);
     BOOST_SPIRIT_DEBUG_NODE(with);
