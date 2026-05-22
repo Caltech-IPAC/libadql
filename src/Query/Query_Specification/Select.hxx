@@ -2,9 +2,8 @@
 
 #include "As.hxx"
 #include "Non_As.hxx"
-#include "Table_Valued_Function.hxx"
-#include "User_Defined_Function.hxx"
 #include "Value_Expression_Primary.hxx"
+#include "Whitelisted_Function.hxx"
 
 namespace ADQL {
 class Select {

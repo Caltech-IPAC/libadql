@@ -56,7 +56,7 @@ void ADQL_parser::init_query() {
               search_condition;
     having.name("having");
 
-    sort_key %= case_expression | user_defined_function | column_reference |
+    sort_key %= case_expression | whitelisted_function | column_reference |
                 unsigned_integer;
 
     ordering_specification %= ascii::no_case[ascii::string("ASC")] |

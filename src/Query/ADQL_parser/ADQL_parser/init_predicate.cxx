@@ -9,10 +9,6 @@ void ADQL_parser::init_predicate() {
     using boost::spirit::qi::digit;
     using boost::spirit::qi::double_;
     using boost::spirit::qi::hold;
-    using boost::spirit::qi::labels::_1;
-    using boost::spirit::qi::labels::_2;
-    using boost::spirit::qi::labels::_3;
-    using boost::spirit::qi::labels::_val;
     using boost::spirit::qi::lexeme;
     using boost::spirit::qi::lit;
     using boost::spirit::qi::lower;
@@ -20,24 +16,17 @@ void ADQL_parser::init_predicate() {
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
     using boost::spirit::qi::ulong_long;
+    using boost::spirit::qi::labels::_1;
+    using boost::spirit::qi::labels::_2;
+    using boost::spirit::qi::labels::_3;
+    using boost::spirit::qi::labels::_val;
     namespace ascii = boost::spirit::ascii;
 
     derived_correlation %= subquery >> correlation_specification;
     derived_correlation.name("derived correlation");
 
-    table_valued_function_name %= possibly_qualified_identifier;
-    table_valued_function_name.name("table_valued_function_name");
+    table_reference %= joined_table | table_correlation | derived_correlation;
 
-    table_valued_function_param %= possibly_qualified_identifier;
-    table_valued_function_param.name("table_valued_function_param");
-
-    table_valued_function %= hold[lexeme[ascii::no_case["table("] >>
-                                         table_valued_function_name >> "('"]] >>
-                             -(table_valued_function_param % "','") >> "')" >> ')';
-    table_valued_function.name("table_valued_function");
-
-    table_reference %= joined_table | table_correlation | derived_correlation |
-                       table_valued_function;
     table_reference.name("table reference");
 
     from_clause %= lexeme[ascii::no_case["FROM"] > &boost::spirit::qi::space] >
@@ -88,7 +77,6 @@ void ADQL_parser::init_predicate() {
                  null_predicate | like_predicate | exists_predicate;
 
 #ifdef DEBUG_PRED
-    BOOST_SPIRIT_DEBUG_NODE(table_valued_function);
     BOOST_SPIRIT_DEBUG_NODE(derived_correlation);
     BOOST_SPIRIT_DEBUG_NODE(table_reference);
     BOOST_SPIRIT_DEBUG_NODE(from_clause);

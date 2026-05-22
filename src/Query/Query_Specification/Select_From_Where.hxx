@@ -3,7 +3,6 @@
 #include "Joined_Table.hxx"
 #include "Select.hxx"
 #include "Table_Reference.hxx"
-#include "Table_Valued_Function.hxx"
 #include "Where.hxx"
 
 namespace ADQL {

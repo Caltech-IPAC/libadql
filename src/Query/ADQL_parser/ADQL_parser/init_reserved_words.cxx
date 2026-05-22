@@ -9,10 +9,6 @@ void ADQL_parser::init_reserved_words() {
     using boost::spirit::qi::digit;
     using boost::spirit::qi::double_;
     using boost::spirit::qi::hold;
-    using boost::spirit::qi::labels::_1;
-    using boost::spirit::qi::labels::_2;
-    using boost::spirit::qi::labels::_3;
-    using boost::spirit::qi::labels::_val;
     using boost::spirit::qi::lexeme;
     using boost::spirit::qi::lit;
     using boost::spirit::qi::lower;
@@ -20,9 +16,13 @@ void ADQL_parser::init_reserved_words() {
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
     using boost::spirit::qi::ulong_long;
+    using boost::spirit::qi::labels::_1;
+    using boost::spirit::qi::labels::_2;
+    using boost::spirit::qi::labels::_3;
+    using boost::spirit::qi::labels::_val;
     namespace ascii = boost::spirit::ascii;
 
-    /// Reverse sort to avoid early matches.
+    // Reverse sort to avoid early matches.
     ADQL_reserved_word %=
             ascii::no_case["TRUNCATE"] | ascii::no_case["TOP"] |
             ascii::no_case["TAP_UPLOAD"] | ascii::no_case["TAN"] |
@@ -41,7 +41,7 @@ void ADQL_parser::init_reserved_words() {
             ascii::no_case["ATAN2"] | ascii::no_case["ATAN"] | ascii::no_case["ASIN"] |
             ascii::no_case["AREA"] | ascii::no_case["ACOS"] | ascii::no_case["ABS"];
 
-    /// Split up SQL_reserved_word to help memory usage and compile times.
+    // Split up SQL_reserved_word to help memory usage and compile times.
     SQL_reserved_word_00 %= ascii::no_case["ZONE"] | ascii::no_case["YEAR"] |
                             ascii::no_case["WRITE"] | ascii::no_case["WORK"] |
                             ascii::no_case["WITH"] | ascii::no_case["WHERE"] |

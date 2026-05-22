@@ -11,9 +11,15 @@
 
 #include "Top_Level_Components.hxx"
 
-// This parser parses a general ADQL query into the 3 components
-// described in Top_Level_Components.hxx, thus making the query's
+// This parser parses ADQL queries into the 3 components
+// described in Top_Level_Components.hxx, thus making the queries'
 // select_from_where strings accessible to the Query_Preprocessor.
+
+// Note: Queries using WITHIN GROUP (...) syntax (e.g. LISTAGG,
+// PERCENTILE_CONT) will fail because Top_Level_Parser stops at the
+// bare GROUP keyword expecting a trailing GROUP BY clause. Supporting
+// WITHIN GROUP would require changes to how trailing clauses are
+// detected.
 
 namespace ADQL {
 

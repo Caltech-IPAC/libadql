@@ -119,10 +119,6 @@ int main(int argc, char *argv[]) {
             "radians(ra),sqrt(ra) FROM my_table1",
             "SELECT mod(ra, dec),power( ra,dec ),pi(),rand(ra),rand(),"
             "round(ra,10),round(ra),truncate(ra),truncate(ra,10) FROM my_table1",
-            "SELECT modern() FROM my_table1",
-            "SELECT my_modern_function(ra,dec) FROM my_table1",
-            "SELECT my_modern_function(ra,dec), modern() FROM my_table1",
-            "SELECT my_modern_function(ra,dec) || modern() FROM my_table1",
             "select 'a b c','a','a ''bv' from b",
             "select \"a b\",\"a \"\" b\" from b",
             "select 'a' 'b' from b",
@@ -142,15 +138,12 @@ int main(int argc, char *argv[]) {
             "select single from a",
             "select a,b from a group by a",
             "select a,b from a group by a having x>2",
-            "select f(a, b, c), max(d), max(e) from t group by f(a,b,c)",
             "SELECT * FROM my_table1 order by x",
             "SELECT * FROM my_table1 order by x asc",
             "SELECT * FROM my_table1 order by x desc",
             "select b from a where x<1 order by a",
             "SELECT * FROM my_table1 where x like y",
             "SELECT * FROM my_table1 where x like y || z",
-            "SELECT * FROM my_table1 where x not like my_sin(x)",
-            "SELECT * FROM my_table1 where x like my_sin(x) || x",
             "SELECT * FROM my_table1 where exists (select a from b)",
             "SELECT * FROM my_table WHERE (mjd>=55550.0 and mjd<=65650.5)",
             "SELECT my_table1.*,'table' from my_table1",
@@ -335,7 +328,6 @@ int main(int argc, char *argv[]) {
             "          AND caom.observation.instrument = 'Spex Spectrograph')"
             "   GROUP BY"
             "     name, DATE_TIME_OF_OBS, PROGRAM_ID, DY, Instrument_Setup, Group_ID",
-            "SELECT bar FROM foo where (ST(ST(ST(ST(ST(ST(ST(ST(ST())))))))))",
             "SELECT TAP_UPLOAD.pos.cntr as in_row_id, TAP_UPLOAD.pos.ra as in_ra, "
             "TAP_UPLOAD.pos.dec as in_dec, "
             "wise.wise_allwise_p3am_cdd.* "
@@ -496,23 +488,6 @@ int main(int argc, char *argv[]) {
 
             "WITH alpha_subset AS (SELECT * FROM alpha_source WHERE mod(id,10) = 0) "
             "SELECT ra, dec FROM alpha_subset WHERE ra > 10 and ra < 20",
-
-            // support for table() function
-            "WITH temp (collection, multi_type) AS (SELECT collection,mytype "
-            "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) "
-            "SELECT DISTINCT projectshort AS facility_name,description,"
-            "irsa_directory.collection AS obs_collection FROM irsa_directory,temp "
-            "WHERE irsa_directory.collection=temp.collection",
-
-            "SELECT DISTINCT projectshort AS "
-            "facility_name,description,irsa_directory.collection AS obs_collection,"
-            "instrument AS instrument_name,coverage,band,info_url,temp.multi_type AS "
-            "dataproduct_type "
-            "FROM irsa_directory, (SELECT collection,mytype as multi_type "
-            "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) as temp "
-            "WHERE semantics like '%primary%' AND "
-            "irsa_directory.collection=temp.collection "
-            "ORDER BY facility_name,irsa_directory.collection,instrument_name",
 
             // IRSA-5856: column values as Shape arguments
 
@@ -766,8 +741,8 @@ int main(int argc, char *argv[]) {
 
             // IRSA-7432 POSITION(string IN column_value)
             "SELECT CASE WHEN POSITION('s3.amazonaws.com' IN a.uri) > 0 THEN a.uri "
-            "ELSE 'https://bacchus1.ipac.caltech.edu/' || regexp_replace(a.uri, "
-            "'https.*edu/', '') END as access_url FROM caom.artifact a",
+            "ELSE 'https://bacchus1.ipac.caltech.edu/' || strip_url_prefix(a.uri, "
+            "'https.*edu/') END as access_url FROM caom.artifact a",
 
             "SELECT POSITION('s3.amazonaws.com' IN a.uri) AS pos FROM caom.artifact a",
 
@@ -821,6 +796,21 @@ int main(int argc, char *argv[]) {
             " tempTable.avgDist / 10 "
             " ORDER BY dist ",
 
+            // IRSA-7735: add whitelisted functions; reject functions not whitelisted
+            "select sum(x,y) from my_table",
+            "select abs(x) from my_table",
+            "select round(x) from my_table",
+            "SELECT DISTINCT projectshort AS "
+            "facility_name,description,collection_label,d.collection AS "
+            "obs_collection,'https://irsawebdev1.ipac.caltech.edu:9801' || "
+            "strip_url_prefix(info_url, 'https.*edu/') AS info_url,instrument AS "
+            "instrument_name,coverage,band,'https://irsawebdev1.ipac.caltech.edu:9801/"
+            "IRSA_Directory/searchpage?collection='||d.collection AS "
+            "access_url,'application/x-votable+xml' AS access_format,v.mytype AS "
+            "dataproduct_type FROM irsa_directory d JOIN "
+            "tap_ancillary.irsa_directory_datatypes v ON d.collection=v.collection "
+            "WHERE d.semantics like '%primary%' ORDER BY "
+            "LOWER(facility_name),d.collection,instrument",
 #endif  // RUN_ALL
     };
 
@@ -846,10 +836,8 @@ int main(int argc, char *argv[]) {
             "And x<1 And x>2 Or y < 3 Or y >5"
             "SELECT *,ra FROM my_table1",
             "SELECT my_tablel1.* as ra_dec FROM my_table1",
-            "select sum(a,b) from a",
             "select sum from a",
             "select sum( from a",
-            "select abs(a,b) from a",
             "select sin from a",
             "select sin() from a",
             "select sin( from a",
@@ -859,7 +847,6 @@ int main(int argc, char *argv[]) {
             "select atan2(a,) from a",
             "select atan2(a,b from a",
             "select round from a",
-            "select round() from a",
             "select round(a,) from a",
             "select round(a,b from a",
             "select round(a,10 from a",
@@ -922,6 +909,34 @@ int main(int argc, char *argv[]) {
             "SELECT * from spherex.obscore WHERE "
             "INTERSECTS(CIRCLE('ICRS',162.12766666, -38.924749999, 0.002777777), "
             "s_region)=1",
+
+            // IRSA-7735: reject non-whitelisted functions
+            "SELECT modern() FROM my_table1",
+            "SELECT my_modern_function(ra,dec) FROM my_table1",
+            "SELECT my_modern_function(ra,dec), modern() FROM my_table1",
+            "SELECT my_modern_function(ra,dec) || modern() FROM my_table1",
+            "select f(a, b, c), max(d), max(e) from t group by f(a,b,c)",
+            "SELECT * FROM my_table1 where x not like my_sin(x)",
+            "SELECT * FROM my_table1 where x like my_sin(x) || x",
+            "SELECT bar FROM foo where (ST(ST(ST(ST(ST(ST(ST(ST(ST())))))))))",
+            "SELECT * FROM my_table1 where sys_context('USERENV','DB_NAME')='wise1'",
+
+            // IRSA-7735: retire support for table() function
+            "WITH temp (collection, multi_type) AS (SELECT collection,mytype "
+            "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) "
+            "SELECT DISTINCT projectshort AS facility_name,description,"
+            "irsa_directory.collection AS obs_collection FROM irsa_directory,temp "
+            "WHERE irsa_directory.collection=temp.collection",
+
+            "SELECT DISTINCT projectshort AS "
+            "facility_name,description,irsa_directory.collection AS obs_collection,"
+            "instrument AS instrument_name,coverage,band,info_url,temp.multi_type AS "
+            "dataproduct_type "
+            "FROM irsa_directory, (SELECT collection,mytype as multi_type "
+            "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) as temp "
+            "WHERE semantics like '%primary%' AND "
+            "irsa_directory.collection=temp.collection "
+            "ORDER BY facility_name,irsa_directory.collection,instrument_name",
     };
 
     int result(0);
