@@ -1,4 +1,4 @@
-#include "../../../User_Defined_Function.hxx"
+#include "../../../Whitelisted_Function.hxx"
 #include "../Numeric_Value_Function.hxx"
 
 namespace ADQL {

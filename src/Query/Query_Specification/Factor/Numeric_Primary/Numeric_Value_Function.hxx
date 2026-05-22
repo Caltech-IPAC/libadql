@@ -1,20 +1,20 @@
 #pragma once
 
+#include <boost/variant.hpp>
+
 #include "../../Non_Predicate_Geometry_Function.hxx"
-#include "../../User_Defined_Function_Wrap.hxx"
+#include "../../Whitelisted_Function_Wrap.hxx"
 #include "Numeric_Value_Function/Cast_Function.hxx"
 #include "Numeric_Value_Function/Math_Function.hxx"
 #include "Numeric_Value_Function/Position_Function.hxx"
 #include "Numeric_Value_Function/Trig_Function.hxx"
-
-#include <boost/variant.hpp>
 
 namespace ADQL {
 class Numeric_Value_Function {
 public:
     typedef boost::variant<Trig_Function, Math_Function, Cast_Function,
                            Position_Function, Non_Predicate_Geometry_Function,
-                           User_Defined_Function_Wrap, std::string>
+                           Whitelisted_Function_Wrap, std::string>
             Variant;
     Variant variant;
     bool empty() const;

@@ -97,12 +97,11 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
             column_name, ordering_specification, set_function_type, table_name,
             tap_upload, tap_upload_identifier, unqualified_schema_name, catalog_name,
             correlation_name, qualifier, trig_one_arg_names, math_zero_arg_names,
-            math_one_arg_names, math_two_arg_names, cast_as, user_defined_function_name,
+            math_one_arg_names, math_two_arg_names, cast_as, whitelisted_function_name,
             unsigned_literal, unsigned_value_specification, general_literal,
             null_literal, null_cast, boolean_literal, qualifier_star, binary_operators,
             geo_one_arg_names, geo_two_arg_names, with_table_name, with_column_name,
-            possibly_qualified_identifier, table_valued_function_name,
-            table_valued_function_param, sql_no_arg_function;
+            possibly_qualified_identifier, sql_no_arg_function;
 
     // rules with skipper
     boost::spirit::qi::rule<std::string::const_iterator, std::string(),
@@ -236,13 +235,13 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             boost::spirit::ascii::space_type>
             position_function;
 
-    boost::spirit::qi::rule<std::string::const_iterator, ADQL::User_Defined_Function(),
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Whitelisted_Function(),
                             boost::spirit::ascii::space_type>
-            user_defined_function;
+            whitelisted_function;
 
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Value_Expression(),
                             boost::spirit::ascii::space_type>
-            value_expression, user_defined_function_param, pattern;
+            value_expression, whitelisted_function_param, pattern;
 
     boost::spirit::qi::rule<std::string::const_iterator,
                             ADQL::Value_Expression_Non_Bool_Term(),
@@ -347,10 +346,6 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
     boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Reference(),
                             boost::spirit::ascii::space_type>
             table_reference;
-
-    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Table_Valued_Function(),
-                            boost::spirit::ascii::space_type>
-            table_valued_function;
 
     boost::spirit::qi::rule<std::string::const_iterator,
                             std::vector<ADQL::Table_Reference>(),

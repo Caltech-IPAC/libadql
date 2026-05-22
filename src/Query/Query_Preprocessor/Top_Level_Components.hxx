@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-// A general ADQL query can be split into 3 parts as follows:
-
+// A general ADQL query supported by LibADQL can be split into 3 parts as follows:
 
 // (1) An optional WITH clause
 
@@ -15,9 +14,7 @@
 
 // (3) Optional HAVING, GROUP BY, and/or ORDER BY clauses.
 
-
 // For example:
-
 
 // "WITH tempTable (avgDist) AS (SELECT avg(dist) FROM distTable) "
 
@@ -28,8 +25,6 @@
 // " tempTable.avgDist / 10 "
 
 // " ORDER BY dist "
-
-
 
 // In what follows, "SFW" represents a SELECT...FROM...[WHERE...] string.
 

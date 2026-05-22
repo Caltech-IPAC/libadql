@@ -9,10 +9,6 @@ void ADQL_parser::init_factor() {
     using boost::spirit::qi::digit;
     using boost::spirit::qi::double_;
     using boost::spirit::qi::hold;
-    using boost::spirit::qi::labels::_1;
-    using boost::spirit::qi::labels::_2;
-    using boost::spirit::qi::labels::_3;
-    using boost::spirit::qi::labels::_val;
     using boost::spirit::qi::lexeme;
     using boost::spirit::qi::lit;
     using boost::spirit::qi::lower;
@@ -20,6 +16,10 @@ void ADQL_parser::init_factor() {
     using boost::spirit::qi::omit;
     using boost::spirit::qi::print;
     using boost::spirit::qi::ulong_long;
+    using boost::spirit::qi::labels::_1;
+    using boost::spirit::qi::labels::_2;
+    using boost::spirit::qi::labels::_3;
+    using boost::spirit::qi::labels::_val;
     namespace ascii = boost::spirit::ascii;
 
     set_function_type %= ascii::no_case[ascii::string("AVG")] |
@@ -62,8 +62,8 @@ void ADQL_parser::init_factor() {
             ascii::no_case["ELSE"] >> &no_skip[boost::spirit::qi::space] >> result;
     else_clause.name("else_clause");
 
-    /// boost::spirit gets wonky if I try to use the '>' operator for
-    /// simple_whens
+    // boost::spirit gets wonky if I try to use the '>' operator for
+    // simple_whens
     simple_case %=
             value_expression >> simple_whens >> -else_clause > ascii::no_case["END"];
     simple_case.name("simple_case");
@@ -124,33 +124,117 @@ void ADQL_parser::init_factor() {
             *array_index;
     value_expression_primary.name("value_expression_primary");
 
-    /// Custom array_expression so that SQL 99 array literals can pass
-    /// through
+    // Custom array_expression so that SQL 99 array literals can pass
+    // through
     array_constructor %=
             ascii::no_case["ARRAY"] >> '[' >> (value_expression % ',') > ']';
     array_constructor.name("array_constructor");
 
-    /// We do not have a rule for default_function_prefix since, being
-    /// optional, it does not change whether something parses.
+    // Reverse-sorted within groups as in init_reserved_word() to
+    // prevent early matches. Could be reverse-sorted in one big group
+    // if necessary.
 
-    /// Add a bunch of functions that are normally reserved words, but
-    /// also really useful string functions (at least in Postgres)
-    user_defined_function_name %= regular_identifier |
-                                  ascii::no_case[ascii::string("RIGHT")] |
-                                  ascii::no_case[ascii::string("LEFT")] |
-                                  ascii::no_case[ascii::string("UPPER")] |
-                                  ascii::no_case[ascii::string("LOWER")] |
-                                  ascii::no_case[ascii::string("DISTINCT")] |
-                                  ascii::no_case[ascii::string("TRIM")];
-    user_defined_function_name.name("user_defined_function_name");
+    // Note: Despite their potential for misuse in blind injection
+    // attacks, the functions SUBSTR, SUBSTRING, and INSTR are
+    // whitelisted because they have legitimate uses in TAP
+    // queries. The functions ASCII() and CHR(), though, are omitted
+    // from the whitelist as of 22May26.
 
-    user_defined_function_param %= value_expression;
-    user_defined_function_param.name("user_defined_function_param");
+    whitelisted_function_name %=
+            // IRSA UDFs
+            ascii::no_case[ascii::string("STRIP_URL_PREFIX")] |
+            ascii::no_case[ascii::string("SIA2_CLOUD_ACCESS_COLUMN")] |
+            ascii::no_case[ascii::string("SIA1_CLOUD_ACCESS_COLUMN")] |
+            ascii::no_case[ascii::string("RA_TO_SEXAGESIMAL")] |
+            ascii::no_case[ascii::string("PT_TO_REGION")] |
+            ascii::no_case[ascii::string("POSITION_ANGLE")] |
+            ascii::no_case[ascii::string("POLY_TO_REGION")] |
+            ascii::no_case[ascii::string("POLY_TO_RA")] |
+            ascii::no_case[ascii::string("POLY_TO_DEC")] |
+            ascii::no_case[ascii::string("GET_MOCS")] |
+            ascii::no_case[ascii::string("GET_CONTENTTYPE_SORT_SURROGATE")] |
+            ascii::no_case[ascii::string("EXTRACT_URL_BASENAME")] |
+            ascii::no_case[ascii::string("DEC_TO_SEXAGESIMAL")] |
 
-    user_defined_function %= hold[user_defined_function_name >> '('] >>
-                             -(user_defined_function_param % ',') >> ')';
+            // PostgreSQL/SQL functions
+            ascii::no_case[ascii::string("TYPEOF")] |
+            ascii::no_case[ascii::string("TO_TIMESTAMP")] |
+            ascii::no_case[ascii::string("TO_NUMBER")] |
+            ascii::no_case[ascii::string("TO_DATE")] |
+            ascii::no_case[ascii::string("TO_CHAR")] |
+            ascii::no_case[ascii::string("TIMEZONE")] |
+            ascii::no_case[ascii::string("SYSDATE")] |
+            ascii::no_case[ascii::string("SUBSTRING")] |
+            ascii::no_case[ascii::string("SUBSTR")] |
+            ascii::no_case[ascii::string("STRPOS")] |
+            ascii::no_case[ascii::string("STRING_AGG")] |
+            ascii::no_case[ascii::string("STDDEV")] |
+            ascii::no_case[ascii::string("SPLIT_PART")] |
+            ascii::no_case[ascii::string("REPLACE")] |
+            ascii::no_case[ascii::string("RANDOM")] |
+            ascii::no_case[ascii::string("NOW")] |
+            ascii::no_case[ascii::string("MEDIAN")] |
+            ascii::no_case[ascii::string("MD5")] | ascii::no_case[ascii::string("LN")] |
+            ascii::no_case[ascii::string("LENGTH")] |
+            ascii::no_case[ascii::string("LEAST")] |
+            ascii::no_case[ascii::string("JSONB_EXTRACT_PATH_TEXT")] |
+            ascii::no_case[ascii::string("JSON_EXTRACT_PATH_TEXT")] |
+            ascii::no_case[ascii::string("INSTR")] |
+            ascii::no_case[ascii::string("GREATEST")] |
+            ascii::no_case[ascii::string("GETDATE")] |
+            ascii::no_case[ascii::string("FORMAT")] |
+            ascii::no_case[ascii::string("FLOOR")] |
+            ascii::no_case[ascii::string("CONCAT")] |
+            ascii::no_case[ascii::string("CLOCK_TIMESTAMP")] |
+            ascii::no_case[ascii::string("CHAR_LENGTH")] |
+            ascii::no_case[ascii::string("CEILING")] |
+            ascii::no_case[ascii::string("CEIL")] |
 
-    user_defined_function.name("user_defined_function");
+            // PostGIS type constructors
+            ascii::no_case[ascii::string("GEOMETRY")] |
+            ascii::no_case[ascii::string("GEOGRAPHY")] |
+
+            // ADQL reserved words that are also valid function names
+            ascii::no_case[ascii::string("SQRT")] |
+            ascii::no_case[ascii::string("ROUND")] |
+            ascii::no_case[ascii::string("POWER")] |
+            ascii::no_case[ascii::string("MOD")] |
+            ascii::no_case[ascii::string("LOG10")] |
+            ascii::no_case[ascii::string("LOG")] |
+            ascii::no_case[ascii::string("EXP")] |
+            ascii::no_case[ascii::string("COORD2")] |
+            ascii::no_case[ascii::string("COORD1")] |
+            ascii::no_case[ascii::string("ABS")] |
+
+            // SQL reserved words that are also valid function names
+            ascii::no_case[ascii::string("UPPER")] |
+            ascii::no_case[ascii::string("TRIM")] |
+            ascii::no_case[ascii::string("SUM")] |
+            ascii::no_case[ascii::string("ROW_NUMBER")] |
+            ascii::no_case[ascii::string("RIGHT")] |
+            ascii::no_case[ascii::string("LOWER")] |
+            ascii::no_case[ascii::string("LEFT")] |
+            ascii::no_case[ascii::string("DISTINCT")] |
+            ascii::no_case[ascii::string("CAST")] |
+
+            // ST_ prefix — PostGIS functions
+            (ascii::no_case[ascii::string("ST_")] >> all_identifiers) |
+
+            // ivo_ prefix — IVOA functions
+            (ascii::no_case[ascii::string("ivo_")] >> all_identifiers) |
+
+            // q3c_ prefix — Q3C spatial indexing functions
+            (ascii::no_case[ascii::string("q3c_")] >> all_identifiers);
+
+    whitelisted_function_name.name("whitelisted_function_name");
+
+    whitelisted_function_param %= value_expression;
+    whitelisted_function_param.name("whitelisted_function_param");
+
+    whitelisted_function %= hold[whitelisted_function_name >> '('] >>
+                            -(whitelisted_function_param % ',') >> ')';
+
+    whitelisted_function.name("whitelisted_function");
 
     sql_no_arg_function %= ascii::no_case[ascii::string("CURRENT_TIMESTAMP")];
 
@@ -182,7 +266,8 @@ void ADQL_parser::init_factor() {
     // numeric_geometry_function
     numeric_value_function %= trig_function | math_function | cast_function |
                               position_function | non_predicate_geometry_function |
-                              user_defined_function | sql_no_arg_function;
+                              whitelisted_function | sql_no_arg_function;
+
     numeric_value_function.name("numeric_value_function");
     // Flipped the order here, because a value_expression can match a
     // function name.
@@ -216,9 +301,9 @@ void ADQL_parser::init_factor() {
     BOOST_SPIRIT_DEBUG_NODE(null_cast);
     BOOST_SPIRIT_DEBUG_NODE(value_expression_primary);
     BOOST_SPIRIT_DEBUG_NODE(array_constructor);
-    BOOST_SPIRIT_DEBUG_NODE(user_defined_function_name);
-    BOOST_SPIRIT_DEBUG_NODE(user_defined_function_param);
-    BOOST_SPIRIT_DEBUG_NODE(user_defined_function);
+    BOOST_SPIRIT_DEBUG_NODE(whitelisted_function_name);
+    BOOST_SPIRIT_DEBUG_NODE(whitelisted_function_param);
+    BOOST_SPIRIT_DEBUG_NODE(whitelisted_function);
     BOOST_SPIRIT_DEBUG_NODE(cast_function);
     BOOST_SPIRIT_DEBUG_NODE(position_function);
     BOOST_SPIRIT_DEBUG_NODE(numeric_value_function);
