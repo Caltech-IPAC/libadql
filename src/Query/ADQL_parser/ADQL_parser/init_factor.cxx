@@ -256,6 +256,19 @@ void ADQL_parser::init_factor() {
                           -('(' > unsigned_integer > ')') >> ')'];
     cast_function.name("cast_function");
 
+    window_function =
+            hold[whitelisted_function_name >> lit('(') >> lit(')') >>
+                 &(ascii::no_case[lit("OVER")])][at_c<0>(_val) = _1] >>
+            lexeme[ascii::no_case[lit("OVER")] >> &boost::spirit::qi::space] >>
+            lit('(') >>
+            lexeme[ascii::no_case[lit("PARTITION")] >> &boost::spirit::qi::space] >>
+            lexeme[ascii::no_case[lit("BY")] >> &boost::spirit::qi::space] >>
+            (value_expression % lit(','))[at_c<1>(_val) = _1] >>
+            lexeme[ascii::no_case[lit("ORDER")] >> &boost::spirit::qi::space] >>
+            lexeme[ascii::no_case[lit("BY")] >> &boost::spirit::qi::space] >>
+            (value_expression % lit(','))[at_c<2>(_val) = _1] >> lit(')');
+    window_function.name("window_function");
+
     position_function %=
             hold[ascii::no_case["POSITION"] >> '(' >> character_string_literal >>
                  &no_skip[boost::spirit::qi::space] >> ascii::no_case["IN"] >>
@@ -263,10 +276,16 @@ void ADQL_parser::init_factor() {
     position_function.name("position_function");
 
     // FIXME: numeric_value_function should have
-    // numeric_geometry_function
+    // numeric_geometry_function.
+
+    // Note that window_function must come before whitelisted_function
+    // since ROW_NUMBER would otherwise be consumed by the whitelisted
+    // function rule first.
+
     numeric_value_function %= trig_function | math_function | cast_function |
                               position_function | non_predicate_geometry_function |
-                              whitelisted_function | sql_no_arg_function;
+                              window_function | whitelisted_function |
+                              sql_no_arg_function;
 
     numeric_value_function.name("numeric_value_function");
     // Flipped the order here, because a value_expression can match a
@@ -304,6 +323,7 @@ void ADQL_parser::init_factor() {
     BOOST_SPIRIT_DEBUG_NODE(whitelisted_function_name);
     BOOST_SPIRIT_DEBUG_NODE(whitelisted_function_param);
     BOOST_SPIRIT_DEBUG_NODE(whitelisted_function);
+    BOOST_SPIRIT_DEBUG_NODE(window_function);
     BOOST_SPIRIT_DEBUG_NODE(cast_function);
     BOOST_SPIRIT_DEBUG_NODE(position_function);
     BOOST_SPIRIT_DEBUG_NODE(numeric_value_function);

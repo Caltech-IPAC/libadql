@@ -4,6 +4,7 @@
 
 #include "../../Non_Predicate_Geometry_Function.hxx"
 #include "../../Whitelisted_Function_Wrap.hxx"
+#include "../../Window_Function_Wrap.hxx"
 #include "Numeric_Value_Function/Cast_Function.hxx"
 #include "Numeric_Value_Function/Math_Function.hxx"
 #include "Numeric_Value_Function/Position_Function.hxx"
@@ -14,7 +15,7 @@ class Numeric_Value_Function {
 public:
     typedef boost::variant<Trig_Function, Math_Function, Cast_Function,
                            Position_Function, Non_Predicate_Geometry_Function,
-                           Whitelisted_Function_Wrap, std::string>
+                           Window_Function_Wrap, Whitelisted_Function_Wrap, std::string>
             Variant;
     Variant variant;
     bool empty() const;

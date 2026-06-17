@@ -811,6 +811,97 @@ int main(int argc, char *argv[]) {
             "tap_ancillary.irsa_directory_datatypes v ON d.collection=v.collection "
             "WHERE d.semantics like '%primary%' ORDER BY "
             "LOWER(facility_name),d.collection,instrument",
+
+			// IRSA-7700: support for WINDOW/PARTITION/OVER
+            "SELECT ROW_NUMBER()  Over (PARTITION BY facility, instrument ORDER BY "
+            "dist) FROM my_table",
+
+            "SELECT * FROM (SELECT SIA2_MINIMAL_JOIN.*, ROW_NUMBER() OVER (PARTITION "
+            "BY SIA2_MINIMAL_JOIN.facility, SIA2_MINIMAL_JOIN.instrument, "
+            "SIA2_MINIMAL_JOIN.upload_row_id ORDER BY "
+            "SIA2_MINIMAL_JOIN.dist_to_point_meters) as rownum FROM SIA2_MINIMAL_JOIN) "
+            "ranked WHERE rownum = 1 AND DISTANCE(POINT('ICRS', ranked.ra, "
+            "ranked.dec), POINT('ICRS', 1.0, 2.0)) < 0.1",
+
+            "SELECT * FROM (SELECT SIA2_MINIMAL_JOIN.*, ROW_NUMBER() OVER (PARTITION "
+            "BY SIA2_MINIMAL_JOIN.facility, SIA2_MINIMAL_JOIN.instrument, "
+            "SIA2_MINIMAL_JOIN.upload_row_id ORDER BY "
+            "SIA2_MINIMAL_JOIN.dist_to_point_meters) as rownum, DISTANCE(POINT('ICRS', "
+            "SIA2_MINIMAL_JOIN.ra, SIA2_MINIMAL_JOIN.dec), POINT('ICRS', 1.0, 2.0)) as "
+            "dist FROM SIA2_MINIMAL_JOIN) ranked WHERE rownum = 1",
+
+            "WITH SIA2_MINIMAL_JOIN AS (SELECT o.obsid as obsid, p.planeid  as "
+            "planeid, o.telescope_name as facility_name, o.instrument_name as "
+            "instrument_name, CAST ('1' AS BIGINT) as upload_row_id FROM "
+            "(caom.simulated_observation o JOIN caom.simulated_plane p ON o.obsid = "
+            "p.obsid)  ) SELECT coord1(p.pt) as s_ra, coord2(p.pt) as s_dec, "
+            "SIA2_CLOSEST_SUBQUERY.dist_to_point_meters / 111194.68229846345 as "
+            "min_dist_to_point FROM (SELECT "
+            "obsid,planeid,facility_name,instrument_name,upload_row_id FROM (SELECT "
+            "SIA2_MINIMAL_JOIN, ROW_NUMBER() OVER (PARTITION BY "
+            "SIA2_MINIMAL_JOIN.facility, SIA2_MINIMAL_JOIN.instrument, "
+            "SIA2_MINIMAL_JOIN.upload_row_id ORDER BY "
+            "SIA2_MINIMAL_JOIN.dist_to_point_meters) as rownum FROM SIA2_MINIMAL_JOIN) "
+            "ranked WHERE rownum = 1) SIA2_CLOSEST_SUBQUERY, ((caom.observation o JOIN "
+            "caom.plane p ON o.obsid = p.obsid) JOIN caom.artifact a ON p.planeid = "
+            "a.planeid) WHERE SIA2_CLOSEST_SUBQUERY.obsid = o.obsid AND "
+            "SIA2_CLOSEST_SUBQUERY.planeid = p.planeid AND "
+            "(SIA2_CLOSEST_SUBQUERY.facility IS NULL OR SIA2_CLOSEST_SUBQUERY.facility "
+            "= o.telescope_name) AND (SIA2_CLOSEST_SUBQUERY.instrument IS NULL OR "
+            "SIA2_CLOSEST_SUBQUERY.instrument = o.instrument_name)",
+
+            "WITH SIA2_MINIMAL_JOIN AS (SELECT o.obsid as obsid, p.planeid as planeid, "
+            "CAST ('1' AS BIGINT) as upload_row_id FROM (caom.simulated_observation o "
+            "JOIN caom.simulated_plane p ON o.obsid = p.obsid) WHERE "
+            "(((p.dataproducttype = 'image') OR (p.dataproducttype = 'cube'))) ) "
+            "SELECT coord1(p.pt) as s_ra, coord2(p.pt) as s_dec, o.telescope_name as "
+            "facility_name, o.instrument_name as instrument_name, a.producttype as "
+            "dataproduct_subtype, p.calibrationlevel as calib_level, p.dataproducttype "
+            "as dataproduct_type, p.energy_bandpassname as energy_bandpassname, "
+            "p.energy_emband as energy_emband, o.observationid as obs_id, "
+            "p.position_resolution as s_resolution, p.energy_bounds_lower as em_min, "
+            "p.energy_bounds_upper as em_max, p.energy_resolvingpower as em_res_power, "
+            "o.proposal_title as proposal_title, CASE WHEN position('http' IN a.uri) > "
+            "0 AND position('ipac.caltech.edu' IN a.uri) = 0 THEN a.uri ELSE "
+            "'HOST:PORT/' || strip_url_prefix(a.uri, 'https.*edu/') END as access_url, "
+            "a.contenttype as access_format, CAST (CEIL(a.contentlength/1000.0) AS "
+            "BIGINT) as access_estsize, p.time_exposure as t_exptime, CASE WHEN "
+            "(p.poly IS NOT NULL) THEN poly_to_region(p.poly) ELSE pt_to_region(p.pt) "
+            "END as s_region, o.collection as obs_collection, o.intent as obs_intent, "
+            "o.algorithm_name as algorithm_name, o.telescope_keywords as "
+            "facility_keywords, o.instrument_keywords as instrument_keywords, "
+            "o.environment_photometric as environment_photometric, o.proposal_id as "
+            "proposal_id, o.proposal_pi as proposal_pi, o.proposal_project as "
+            "proposal_project, o.target_name as target_name, o.target_type as "
+            "target_type, o.target_standard as target_standard, o.target_moving as "
+            "target_moving, o.target_keywords as target_keywords, p.datarelease as "
+            "obs_release_date, p.position_dimension_naxis1 as s_xel1, "
+            "p.position_dimension_naxis2 as s_xel2, p.position_samplesize as "
+            "s_pixel_scale, p.position_timedependent as position_timedependent, "
+            "p.time_bounds_lower as t_min, p.time_bounds_upper as t_max, "
+            "p.time_resolution as t_resolution, p.time_dimension as t_xel, "
+            "'ivo://irsa.ipac/' || o.collection || '?' || o.observationid || '/' || "
+            "p.productID as obs_publisher_did, "
+            "sqrt(p.position_dimension_naxis1*p.position_dimension_naxis2)*p.position_"
+            "samplesize/3600 as s_fov, p.energy_dimension as em_xel, "
+            "p.polarization_states as pol_states, p.polarization_dimension as pol_xel, "
+            "SIA2_cloud_access_column(o.collection, a.uri) as cloud_access, NULL::char "
+            "as o_ucd, SIA2_CLOSEST_SUBQUERY.upload_row_id as upload_row_id, CASE "
+            "a.producttype WHEN 'science' THEN 'aaa' WHEN 'calibration' THEN 'aab' "
+            "ELSE producttype END as irsa_temp_producttype, "
+            "SIA2_CLOSEST_SUBQUERY.dist_to_point_meters / 111194.68229846345 as "
+            "min_dist_to_point FROM (SELECT * FROM (SELECT SIA2_MINIMAL_JOIN.*, "
+            "ROW_NUMBER() OVER (PARTITION BY SIA2_MINIMAL_JOIN.facility, "
+            "SIA2_MINIMAL_JOIN.instrument, SIA2_MINIMAL_JOIN.upload_row_id ORDER BY "
+            "SIA2_MINIMAL_JOIN.dist_to_point_meters) as rownum FROM SIA2_MINIMAL_JOIN) "
+            "ranked WHERE rownum = 1) SIA2_CLOSEST_SUBQUERY, ((caom.observation o JOIN "
+            "caom.plane p ON o.obsid = p.obsid) JOIN caom.artifact a ON p.planeid = "
+            "a.planeid) WHERE SIA2_CLOSEST_SUBQUERY.obsid = o.obsid AND "
+            "SIA2_CLOSEST_SUBQUERY.planeid = p.planeid AND "
+            "(SIA2_CLOSEST_SUBQUERY.facility IS NULL OR SIA2_CLOSEST_SUBQUERY.facility "
+            "= o.telescope_name) AND (SIA2_CLOSEST_SUBQUERY.instrument IS NULL OR "
+            "SIA2_CLOSEST_SUBQUERY.instrument = o.instrument_name)",
+
 #endif  // RUN_ALL
     };
 
@@ -921,6 +1012,9 @@ int main(int argc, char *argv[]) {
             "SELECT bar FROM foo where (ST(ST(ST(ST(ST(ST(ST(ST(ST())))))))))",
             "SELECT * FROM my_table1 where sys_context('USERENV','DB_NAME')='wise1'",
 
+            "SELECT DISTINCT ON (collection) ra, dec, collection FROM my_table ORDER "
+            "BY collection, dist",
+
             // IRSA-7735: retire support for table() function
             "WITH temp (collection, multi_type) AS (SELECT collection,mytype "
             "FROM table(tap_ancillary.DCE_DATATYPE('irsa_directory'))) "
@@ -937,6 +1031,7 @@ int main(int argc, char *argv[]) {
             "WHERE semantics like '%primary%' AND "
             "irsa_directory.collection=temp.collection "
             "ORDER BY facility_name,irsa_directory.collection,instrument_name",
+            "SELECT RANK() OVER (PARTITION BY collection ORDER BY dist) FROM my_table",
     };
 
     int result(0);
