@@ -553,4 +553,8 @@ struct ADQL_parser : boost::spirit::qi::grammar<std::string::const_iterator,
                             ADQL::Coord_Sys::Reference_Position(),
                             boost::spirit::ascii::space_type>
             reference_position;
+
+    boost::spirit::qi::rule<std::string::const_iterator, ADQL::Window_Function(),
+                            boost::spirit::ascii::space_type>
+            window_function;
 };

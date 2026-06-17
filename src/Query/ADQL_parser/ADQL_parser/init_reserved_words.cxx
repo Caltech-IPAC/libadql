@@ -82,8 +82,9 @@ void ADQL_parser::init_reserved_words() {
                             ascii::no_case["PRIVILEGES"] | ascii::no_case["PRIOR"] |
                             ascii::no_case["PRIMARY"] | ascii::no_case["PRESERVE"] |
                             ascii::no_case["PREPARE"] | ascii::no_case["PRECISION"] |
-                            ascii::no_case["POSITION"] | ascii::no_case["PARTIAL"] |
-                            ascii::no_case["PAD"] | ascii::no_case["OVERLAPS"] |
+                            ascii::no_case["POSITION"] | ascii::no_case["PARTITION"] |
+                            ascii::no_case["PARTIAL"] | ascii::no_case["PAD"] |
+                            ascii::no_case["OVERLAPS"] | ascii::no_case["OVER"] |
                             ascii::no_case["OUTPUT"] | ascii::no_case["OUTER"] |
                             ascii::no_case["ORDER"] | ascii::no_case["OR"];
 

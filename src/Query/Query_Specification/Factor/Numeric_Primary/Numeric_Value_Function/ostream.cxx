@@ -1,4 +1,5 @@
 #include "../../../Whitelisted_Function.hxx"
+#include "../../../Window_Function.hxx"
 #include "../Numeric_Value_Function.hxx"
 
 namespace ADQL {

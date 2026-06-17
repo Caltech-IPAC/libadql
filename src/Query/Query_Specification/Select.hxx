@@ -4,6 +4,7 @@
 #include "Non_As.hxx"
 #include "Value_Expression_Primary.hxx"
 #include "Whitelisted_Function.hxx"
+#include "Window_Function.hxx"
 
 namespace ADQL {
 class Select {

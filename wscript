@@ -114,6 +114,8 @@ def build(ctx):
                  'src/Query/Query_Specification/Value_Expression_Primary/Case_Expression/Case_Abbreviation/Nullif/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression_Primary/Case_Expression/Case_Abbreviation/Coalesce/ostream.cxx',
                  'src/Query/Query_Specification/Whitelisted_Function_Wrap/ostream.cxx',
+                 'src/Query/Query_Specification/Window_Function_Wrap/empty.cxx',
+                 'src/Query/Query_Specification/Window_Function_Wrap/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression/empty.cxx',
                  'src/Query/Query_Specification/Value_Expression/ostream.cxx',
                  'src/Query/Query_Specification/Value_Expression_Wrap/ostream.cxx',
