@@ -8,7 +8,8 @@ void ADQL_parser::init_non_predicate_geometry_function() {
     geo_one_arg_names %= ascii::no_case[ascii::string("COORD1")] |
                          ascii::no_case[ascii::string("COORD2")];
 
-    geo_two_arg_names %= ascii::no_case[ascii::string("DISTANCE")];
+    geo_two_arg_names %= ascii::no_case[ascii::string("DISTANCE")] |
+                         ascii::no_case[ascii::string("POSITION_ANGLE")];
 
     non_predicate_geometry_function_one_arg %=
             (hold[lexeme[geo_one_arg_names >> &nonidentifier_character]] > '(' >
