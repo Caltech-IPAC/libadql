@@ -750,7 +750,6 @@ int main(int argc, char *argv[]) {
             "IN a.uri) > 0",
 
             // IRSA-7681 flexible WHERE revisited
-
             "WITH SIA2_MINIMAL_JOIN AS (SELECT o.obsid as obsid, p.planeid as planeid, "
             "CAST ('1' AS BIGINT) as upload_row_id FROM (caom.observation o JOIN "
             "caom.plane p ON o.obsid = p.obsid) WHERE ((o.collection = "
@@ -901,6 +900,23 @@ int main(int argc, char *argv[]) {
             "(SIA2_CLOSEST_SUBQUERY.facility IS NULL OR SIA2_CLOSEST_SUBQUERY.facility "
             "= o.telescope_name) AND (SIA2_CLOSEST_SUBQUERY.instrument IS NULL OR "
             "SIA2_CLOSEST_SUBQUERY.instrument = o.instrument_name)",
+
+            // IRSA-7854: support position_angle
+            "SELECT TAP_UPLOAD.pos.cntr as in_row_id, "
+            "POSITION_ANGLE(POINT('ICRS', dbtable.ra, dbtable.dec), POINT('ICRS', "
+            "mytable.ra, mytable.dec)) as unwise_posang "
+            "FROM wise.wise_allwise_p3am_cdd dbtable, "
+            "TAP_UPLOAD.pos WHERE "
+            "(ST_Intersects(TAP_UPLOAD.pos.poly,dbtable.poly)) ",
+
+            "SELECT TAP_UPLOAD.pos.cntr as in_row_id, "
+            "DISTANCE(POINT('ICRS', dbtable.ra, dbtable.dec), POINT('ICRS', "
+            "mytable.ra, mytable.dec)) as unwise_dist, "
+            "POSITION_ANGLE(POINT('ICRS', dbtable.ra, dbtable.dec), POINT('ICRS', "
+            "mytable.ra, mytable.dec)) as unwise_posang "
+            "FROM wise.wise_allwise_p3am_cdd dbtable, "
+            "TAP_UPLOAD.pos WHERE "
+            "(ST_Intersects(TAP_UPLOAD.pos.poly,dbtable.poly)) ",
 
 #endif  // RUN_ALL
     };
