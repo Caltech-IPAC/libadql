@@ -6,15 +6,13 @@ def configure(conf):
     def get_param(varname, default):
         return getattr(Options.options, varname, "") or default
 
-    cxx17_fragment = """
-    #include <optional>
-    #include <string_view>
-    int main() {
-        std::optional<int> o = 42;
-        std::string_view sv = "hello";
-        if constexpr (true) { return 0; }
-    }
-    """
+    cxx17_fragment = (
+        "#include <optional>\n"
+        "#include <utility>\n"
+        "int main() { std::optional<int> o{1};\n"
+        "  if constexpr (true) { auto [a, b] = std::pair{1, 2}; (void)a; (void)b; }\n"
+        "  return o.value_or(0) - 1; }"
+)
 
     flags = ["-std=c++17", "-std=c++1z"]
     if conf.options.cxx17_flag:
