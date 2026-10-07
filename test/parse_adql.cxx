@@ -811,7 +811,7 @@ int main(int argc, char *argv[]) {
             "WHERE d.semantics like '%primary%' ORDER BY "
             "LOWER(facility_name),d.collection,instrument",
 
-			// IRSA-7700: support for WINDOW/PARTITION/OVER
+            // IRSA-7700: support for WINDOW/PARTITION/OVER
             "SELECT ROW_NUMBER()  Over (PARTITION BY facility, instrument ORDER BY "
             "dist) FROM my_table",
 
@@ -917,6 +917,12 @@ int main(int argc, char *argv[]) {
             "FROM wise.wise_allwise_p3am_cdd dbtable, "
             "TAP_UPLOAD.pos WHERE "
             "(ST_Intersects(TAP_UPLOAD.pos.poly,dbtable.poly)) ",
+
+            // IRSA-7957: Support Euclid DR1
+            "SELECT coord1(pt) as s_ra, coord2(pt) as s_dec, "
+            "position_samplesize/3600 * "
+            "sqrt(position_dimension_naxis1*position_dimension_naxis2) as s_fov, "
+            "poly_to_region_full(poly) as s_region FROM caom.plane",
 
 #endif  // RUN_ALL
     };
