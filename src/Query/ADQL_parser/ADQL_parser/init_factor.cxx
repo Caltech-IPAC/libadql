@@ -148,6 +148,7 @@ void ADQL_parser::init_factor() {
             ascii::no_case[ascii::string("RA_TO_SEXAGESIMAL")] |
             ascii::no_case[ascii::string("PT_TO_REGION")] |
             ascii::no_case[ascii::string("POSITION_ANGLE")] |
+            ascii::no_case[ascii::string("POLY_TO_REGION_FULL")] |
             ascii::no_case[ascii::string("POLY_TO_REGION")] |
             ascii::no_case[ascii::string("POLY_TO_RA")] |
             ascii::no_case[ascii::string("POLY_TO_DEC")] |
