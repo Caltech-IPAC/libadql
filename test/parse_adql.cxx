@@ -924,6 +924,20 @@ int main(int argc, char *argv[]) {
             "sqrt(position_dimension_naxis1*position_dimension_naxis2) as s_fov, "
             "poly_to_region_full(poly) as s_region FROM caom.plane",
 
+            // IRSA-8134: Precision
+            "SELECT *  FROM spherex.obscore  WHERE "
+            "CONTAINS(CIRCLE('ICRS', 210.123456789012, 54.123456789012, "
+            "0.000123456789), "
+            "s_region)=1  ORDER BY obs_id ASC",
+
+            "SELECT *  FROM spherex.obscore  WHERE "
+            "CONTAINS(CIRCLE('ICRS', 81.84475, -60.04692, 0.0083333333), "
+            "s_region)=1  ORDER BY obs_id ASC",
+
+            "SELECT *  FROM spherex.obscore  WHERE "
+            "INTERSECTS(s_region, CIRCLE('ICRS', 81.84475, -60.04692, 0.0083333333)) "
+            "=1  ORDER BY obs_id ASC",
+
 #endif  // RUN_ALL
     };
 

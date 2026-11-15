@@ -2,8 +2,8 @@
 
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
-
 #include <iostream>
+#include <limits>
 #include <string>
 
 namespace ADQL {
@@ -37,7 +37,13 @@ public:
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Binary_Arithmetic_Expression &bae) {
-    return os << bae.arg0 << bae.operation << bae.arg1;
+    // Write every significant digit of the operands and put spaces
+    // around the operator so that a negative second operand does
+    //  not produce "--", the start of a comment in SQL.
+    const auto old_precision = os.precision(std::numeric_limits<double>::max_digits10);
+    os << bae.arg0 << ' ' << bae.operation << ' ' << bae.arg1;
+    os.precision(old_precision);
+    return os;
 }
 }  // namespace ADQL
 
