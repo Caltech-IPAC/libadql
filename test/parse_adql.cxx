@@ -5,8 +5,8 @@
 
 #include "../src/Query.hxx"
 
-// #define INVESTIGATE
-#define RUN_ALL
+#define INVESTIGATE
+// #define RUN_ALL
 
 // Warning: Tests will fail if "TOP" is specified with any value other than "14223".
 //          Tests will fail if TAP_UPLOAD table is named anything but "mytable".
@@ -923,6 +923,22 @@ int main(int argc, char *argv[]) {
             "position_samplesize/3600 * "
             "sqrt(position_dimension_naxis1*position_dimension_naxis2) as s_fov, "
             "poly_to_region_full(poly) as s_region FROM caom.plane",
+
+            // IRSA-8134: Precision
+            "SELECT *  FROM spherex.obscore  WHERE "
+            "CONTAINS(CIRCLE('ICRS', 210.123456789012, 54.123456789012, "
+            "0.000123456789), "
+            "s_region)=1  ORDER BY obs_id ASC",
+
+            "SELECT *  FROM spherex.obscore  WHERE "
+            "CONTAINS(CIRCLE('ICRS', 81.84475, -60.04692, 0.0083333333), "
+            "s_region)=1  ORDER BY obs_id ASC",
+
+#else
+            "SELECT *  FROM spherex.obscore  WHERE "
+            "INTERSECTS(CIRCLE('ICRS', 81.84475, -60.04692, 0.0083333333), "
+            "s_region)=1  ORDER BY obs_id ASC",
+
 
 #endif  // RUN_ALL
     };

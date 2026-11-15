@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <stdexcept>
 #include <string>
 
@@ -57,7 +58,10 @@ inline double double_or_throw(const Column_or_Simple_Arithmetic_Expression &c) {
 
 inline std::ostream &operator<<(std::ostream &os,
                                 const ADQL::Column_or_Simple_Arithmetic_Expression &c) {
-    return os << c.variant;
+    const auto old_precision = os.precision(std::numeric_limits<double>::max_digits10);
+    os << c.variant;
+    os.precision(old_precision);
+    return os;
 }
 
 }  // namespace ADQL
